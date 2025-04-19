@@ -1,0 +1,626 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		9722EDB12DB44A7100377E59 /* bored_climbApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9722EDB02DB44A7100377E59 /* bored_climbApp.swift */; };
+		9722EDB32DB44A7100377E59 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9722EDB22DB44A7100377E59 /* ContentView.swift */; };
+		9722EDB52DB44A7100377E59 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9722EDB42DB44A7100377E59 /* Item.swift */; };
+		9722EDB72DB44A7300377E59 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9722EDB62DB44A7300377E59 /* Assets.xcassets */; };
+		9722EDBB2DB44A7300377E59 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9722EDBA2DB44A7300377E59 /* Preview Assets.xcassets */; };
+		9722EDC52DB44A7300377E59 /* bored_climbTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9722EDC42DB44A7300377E59 /* bored_climbTests.swift */; };
+		9722EDCF2DB44A7300377E59 /* bored_climbUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9722EDCE2DB44A7300377E59 /* bored_climbUITests.swift */; };
+		9722EDD12DB44A7300377E59 /* bored_climbUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9722EDD02DB44A7300377E59 /* bored_climbUITestsLaunchTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		9722EDC12DB44A7300377E59 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9722EDA52DB44A7100377E59 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9722EDAC2DB44A7100377E59;
+			remoteInfo = bored.climb;
+		};
+		9722EDCB2DB44A7300377E59 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9722EDA52DB44A7100377E59 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9722EDAC2DB44A7100377E59;
+			remoteInfo = bored.climb;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		9722EDAD2DB44A7100377E59 /* bored.climb.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = bored.climb.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9722EDB02DB44A7100377E59 /* bored_climbApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bored_climbApp.swift; sourceTree = "<group>"; };
+		9722EDB22DB44A7100377E59 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		9722EDB42DB44A7100377E59 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		9722EDB62DB44A7300377E59 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		9722EDB82DB44A7300377E59 /* bored_climb.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = bored_climb.entitlements; sourceTree = "<group>"; };
+		9722EDBA2DB44A7300377E59 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		9722EDC02DB44A7300377E59 /* bored.climbTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = bored.climbTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		9722EDC42DB44A7300377E59 /* bored_climbTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bored_climbTests.swift; sourceTree = "<group>"; };
+		9722EDCA2DB44A7300377E59 /* bored.climbUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = bored.climbUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		9722EDCE2DB44A7300377E59 /* bored_climbUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bored_climbUITests.swift; sourceTree = "<group>"; };
+		9722EDD02DB44A7300377E59 /* bored_climbUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bored_climbUITestsLaunchTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		9722EDAA2DB44A7100377E59 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9722EDBD2DB44A7300377E59 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9722EDC72DB44A7300377E59 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		9722EDA42DB44A7100377E59 = {
+			isa = PBXGroup;
+			children = (
+				9722EDAF2DB44A7100377E59 /* bored.climb */,
+				9722EDC32DB44A7300377E59 /* bored.climbTests */,
+				9722EDCD2DB44A7300377E59 /* bored.climbUITests */,
+				9722EDAE2DB44A7100377E59 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		9722EDAE2DB44A7100377E59 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9722EDAD2DB44A7100377E59 /* bored.climb.app */,
+				9722EDC02DB44A7300377E59 /* bored.climbTests.xctest */,
+				9722EDCA2DB44A7300377E59 /* bored.climbUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9722EDAF2DB44A7100377E59 /* bored.climb */ = {
+			isa = PBXGroup;
+			children = (
+				9722EDB02DB44A7100377E59 /* bored_climbApp.swift */,
+				9722EDB22DB44A7100377E59 /* ContentView.swift */,
+				9722EDB42DB44A7100377E59 /* Item.swift */,
+				9722EDB62DB44A7300377E59 /* Assets.xcassets */,
+				9722EDB82DB44A7300377E59 /* bored_climb.entitlements */,
+				9722EDB92DB44A7300377E59 /* Preview Content */,
+			);
+			path = bored.climb;
+			sourceTree = "<group>";
+		};
+		9722EDB92DB44A7300377E59 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				9722EDBA2DB44A7300377E59 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		9722EDC32DB44A7300377E59 /* bored.climbTests */ = {
+			isa = PBXGroup;
+			children = (
+				9722EDC42DB44A7300377E59 /* bored_climbTests.swift */,
+			);
+			path = bored.climbTests;
+			sourceTree = "<group>";
+		};
+		9722EDCD2DB44A7300377E59 /* bored.climbUITests */ = {
+			isa = PBXGroup;
+			children = (
+				9722EDCE2DB44A7300377E59 /* bored_climbUITests.swift */,
+				9722EDD02DB44A7300377E59 /* bored_climbUITestsLaunchTests.swift */,
+			);
+			path = bored.climbUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		9722EDAC2DB44A7100377E59 /* bored.climb */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9722EDD42DB44A7300377E59 /* Build configuration list for PBXNativeTarget "bored.climb" */;
+			buildPhases = (
+				9722EDA92DB44A7100377E59 /* Sources */,
+				9722EDAA2DB44A7100377E59 /* Frameworks */,
+				9722EDAB2DB44A7100377E59 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = bored.climb;
+			productName = bored.climb;
+			productReference = 9722EDAD2DB44A7100377E59 /* bored.climb.app */;
+			productType = "com.apple.product-type.application";
+		};
+		9722EDBF2DB44A7300377E59 /* bored.climbTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9722EDD72DB44A7300377E59 /* Build configuration list for PBXNativeTarget "bored.climbTests" */;
+			buildPhases = (
+				9722EDBC2DB44A7300377E59 /* Sources */,
+				9722EDBD2DB44A7300377E59 /* Frameworks */,
+				9722EDBE2DB44A7300377E59 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9722EDC22DB44A7300377E59 /* PBXTargetDependency */,
+			);
+			name = bored.climbTests;
+			productName = bored.climbTests;
+			productReference = 9722EDC02DB44A7300377E59 /* bored.climbTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		9722EDC92DB44A7300377E59 /* bored.climbUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9722EDDA2DB44A7300377E59 /* Build configuration list for PBXNativeTarget "bored.climbUITests" */;
+			buildPhases = (
+				9722EDC62DB44A7300377E59 /* Sources */,
+				9722EDC72DB44A7300377E59 /* Frameworks */,
+				9722EDC82DB44A7300377E59 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9722EDCC2DB44A7300377E59 /* PBXTargetDependency */,
+			);
+			name = bored.climbUITests;
+			productName = bored.climbUITests;
+			productReference = 9722EDCA2DB44A7300377E59 /* bored.climbUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		9722EDA52DB44A7100377E59 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1540;
+				LastUpgradeCheck = 1540;
+				TargetAttributes = {
+					9722EDAC2DB44A7100377E59 = {
+						CreatedOnToolsVersion = 15.4;
+					};
+					9722EDBF2DB44A7300377E59 = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = 9722EDAC2DB44A7100377E59;
+					};
+					9722EDC92DB44A7300377E59 = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = 9722EDAC2DB44A7100377E59;
+					};
+				};
+			};
+			buildConfigurationList = 9722EDA82DB44A7100377E59 /* Build configuration list for PBXProject "bored.climb" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 9722EDA42DB44A7100377E59;
+			productRefGroup = 9722EDAE2DB44A7100377E59 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				9722EDAC2DB44A7100377E59 /* bored.climb */,
+				9722EDBF2DB44A7300377E59 /* bored.climbTests */,
+				9722EDC92DB44A7300377E59 /* bored.climbUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		9722EDAB2DB44A7100377E59 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9722EDBB2DB44A7300377E59 /* Preview Assets.xcassets in Resources */,
+				9722EDB72DB44A7300377E59 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9722EDBE2DB44A7300377E59 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9722EDC82DB44A7300377E59 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		9722EDA92DB44A7100377E59 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9722EDB32DB44A7100377E59 /* ContentView.swift in Sources */,
+				9722EDB52DB44A7100377E59 /* Item.swift in Sources */,
+				9722EDB12DB44A7100377E59 /* bored_climbApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9722EDBC2DB44A7300377E59 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9722EDC52DB44A7300377E59 /* bored_climbTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9722EDC62DB44A7300377E59 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9722EDCF2DB44A7300377E59 /* bored_climbUITests.swift in Sources */,
+				9722EDD12DB44A7300377E59 /* bored_climbUITestsLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		9722EDC22DB44A7300377E59 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9722EDAC2DB44A7100377E59 /* bored.climb */;
+			targetProxy = 9722EDC12DB44A7300377E59 /* PBXContainerItemProxy */;
+		};
+		9722EDCC2DB44A7300377E59 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9722EDAC2DB44A7100377E59 /* bored.climb */;
+			targetProxy = 9722EDCB2DB44A7300377E59 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		9722EDD22DB44A7300377E59 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		9722EDD32DB44A7300377E59 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		9722EDD52DB44A7300377E59 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = bored.climb/bored_climb.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"bored.climb/Preview Content\"";
+				DEVELOPMENT_TEAM = 6H89K9WGV3;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "cibaat.bored-climb";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		9722EDD62DB44A7300377E59 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = bored.climb/bored_climb.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"bored.climb/Preview Content\"";
+				DEVELOPMENT_TEAM = 6H89K9WGV3;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "cibaat.bored-climb";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		9722EDD82DB44A7300377E59 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6H89K9WGV3;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				MACOSX_DEPLOYMENT_TARGET = 14.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "cibaat.bored-climbTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/bored.climb.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/bored.climb";
+			};
+			name = Debug;
+		};
+		9722EDD92DB44A7300377E59 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6H89K9WGV3;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				MACOSX_DEPLOYMENT_TARGET = 14.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "cibaat.bored-climbTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/bored.climb.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/bored.climb";
+			};
+			name = Release;
+		};
+		9722EDDB2DB44A7300377E59 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6H89K9WGV3;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				MACOSX_DEPLOYMENT_TARGET = 14.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "cibaat.bored-climbUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = bored.climb;
+			};
+			name = Debug;
+		};
+		9722EDDC2DB44A7300377E59 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6H89K9WGV3;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				MACOSX_DEPLOYMENT_TARGET = 14.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "cibaat.bored-climbUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = bored.climb;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		9722EDA82DB44A7100377E59 /* Build configuration list for PBXProject "bored.climb" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9722EDD22DB44A7300377E59 /* Debug */,
+				9722EDD32DB44A7300377E59 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9722EDD42DB44A7300377E59 /* Build configuration list for PBXNativeTarget "bored.climb" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9722EDD52DB44A7300377E59 /* Debug */,
+				9722EDD62DB44A7300377E59 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9722EDD72DB44A7300377E59 /* Build configuration list for PBXNativeTarget "bored.climbTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9722EDD82DB44A7300377E59 /* Debug */,
+				9722EDD92DB44A7300377E59 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9722EDDA2DB44A7300377E59 /* Build configuration list for PBXNativeTarget "bored.climbUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9722EDDB2DB44A7300377E59 /* Debug */,
+				9722EDDC2DB44A7300377E59 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 9722EDA52DB44A7100377E59 /* Project object */;
+}
