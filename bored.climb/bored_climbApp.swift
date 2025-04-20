@@ -13,6 +13,7 @@ struct bored_climbApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
+            Wall.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -25,7 +26,7 @@ struct bored_climbApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            BoardsView()
         }
         .modelContainer(sharedModelContainer)
     }
