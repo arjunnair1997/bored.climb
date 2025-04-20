@@ -29,13 +29,9 @@ struct EditBoardView: View {
                         saveContext(context: context)
                     }
 
-                    if let currWall = wall {
-                        // No need to reinsert, just and all the updates will automatically be saved.
-                        saveContext(context: context)
-                        dismiss()
-                    } else {
-                        fatalError("wall is nil")
-                    }
+                    // No need to reinsert, just and all the updates will automatically be saved.
+                    saveContext(context: context)
+                    dismiss()
                 }
             }
             .padding()
