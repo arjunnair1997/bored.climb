@@ -12,7 +12,11 @@ func saveContext(context: ModelContext) {
 
 @Model
 class Hold {
-    init() {}
+    var points: [CGPoint] = []
+
+    init(points: [CGPoint]) {
+        self.points = points
+    }
 }
 
 @Model
