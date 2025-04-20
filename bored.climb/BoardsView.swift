@@ -34,7 +34,7 @@ struct BoardsView: View {
                         }
 
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("Climb Name")
+                            Text("Wall Name")
                                 .font(.headline)
                             Text("Grade: TBD")
                                 .font(.subheadline)
@@ -46,13 +46,21 @@ struct BoardsView: View {
                     .padding(.vertical, 4)
                 }
             }
-            .navigationTitle("Boards")
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    PhotosPicker(selection: $selectedItem, matching: .images, photoLibrary: .shared()) {
-                        Image(systemName: "plus")
-                            .font(.title2)
-                    }
+                ToolbarItem(placement: .principal) {
+                        HStack {
+                            Text("Boards")
+                                .font(.title)
+                                .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
+                            Spacer()
+                            PhotosPicker(selection: $selectedItem, matching: .images, photoLibrary: .shared()) {
+                                Image(systemName: "plus")
+                                    .font(.title2)
+                                    .padding(.trailing, 0)
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.leading, 8) // optional: reduce system margin
                 }
             }
             .onChange(of: selectedItem) { oldItem, newItem in
