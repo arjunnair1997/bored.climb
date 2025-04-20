@@ -2,9 +2,24 @@ import SwiftUI
 import SwiftData
 import PhotosUI
 
+func saveContext(context: ModelContext) {
+    do {
+        try context.save()
+    } catch {
+        fatalError("Error saving context: \(error)")
+    }
+}
+
+@Model
+class Hold {
+    init() {}
+}
+
 @Model
 class Wall {
     var imageData: Data
+    // TODO: Check if this needs a query param.
+    var holds: [Hold] = []
 
     init(imageData: Data) {
         self.imageData = imageData
@@ -72,7 +87,7 @@ struct BoardsView: View {
                 }
             }
             .navigationDestination(isPresented: $navigateToImageView) {
-                UploadBoardView(imageData: selectedImageData)
+                EditBoardView(imageData: selectedImageData)
             }
         }
     }

@@ -1,10 +1,3 @@
-//
-//  bored_climbApp.swift
-//  bored.climb
-//
-//  Created by Arjun Nair on 2025-04-19.
-//
-
 import SwiftUI
 import SwiftData
 
@@ -14,6 +7,7 @@ struct bored_climbApp: App {
         let schema = Schema([
             Item.self,
             Wall.self,
+            Hold.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
