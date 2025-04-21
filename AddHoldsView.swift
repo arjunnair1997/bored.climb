@@ -36,42 +36,41 @@ struct AddHoldsView: View {
         GeometryReader { containerGeo in
             ZStack(alignment: .topLeading) {
                 if let uiImage = UIImage(data: wall.imageData) {
-                    Image(uiImage: uiImage)
-                        .resizable()
-                        .scaledToFit()
-                        .scaleEffect(scale)
-                        .frame(
-                            width: containerGeo.size.width,
-                            height: containerGeo.size.height
-                        )
-                        // Measure *after* scaleEffect by using a background GeometryReader
-                        .background(
-                            GeometryReader { proxy in
+                    GeometryReader { imageGeo in
+                        let containerSize = containerGeo.size
+                        let baseFrame = imageGeo.frame(in: .global)
+
+                        Image(uiImage: uiImage)
+                            .resizable()
+                            .scaledToFit()
+                            .scaleEffect(scale)
+                            .frame(
+                                width: containerSize.width,
+                                height: containerSize.height
+                            )
+                            .background(
                                 Color.clear
                                     .onAppear {
-                                        imageFrame = proxy.frame(in: .global)
+                                        imageFrame = computeScaledFrame(baseFrame: baseFrame, scale: scale)
                                     }
                                     .onChange(of: scale) { oldScale, newScale in
-                                        imageFrame = proxy.frame(in: .global)
+                                        imageFrame = computeScaledFrame(baseFrame: baseFrame, scale: newScale)
                                     }
-                            }
-                        )
-                        .gesture(
-                            MagnificationGesture()
-                                .onChanged { value in
-                                    // Restrict scaling to
-                                    scale = max(1, lastScale * value)
-                                    scale = min(scale, 10)
-                                }
-                                .onEnded { _ in
-                                    lastScale = scale
-                                }
-                        )
+                            )
+                            .gesture(
+                                MagnificationGesture()
+                                    .onChanged { value in
+                                        scale = min(max(1.0, lastScale * value), 10.0)
+                                    }
+                                    .onEnded { _ in
+                                        lastScale = scale
+                                    }
+                            )
+                    }
                 } else {
                     fatalError("wall must have an image")
                 }
 
-                // Overlay debug info
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Scale: \(scale, specifier: "%.2f")")
                     Text("Image Size: \(Int(imageFrame.width)) x \(Int(imageFrame.height))")
@@ -87,6 +86,13 @@ struct AddHoldsView: View {
             }
             .background(Color.black.ignoresSafeArea())
         }
+    }
+
+    func computeScaledFrame(baseFrame: CGRect, scale: CGFloat) -> CGRect {
+        let center = CGPoint(x: baseFrame.midX, y: baseFrame.midY)
+        let newSize = CGSize(width: baseFrame.width * scale, height: baseFrame.height * scale)
+        let newOrigin = CGPoint(x: center.x - newSize.width / 2, y: center.y - newSize.height / 2)
+        return CGRect(origin: newOrigin, size: newSize)
     }
 }
 
