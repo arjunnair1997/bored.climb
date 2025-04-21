@@ -1,6 +1,13 @@
 import SwiftUI
 import SwiftData
 
+func getWallFromData(data: Data) -> Wall {
+    let uiImage = UIImage(data: data).unsafelyUnwrapped
+    let height = uiImage.size.height
+    let width = uiImage.size.width
+    return Wall(imageData: data, width: width, height: height)
+}
+
 struct EditBoardView: View {
     let imageData: Data?
     @State private var wall:  Wall?
@@ -24,7 +31,7 @@ struct EditBoardView: View {
                     // TODO: Wall shouldn't really be saved if there's literally no edits to it.
                     if wall == nil, let data = imageData {
                         // Create a new wall with the image. Do not persist it yet.
-                        wall = Wall(imageData: data)
+                        wall = getWallFromData(data: data)
                         context.insert(wall.unsafelyUnwrapped)
                         saveContext(context: context)
                     }
@@ -53,7 +60,7 @@ struct EditBoardView: View {
                 // TODO: Wall shouldn't really be saved if there's literally no edits to it.
                 if wall == nil, let data = imageData {
                     // Create a new wall with the image. Do not persist it yet.
-                    wall = Wall(imageData: data)
+                    wall = getWallFromData(data: data)
                     context.insert(wall.unsafelyUnwrapped)
                     saveContext(context: context)
                 }

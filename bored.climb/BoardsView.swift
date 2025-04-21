@@ -10,26 +10,6 @@ func saveContext(context: ModelContext) {
     }
 }
 
-@Model
-class Hold {
-    var points: [CGPoint] = []
-
-    init(points: [CGPoint]) {
-        self.points = points
-    }
-}
-
-@Model
-class Wall {
-    var imageData: Data
-    // TODO: Check if this needs a query param.
-    var holds: [Hold] = []
-
-    init(imageData: Data) {
-        self.imageData = imageData
-    }
-}
-
 struct BoardsView: View {
     @State private var selectedItem: PhotosPickerItem? = nil
     @State private var selectedImageData: Data? = nil
@@ -97,9 +77,9 @@ struct BoardsView: View {
     }
 }
 
-#Preview {
-    BoardsView()
-    .modelContainer(try! ModelContainer(for: Wall.self, configurations:
-        ModelConfiguration(isStoredInMemoryOnly: true)
-    ))
-}
+//#Preview {
+//    BoardsView()
+//    .modelContainer(try! ModelContainer(for: Wall.self, configurations:
+//        ModelConfiguration(isStoredInMemoryOnly: true)
+//    ))
+//}
