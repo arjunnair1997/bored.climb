@@ -17,7 +17,7 @@
 		9722EDD12DB44A7300377E59 /* bored_climbUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9722EDD02DB44A7300377E59 /* bored_climbUITestsLaunchTests.swift */; };
 		97712E622DB4543B00DB24C3 /* EditBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97712E612DB4543B00DB24C3 /* EditBoardView.swift */; };
 		97712E662DB480C200DB24C3 /* AddHoldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97712E652DB480C200DB24C3 /* AddHoldView.swift */; };
-		97712E682DB5C3BC00DB24C3 /* WallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97712E672DB5C3BC00DB24C3 /* WallView.swift */; };
+		97712E682DB5C3BC00DB24C3 /* AddHoldsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97712E672DB5C3BC00DB24C3 /* AddHoldsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,7 +52,7 @@
 		9722EDD02DB44A7300377E59 /* bored_climbUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bored_climbUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		97712E612DB4543B00DB24C3 /* EditBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditBoardView.swift; sourceTree = "<group>"; };
 		97712E652DB480C200DB24C3 /* AddHoldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddHoldView.swift; sourceTree = "<group>"; };
-		97712E672DB5C3BC00DB24C3 /* WallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WallView.swift; sourceTree = "<group>"; };
+		97712E672DB5C3BC00DB24C3 /* AddHoldsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddHoldsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,7 +84,7 @@
 			isa = PBXGroup;
 			children = (
 				97712E652DB480C200DB24C3 /* AddHoldView.swift */,
-				97712E672DB5C3BC00DB24C3 /* WallView.swift */,
+				97712E672DB5C3BC00DB24C3 /* AddHoldsView.swift */,
 				9722EDAF2DB44A7100377E59 /* bored.climb */,
 				9722EDC32DB44A7300377E59 /* bored.climbTests */,
 				9722EDCD2DB44A7300377E59 /* bored.climbUITests */,
@@ -271,7 +271,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				97712E682DB5C3BC00DB24C3 /* WallView.swift in Sources */,
+				97712E682DB5C3BC00DB24C3 /* AddHoldsView.swift in Sources */,
 				97712E662DB480C200DB24C3 /* AddHoldView.swift in Sources */,
 				9722EDB32DB44A7100377E59 /* BoardsView.swift in Sources */,
 				9722EDB52DB44A7100377E59 /* Item.swift in Sources */,
