@@ -42,37 +42,19 @@ struct AddHoldsView: View {
     let tapDisplayDuration: Double = 2.0
 
     var body: some View {
-        VStack(spacing: 0) {
+        ZStack {
+            // Main content
             // Instruction message above the image
-            HStack {
-                // Undo and redo buttons
-                HStack {
-                    Button(action: {
-                        undoAction()
-                    }) {
-                        Image(systemName: "arrow.uturn.backward")
-                            .foregroundColor(.white)
-                            .padding(8)
-                            .background(Circle().fill(Color.gray.opacity(0)))
-                    }
-                    
-                    Button(action: {
-                        redoAction()
-                    }) {
-                        Image(systemName: "arrow.uturn.forward")
-                            .foregroundColor(.white)
-                            .padding(8)
-                            .background(Circle().fill(Color.gray.opacity(0)))
-                    }
-                }
-                Spacer()
-            }
-            .padding()
-            .frame(maxWidth: .infinity, alignment: .center)
-            .background(Color.black)
-            
-            GeometryReader { containerGeo in
-                ZStack(alignment: .topLeading) {
+            VStack(spacing: 0) {
+                Text("Zoom and tap to mark the hold")
+                    .font(.callout)
+                    .foregroundColor(.white)
+                    .padding()
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .background(Color.black)
+
+                GeometryReader { containerGeo in
+                    ZStack(alignment: .topLeading) {
                     if let uiImage = UIImage(data: wall.imageData) {
                         GeometryReader { imageGeo in
                             let containerSize = containerGeo.size
@@ -178,6 +160,38 @@ struct AddHoldsView: View {
             }
         }
         .background(Color.black)
+            
+            // Undo and redo buttons overlay
+            VStack {
+                HStack {
+                    // Undo and redo buttons
+                    HStack {
+                        Button(action: {
+                            undoAction()
+                        }) {
+                            Image(systemName: "arrow.uturn.backward")
+                                .foregroundColor(.white)
+                                .padding(8)
+                                .background(Circle().fill(Color.gray.opacity(0.5)))
+                        }
+                        
+                        Button(action: {
+                            redoAction()
+                        }) {
+                            Image(systemName: "arrow.uturn.forward")
+                                .foregroundColor(.white)
+                                .padding(8)
+                                .background(Circle().fill(Color.gray.opacity(0.5)))
+                        }
+                    }
+                    .padding()
+                    
+                    Spacer()
+                }
+                
+                Spacer()
+            }
+        }
     }
     
     // Stub function for undo action
