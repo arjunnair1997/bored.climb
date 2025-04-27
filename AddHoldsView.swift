@@ -42,124 +42,122 @@ struct AddHoldsView: View {
     let tapDisplayDuration: Double = 2.0
 
     var body: some View {
-        GeometryReader { containerGeo in
-            ZStack(alignment: .topLeading) {
-                if let uiImage = UIImage(data: wall.imageData) {
-                    GeometryReader { imageGeo in
-                        let containerSize = containerGeo.size
-                        let baseFrame = imageGeo.frame(in: .global)
+        VStack(spacing: 0) {
+            // Instruction message above the image
+            Text("Click on \"Add hold\" to add a hold to your wall.")
+                .font(.headline)
+                .foregroundColor(.white)
+                .padding()
+                .frame(maxWidth: .infinity, alignment: .center)
+                .background(Color.black)
+            
+            GeometryReader { containerGeo in
+                ZStack(alignment: .topLeading) {
+                    if let uiImage = UIImage(data: wall.imageData) {
+                        GeometryReader { imageGeo in
+                            let containerSize = containerGeo.size
+                            let baseFrame = imageGeo.frame(in: .global)
 
-                        Image(uiImage: uiImage)
-                            .resizable()
-                            .scaledToFit()
-                            .scaleEffect(scale)
-                            .offset(imageOffset)
-                            .frame(
-                                width: containerSize.width,
-                                height: containerSize.height
-                            )
-                            .background(
-                                Color.clear
-                                    .onAppear {
-                                        imageFrame = computeScaledFrame(baseFrame: baseFrame, scale: scale)
-                                    }
-                                    .onChange(of: scale) { _, newScale in
-                                        imageFrame = computeScaledFrame(baseFrame: baseFrame, scale: newScale)
-                                        imageOffset = clampedOffset(
-                                            offset: imageOffset,
-                                            scale: newScale,
-                                            containerSize: containerSize,
-                                            imageSize: baseFrame.size
-                                        )
-                                        lastOffset = imageOffset
-                                    }
-                            )
-                            .overlay(
-                                Color.clear
-                                    .contentShape(Rectangle())
-                                    .onTapGesture { location in
-                                        // Convert container coordinates to image coordinates
-                                        let relativeTapPoint = convertToImageCoordinates(
-                                            containerPoint: location,
-                                            containerSize: containerSize,
-                                            imageSize: uiImage.size,
-                                            scale: scale,
-                                            offset: imageOffset
-                                        )
-                                        
-                                        // Store and display the tap coordinates
-                                        tapCoordinates = relativeTapPoint
-                                        showTapCoordinates = true
-                                        
-                                        // Hide coordinates after delay
-                                        DispatchQueue.main.asyncAfter(deadline: .now() + tapDisplayDuration) {
-                                            showTapCoordinates = false
+                            Image(uiImage: uiImage)
+                                .resizable()
+                                .scaledToFit()
+                                .scaleEffect(scale)
+                                .offset(imageOffset)
+                                .frame(
+                                    width: containerSize.width,
+                                    height: containerSize.height
+                                )
+                                .background(
+                                    Color.clear
+                                        .onAppear {
+                                            imageFrame = computeScaledFrame(baseFrame: baseFrame, scale: scale)
                                         }
-                                    }
-                            )
-                            .gesture(
-                                SimultaneousGesture(
-                                    MagnificationGesture()
-                                        .onChanged { value in
-                                            scale = min(max(1.0, lastScale * value), 10.0)
-                                        }
-                                        .onEnded { _ in
-                                            lastScale = scale
-                                        },
-                                    DragGesture()
-                                        .onChanged { value in
-                                            let newOffset = CGSize(
-                                                width: lastOffset.width + value.translation.width,
-                                                height: lastOffset.height + value.translation.height
-                                            )
+                                        .onChange(of: scale) { _, newScale in
+                                            imageFrame = computeScaledFrame(baseFrame: baseFrame, scale: newScale)
                                             imageOffset = clampedOffset(
-                                                offset: newOffset,
-                                                scale: scale,
+                                                offset: imageOffset,
+                                                scale: newScale,
                                                 containerSize: containerSize,
                                                 imageSize: baseFrame.size
                                             )
-                                        }
-                                        .onEnded { _ in
                                             lastOffset = imageOffset
                                         }
                                 )
-                            )
+                                .overlay(
+                                    Color.clear
+                                        .contentShape(Rectangle())
+                                        .onTapGesture { location in
+                                            // Convert container coordinates to image coordinates
+                                            let relativeTapPoint = convertToImageCoordinates(
+                                                containerPoint: location,
+                                                containerSize: containerSize,
+                                                imageSize: uiImage.size,
+                                                scale: scale,
+                                                offset: imageOffset
+                                            )
+                                            
+                                            // Store and display the tap coordinates
+                                            tapCoordinates = relativeTapPoint
+                                            showTapCoordinates = true
+                                            
+                                            // Hide coordinates after delay
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + tapDisplayDuration) {
+                                                showTapCoordinates = false
+                                            }
+                                        }
+                                )
+                                .gesture(
+                                    SimultaneousGesture(
+                                        MagnificationGesture()
+                                            .onChanged { value in
+                                                scale = min(max(1.0, lastScale * value), 10.0)
+                                            }
+                                            .onEnded { _ in
+                                                lastScale = scale
+                                            },
+                                        DragGesture()
+                                            .onChanged { value in
+                                                let newOffset = CGSize(
+                                                    width: lastOffset.width + value.translation.width,
+                                                    height: lastOffset.height + value.translation.height
+                                                )
+                                                imageOffset = clampedOffset(
+                                                    offset: newOffset,
+                                                    scale: scale,
+                                                    containerSize: containerSize,
+                                                    imageSize: baseFrame.size
+                                                )
+                                            }
+                                            .onEnded { _ in
+                                                lastOffset = imageOffset
+                                            }
+                                    )
+                                )
+                        }
+                    } else {
+                        fatalError("wall must have an image")
                     }
-                } else {
-                    fatalError("wall must have an image")
-                }
 
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Scale: \(scale, specifier: "%.2f")")
-                    Text("Image Size: \(Int(imageFrame.width)) x \(Int(imageFrame.height))")
-                    Text("Top-Left: (x: \(Int(imageFrame.minX)), y: \(Int(imageFrame.minY)))")
-                    Text("Bottom-Right: (x: \(Int(imageFrame.maxX)), y: \(Int(imageFrame.maxY)))")
-                }
-                .font(.caption)
-                .foregroundColor(.white)
-                .padding()
-                .background(Color.black.opacity(0.6))
-                .cornerRadius(10)
-                .padding()
-                
-                // Display tap coordinates when available
-                if showTapCoordinates, let coordinates = tapCoordinates {
-                    VStack {
-                        Spacer()
-                        Text("Tap: (x: \(Int(coordinates.x)), y: \(Int(coordinates.y)))")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .padding()
-                            .background(Color.blue.opacity(0.8))
-                            .cornerRadius(10)
-                            .padding(.bottom, 20)
+                    // Display tap coordinates when available
+                    if showTapCoordinates, let coordinates = tapCoordinates {
+                        VStack {
+                            Spacer()
+                            Text("Tap: (x: \(Int(coordinates.x)), y: \(Int(coordinates.y)))")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .padding()
+                                .background(Color.blue.opacity(0.8))
+                                .cornerRadius(10)
+                                .padding(.bottom, 20)
+                        }
+                        .frame(width: containerGeo.size.width)
+                        .animation(.easeInOut, value: showTapCoordinates)
                     }
-                    .frame(width: containerGeo.size.width)
-                    .animation(.easeInOut, value: showTapCoordinates)
                 }
+                .background(Color.black.ignoresSafeArea())
             }
-            .background(Color.black.ignoresSafeArea())
         }
+        .background(Color.black)
     }
 
     func computeScaledFrame(baseFrame: CGRect, scale: CGFloat) -> CGRect {
