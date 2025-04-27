@@ -41,173 +41,176 @@ struct AddHoldsView: View {
     let tapDisplayDuration: Double = 2.0
 
     var body: some View {
-        ZStack {
-            // Main content
-            VStack(spacing: 0) {
-                GeometryReader { containerGeo in
-                    ZStack(alignment: .topLeading) {
-                    if let uiImage = UIImage(data: wall.imageData) {
-                        GeometryReader { imageGeo in
-                            let containerSize = containerGeo.size
-                            let baseFrame = imageGeo.frame(in: .global)
+        GeometryReader { geometryProxy in
+            ZStack {
+                // Main content
+                VStack(spacing: 0) {
+                    GeometryReader { containerGeo in
+                        ZStack(alignment: .topLeading) {
+                            if let uiImage = UIImage(data: wall.imageData) {
+                                GeometryReader { imageGeo in
+                                    let containerSize = containerGeo.size
+                                    let baseFrame = imageGeo.frame(in: .global)
 
-                            Image(uiImage: uiImage)
-                                .resizable()
-                                .scaledToFit()
-                                .scaleEffect(scale)
-                                .offset(imageOffset)
-                                .frame(
-                                    width: containerSize.width,
-                                    height: containerSize.height
-                                )
-                                .background(
-                                    Color.clear
-                                        .onAppear {
-                                            imageFrame = computeScaledFrame(baseFrame: baseFrame, scale: scale)
-                                        }
-                                        .onChange(of: scale) { _, newScale in
-                                            imageFrame = computeScaledFrame(baseFrame: baseFrame, scale: newScale)
-                                            imageOffset = clampedOffset(
-                                                offset: imageOffset,
-                                                scale: newScale,
-                                                containerSize: containerSize,
-                                                imageSize: baseFrame.size
-                                            )
-                                            lastOffset = imageOffset
-                                        }
-                                )
-                                .overlay(
-                                    Color.clear
-                                        .contentShape(Rectangle())
-                                        .onTapGesture { location in
-                                            // Dismiss modal on tap
-                                            showModal = false
-                                            
-                                            // Convert container coordinates to image coordinates
-                                            let relativeTapPoint = convertToImageCoordinates(
-                                                containerPoint: location,
-                                                containerSize: containerSize,
-                                                imageSize: uiImage.size,
-                                                scale: scale,
-                                                offset: imageOffset
-                                            )
-                                            
-                                            // Store and display the tap coordinates
-                                            tapCoordinates = relativeTapPoint
-                                            showTapCoordinates = true
-                                            
-                                            // Hide coordinates after delay
-                                            DispatchQueue.main.asyncAfter(deadline: .now() + tapDisplayDuration) {
-                                                showTapCoordinates = false
-                                            }
-                                        }
-                                )
-                                .gesture(
-                                    SimultaneousGesture(
-                                        MagnificationGesture()
-                                            .onChanged { value in
-                                                // Dismiss modal on gesture
-                                                showModal = false
-                                                scale = min(max(1.0, lastScale * value), 10.0)
-                                            }
-                                            .onEnded { _ in
-                                                lastScale = scale
-                                            },
-                                        DragGesture()
-                                            .onChanged { value in
-                                                // Dismiss modal on gesture
-                                                showModal = false
-                                                let newOffset = CGSize(
-                                                    width: lastOffset.width + value.translation.width,
-                                                    height: lastOffset.height + value.translation.height
-                                                )
-                                                imageOffset = clampedOffset(
-                                                    offset: newOffset,
-                                                    scale: scale,
-                                                    containerSize: containerSize,
-                                                    imageSize: baseFrame.size
-                                                )
-                                            }
-                                            .onEnded { _ in
-                                                lastOffset = imageOffset
-                                            }
-                                    )
-                                )
-                        }
-                    } else {
-                        fatalError("wall must have an image")
-                    }
+                                    Image(uiImage: uiImage)
+                                        .resizable()
+                                        .scaledToFit()
+                                        .scaleEffect(scale)
+                                        .offset(imageOffset)
+                                        .frame(
+                                            width: containerSize.width,
+                                            height: containerSize.height
+                                        )
+                                        .background(
+                                            Color.clear
+                                                .onAppear {
+                                                    imageFrame = computeScaledFrame(baseFrame: baseFrame, scale: scale)
+                                                }
+                                                .onChange(of: scale) { _, newScale in
+                                                    imageFrame = computeScaledFrame(baseFrame: baseFrame, scale: newScale)
+                                                    imageOffset = clampedOffset(
+                                                        offset: imageOffset,
+                                                        scale: newScale,
+                                                        containerSize: containerSize,
+                                                        imageSize: baseFrame.size
+                                                    )
+                                                    lastOffset = imageOffset
+                                                }
+                                        )
+                                        .overlay(
+                                            Color.clear
+                                                .contentShape(Rectangle())
+                                                .onTapGesture { location in
+                                                    // Dismiss modal on tap
+                                                    showModal = false
+                                                    
+                                                    // Convert container coordinates to image coordinates
+                                                    let relativeTapPoint = convertToImageCoordinates(
+                                                        containerPoint: location,
+                                                        containerSize: containerSize,
+                                                        imageSize: uiImage.size,
+                                                        scale: scale,
+                                                        offset: imageOffset
+                                                    )
+                                                    
+                                                    // Store and display the tap coordinates
+                                                    tapCoordinates = relativeTapPoint
+                                                    showTapCoordinates = true
+                                                    
+                                                    // Hide coordinates after delay
+                                                    DispatchQueue.main.asyncAfter(deadline: .now() + tapDisplayDuration) {
+                                                        showTapCoordinates = false
+                                                    }
+                                                }
+                                        )
+                                }
+                            } else {
+                                fatalError("wall must have an image")
+                            }
 
-                    // Display tap coordinates when available
-                    if showTapCoordinates, let coordinates = tapCoordinates {
-                        VStack {
-                            Spacer()
-                            Text("Tap: (x: \(Int(coordinates.x)), y: \(Int(coordinates.y)))")
-                                .font(.headline)
-                                .foregroundColor(.white)
-                                .padding()
-                                .background(Color.blue.opacity(0.8))
-                                .cornerRadius(10)
-                                .padding(.bottom, 20)
+                            // Display tap coordinates when available
+                            if showTapCoordinates, let coordinates = tapCoordinates {
+                                VStack {
+                                    Spacer()
+                                    Text("Tap: (x: \(Int(coordinates.x)), y: \(Int(coordinates.y)))")
+                                        .font(.headline)
+                                        .foregroundColor(.white)
+                                        .padding()
+                                        .background(Color.blue.opacity(0.8))
+                                        .cornerRadius(10)
+                                        .padding(.bottom, 20)
+                                }
+                                .frame(width: containerGeo.size.width)
+                                .animation(.easeInOut, value: showTapCoordinates)
+                            }
                         }
-                        .frame(width: containerGeo.size.width)
-                        .animation(.easeInOut, value: showTapCoordinates)
+                        .background(Color.black.ignoresSafeArea())
                     }
                 }
-                .background(Color.black.ignoresSafeArea())
-            }
-        }
-        .background(Color.black)
-            
-            // Undo and redo buttons overlay
-            VStack {
-                HStack {
-                    // Undo and redo buttons
+                .background(Color.black)
+                
+                // Undo and redo buttons overlay
+                VStack {
                     HStack {
-                        Button(action: {
-                            undoAction()
-                            showModal = false
-                        }) {
-                            Image(systemName: "arrow.uturn.backward")
-                                .foregroundColor(.white)
-                                .padding(8)
-                                .background(Circle().fill(Color.gray.opacity(0.5)))
+                        // Undo and redo buttons
+                        HStack {
+                            Button(action: {
+                                undoAction()
+                                showModal = false
+                            }) {
+                                Image(systemName: "arrow.uturn.backward")
+                                    .foregroundColor(.white)
+                                    .padding(8)
+                                    .background(Circle().fill(Color.gray.opacity(0.5)))
+                            }
+                            
+                            Button(action: {
+                                redoAction()
+                                showModal = false
+                            }) {
+                                Image(systemName: "arrow.uturn.forward")
+                                    .foregroundColor(.white)
+                                    .padding(8)
+                                    .background(Circle().fill(Color.gray.opacity(0.5)))
+                            }
                         }
+                        .padding()
                         
-                        Button(action: {
-                            redoAction()
-                            showModal = false
-                        }) {
-                            Image(systemName: "arrow.uturn.forward")
-                                .foregroundColor(.white)
-                                .padding(8)
-                                .background(Circle().fill(Color.gray.opacity(0.5)))
-                        }
+                        Spacer()
                     }
-                    .padding()
                     
                     Spacer()
                 }
                 
-                Spacer()
+                // Modal overlay
+                if showModal {
+                    Color.gray.opacity(0.5)
+                        .edgesIgnoringSafeArea(.all)
+                        .overlay(
+                            Text("Zoom and tap to create hold")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .padding()
+                                .background(Color.gray)
+                                .cornerRadius(10)
+                        )
+                        .onTapGesture {
+                            showModal = false
+                        }
+                }
             }
-            
-            // Modal overlay
-            if showModal {
-                Color.black.opacity(0.5)
-                    .edgesIgnoringSafeArea(.all)
-                    .overlay(
-                        Text("Zoom and tap to create hold")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .padding()
-                            .background(Color.gray)
-                            .cornerRadius(10)
-                    )
-                    .onTapGesture {
-                        showModal = false
+            // Add the gestures directly to the ZStack to ensure they work with the modal
+            .gesture(
+                // Magnification gesture to handle zooming
+                MagnificationGesture()
+                    .onChanged { value in
+                        showModal = false  // Dismiss modal on gesture change
+                        scale = min(max(1.0, lastScale * value), 10.0)
                     }
-            }
+                    .onEnded { _ in
+                        lastScale = scale
+                    }
+            )
+            .gesture(
+                // Drag gesture for panning
+                DragGesture()
+                    .onChanged { value in
+                        showModal = false  // Dismiss modal on gesture change
+                        let newOffset = CGSize(
+                            width: lastOffset.width + value.translation.width,
+                            height: lastOffset.height + value.translation.height
+                        )
+                        imageOffset = clampedOffset(
+                            offset: newOffset,
+                            scale: scale,
+                            containerSize: geometryProxy.size,
+                            imageSize: CGSize(width: wall.width, height: wall.height)
+                        )
+                    }
+                    .onEnded { _ in
+                        lastOffset = imageOffset
+                    }
+            )
         }
         .onAppear {
             // Show modal when view appears
