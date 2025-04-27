@@ -44,12 +44,32 @@ struct AddHoldsView: View {
     var body: some View {
         VStack(spacing: 0) {
             // Instruction message above the image
-            Text("Click on \"Add hold\" to add a hold to your wall.")
-                .font(.headline)
-                .foregroundColor(.white)
-                .padding()
-                .frame(maxWidth: .infinity, alignment: .center)
-                .background(Color.black)
+            HStack {
+                // Undo and redo buttons
+                HStack {
+                    Button(action: {
+                        undoAction()
+                    }) {
+                        Image(systemName: "arrow.uturn.backward")
+                            .foregroundColor(.white)
+                            .padding(8)
+                            .background(Circle().fill(Color.gray.opacity(0)))
+                    }
+                    
+                    Button(action: {
+                        redoAction()
+                    }) {
+                        Image(systemName: "arrow.uturn.forward")
+                            .foregroundColor(.white)
+                            .padding(8)
+                            .background(Circle().fill(Color.gray.opacity(0)))
+                    }
+                }
+                Spacer()
+            }
+            .padding()
+            .frame(maxWidth: .infinity, alignment: .center)
+            .background(Color.black)
             
             GeometryReader { containerGeo in
                 ZStack(alignment: .topLeading) {
@@ -159,6 +179,18 @@ struct AddHoldsView: View {
         }
         .background(Color.black)
     }
+    
+    // Stub function for undo action
+    func undoAction() {
+        print("Undo action triggered")
+        // TODO: Implement undo functionality
+    }
+    
+    // Stub function for redo action
+    func redoAction() {
+        print("Redo action triggered")
+        // TODO: Implement redo functionality
+    }
 
     func computeScaledFrame(baseFrame: CGRect, scale: CGFloat) -> CGRect {
         let center = CGPoint(x: baseFrame.midX, y: baseFrame.midY)
@@ -258,6 +290,7 @@ struct AddHoldsView: View {
         return CGPoint(x: boundedX, y: boundedY)
     }
 }
+
 // TODO: Have a second test image which is vertically longer than it is horizontally.
 #Preview {
     let image = UIImage(named: "test_wall")!
