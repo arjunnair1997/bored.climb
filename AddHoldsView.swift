@@ -25,6 +25,7 @@ class Wall {
     }
 }
 
+// TODO: Prevent landscape mode in all views.
 struct AddHoldsView: View {
     var wall: Wall
 
@@ -129,7 +130,7 @@ struct AddHoldsView: View {
                 }
                 .background(Color.black)
                 
-                // Undo and redo buttons overlay
+                // Undo, redo, and Done buttons overlay
                 VStack {
                     HStack {
                         // Undo and redo buttons
@@ -141,7 +142,7 @@ struct AddHoldsView: View {
                                 Image(systemName: "arrow.uturn.backward")
                                     .foregroundColor(.white)
                                     .padding(8)
-                                    .background(Circle().fill(Color.gray.opacity(0.5)))
+                                    .background(Circle().fill(Color.clear))
                             }
                             
                             Button(action: {
@@ -151,12 +152,28 @@ struct AddHoldsView: View {
                                 Image(systemName: "arrow.uturn.forward")
                                     .foregroundColor(.white)
                                     .padding(8)
-                                    .background(Circle().fill(Color.gray.opacity(0.5)))
+                                    .background(Circle().fill(Color.clear))
                             }
                         }
                         .padding()
                         
                         Spacer()
+                        
+                        // Done button
+                        Button(action: {
+                            // This will do nothing for now
+                            // Add view dismissal code here when needed
+                            print("Done button tapped")
+                        }) {
+                            Text("Done")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 8)
+                                .background(Color.clear)
+                                .cornerRadius(8)
+                        }
+                        .padding()
                     }
                     
                     Spacer()
