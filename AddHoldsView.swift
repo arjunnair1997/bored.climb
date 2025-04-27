@@ -108,14 +108,14 @@ struct AddHoldsView: View {
                     Text("Top-Left: (x: \(Int(imageFrame.minX)), y: \(Int(imageFrame.minY)))")
                     Text("Bottom-Right: (x: \(Int(imageFrame.maxX)), y: \(Int(imageFrame.maxY)))")
                 }
-                .font(.caption)
-                .foregroundColor(.white)
-                .padding()
-                .background(Color.black.opacity(0.6))
-                .cornerRadius(10)
-                .padding()
+                    .font(.caption)
+                    .foregroundColor(.white)
+                    .padding()
+                    .background(Color.black.opacity(0.6))
+                    .cornerRadius(10)
+                    .padding()
             }
-            .background(Color.black.ignoresSafeArea())
+                .background(Color.black.ignoresSafeArea())
         }
     }
 
