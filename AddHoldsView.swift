@@ -35,7 +35,6 @@ struct AddHoldsView: View {
     @State private var lastOffset: CGSize = .zero
     @State private var tapCoordinates: CGPoint? = nil
     @State private var showTapCoordinates: Bool = false
-    @State private var showModal: Bool = true
     
     // Store the tapped points
     @State private var tappedPoints: [CGPoint] = []
@@ -93,9 +92,6 @@ struct AddHoldsView: View {
                                             Color.clear
                                                 .contentShape(Rectangle())
                                                 .onTapGesture { location in
-                                                    // Dismiss modal on tap
-                                                    showModal = false
-                                                    
                                                     // Convert container coordinates to image coordinates
                                                     let relativeTapPoint = convertToImageCoordinates(
                                                         containerPoint: location,
@@ -151,7 +147,6 @@ struct AddHoldsView: View {
                         HStack {
                             Button(action: {
                                 undoAction()
-                                showModal = false
                             }) {
                                 Image(systemName: "arrow.uturn.backward")
                                     .foregroundColor(.white)
@@ -159,17 +154,24 @@ struct AddHoldsView: View {
                                     .background(Circle().fill(Color.clear))
                             }
                             
-                            Button(action: {
-                                redoAction()
-                                showModal = false
-                            }) {
-                                Image(systemName: "arrow.uturn.forward")
-                                    .foregroundColor(.white)
-                                    .padding(8)
-                                    .background(Circle().fill(Color.clear))
-                            }
+//                            Button(action: {
+//                                redoAction()
+//                            }) {
+//                                Image(systemName: "arrow.uturn.forward")
+//                                    .foregroundColor(.white)
+//                                    .padding(8)
+//                                    .background(Circle().fill(Color.clear))
+//                            }
                         }
                         .padding()
+                        
+                        Spacer()
+                        
+                        // Instruction text
+                        Text("Zoom and tap to create hold")
+                            .font(.custom("tiny", size: 14))
+                            .foregroundColor(.white)
+                            .padding(.vertical, 8)
                         
                         Spacer()
                         
@@ -192,23 +194,6 @@ struct AddHoldsView: View {
                     
                     Spacer()
                 }
-                
-                // Modal overlay
-                if showModal {
-                    Color.gray.opacity(0.5)
-                        .edgesIgnoringSafeArea(.all)
-                        .overlay(
-                            Text("Zoom and tap to create hold")
-                                .font(.headline)
-                                .foregroundColor(.white)
-                                .padding()
-                                .background(Color.gray)
-                                .cornerRadius(10)
-                        )
-                        .onTapGesture {
-                            showModal = false
-                        }
-                }
             }
             // Add the gestures directly to the ZStack to ensure they work with the modal
             .gesture(
@@ -216,7 +201,6 @@ struct AddHoldsView: View {
                     // Magnification gesture to handle zooming
                     MagnificationGesture()
                         .onChanged { value in
-                            showModal = false  // Dismiss modal on gesture change
                             scale = min(max(1.0, lastScale * value), 10.0)
                         }
                         .onEnded { _ in
@@ -225,7 +209,6 @@ struct AddHoldsView: View {
                     // Drag gesture for panning
                     DragGesture()
                         .onChanged { value in
-                            showModal = false  // Dismiss modal on gesture change
                             let newOffset = CGSize(
                                 width: lastOffset.width + value.translation.width,
                                 height: lastOffset.height + value.translation.height
@@ -242,10 +225,6 @@ struct AddHoldsView: View {
                         }
                 )
             )
-        }
-        .onAppear {
-            // Show modal when view appears
-            showModal = true
         }
     }
     
