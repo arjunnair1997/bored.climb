@@ -35,9 +35,13 @@ struct AddHoldsView: View {
     @State private var imageFrame: CGRect = .zero
     @State private var imageOffset: CGSize = .zero
     @State private var lastOffset: CGSize = .zero
+    @State private var tapCoordinates: CGPoint? = nil
+    @State private var showTapCoordinates: Bool = false
+    
+    // Timer for showing tap coordinates temporarily
+    let tapDisplayDuration: Double = 2.0
 
     var body: some View {
-        // TODO: Why are there two geometry readers here?
         GeometryReader { containerGeo in
             ZStack(alignment: .topLeading) {
                 if let uiImage = UIImage(data: wall.imageData) {
@@ -68,6 +72,29 @@ struct AddHoldsView: View {
                                             imageSize: baseFrame.size
                                         )
                                         lastOffset = imageOffset
+                                    }
+                            )
+                            .overlay(
+                                Color.clear
+                                    .contentShape(Rectangle())
+                                    .onTapGesture { location in
+                                        // Convert container coordinates to image coordinates
+                                        let relativeTapPoint = convertToImageCoordinates(
+                                            containerPoint: location,
+                                            containerSize: containerSize,
+                                            imageSize: uiImage.size,
+                                            scale: scale,
+                                            offset: imageOffset
+                                        )
+                                        
+                                        // Store and display the tap coordinates
+                                        tapCoordinates = relativeTapPoint
+                                        showTapCoordinates = true
+                                        
+                                        // Hide coordinates after delay
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + tapDisplayDuration) {
+                                            showTapCoordinates = false
+                                        }
                                     }
                             )
                             .gesture(
@@ -108,14 +135,30 @@ struct AddHoldsView: View {
                     Text("Top-Left: (x: \(Int(imageFrame.minX)), y: \(Int(imageFrame.minY)))")
                     Text("Bottom-Right: (x: \(Int(imageFrame.maxX)), y: \(Int(imageFrame.maxY)))")
                 }
-                    .font(.caption)
-                    .foregroundColor(.white)
-                    .padding()
-                    .background(Color.black.opacity(0.6))
-                    .cornerRadius(10)
-                    .padding()
+                .font(.caption)
+                .foregroundColor(.white)
+                .padding()
+                .background(Color.black.opacity(0.6))
+                .cornerRadius(10)
+                .padding()
+                
+                // Display tap coordinates when available
+                if showTapCoordinates, let coordinates = tapCoordinates {
+                    VStack {
+                        Spacer()
+                        Text("Tap: (x: \(Int(coordinates.x)), y: \(Int(coordinates.y)))")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .padding()
+                            .background(Color.blue.opacity(0.8))
+                            .cornerRadius(10)
+                            .padding(.bottom, 20)
+                    }
+                    .frame(width: containerGeo.size.width)
+                    .animation(.easeInOut, value: showTapCoordinates)
+                }
             }
-                .background(Color.black.ignoresSafeArea())
+            .background(Color.black.ignoresSafeArea())
         }
     }
 
@@ -172,8 +215,51 @@ struct AddHoldsView: View {
 
         return CGSize(width: clampX, height: clampY)
     }
+    
+    func convertToImageCoordinates(
+        containerPoint: CGPoint,
+        containerSize: CGSize,
+        imageSize: CGSize,
+        scale: CGFloat,
+        offset: CGSize
+    ) -> CGPoint {
+        // 1. Calculate the fitted image size within the container (before scaling)
+        let imageAspect = imageSize.width / imageSize.height
+        let containerAspect = containerSize.width / containerSize.height
+        
+        let fittedSize: CGSize
+        if imageAspect > containerAspect {
+            // Fit to width
+            let width = containerSize.width
+            let height = width / imageAspect
+            fittedSize = CGSize(width: width, height: height)
+        } else {
+            // Fit to height
+            let height = containerSize.height
+            let width = height * imageAspect
+            fittedSize = CGSize(width: width, height: height)
+        }
+        
+        // 2. Calculate the position of the image taking into account scaling and offset
+        let scaledSize = CGSize(width: fittedSize.width * scale, height: fittedSize.height * scale)
+        let imageOriginX = (containerSize.width - scaledSize.width) / 2 + offset.width
+        let imageOriginY = (containerSize.height - scaledSize.height) / 2 + offset.height
+        
+        // 3. Calculate the relative position within the scaled image
+        let relativeX = (containerPoint.x - imageOriginX) / scaledSize.width
+        let relativeY = (containerPoint.y - imageOriginY) / scaledSize.height
+        
+        // 4. Convert relative position to original image coordinates
+        let imageX = relativeX * imageSize.width
+        let imageY = relativeY * imageSize.height
+        
+        // Make sure the coordinates are within the image bounds
+        let boundedX = max(0, min(imageSize.width, imageX))
+        let boundedY = max(0, min(imageSize.height, imageY))
+        
+        return CGPoint(x: boundedX, y: boundedY)
+    }
 }
-
 // TODO: Have a second test image which is vertically longer than it is horizontally.
 #Preview {
     let image = UIImage(named: "test_wall")!
