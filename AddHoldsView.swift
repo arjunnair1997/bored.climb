@@ -132,11 +132,12 @@ struct AddHoldsView: View {
                                         )
                                         .overlay(
                                             PolygonView(
-                                                points: tappedPoints,
+                                                polygons: [tappedPoints],
                                                 containerSize: containerSize,
                                                 imageSize: uiImage.size,
                                                 scale: scale,
-                                                offset: imageOffset
+                                                offset: imageOffset,
+                                                drawCircle: true
                                             )
                                         )
                                         .background(
@@ -351,65 +352,70 @@ struct AddHoldsView: View {
 
 // Custom view to draw the polygon
 struct PolygonView: View {
-    let points: [CGPoint]
+    let polygons: [[CGPoint]]  // Array of polygon point arrays
     let containerSize: CGSize
     let imageSize: CGSize
     let scale: CGFloat
     let offset: CGSize
-    
+    let drawCircle: Bool
+
     var body: some View {
         Canvas { context, size in
-            // Draw points and lines only if there are points
-            if !points.isEmpty {
-                // Convert image coordinates to container coordinates for display
-                let containerPoints = points.map { point in
-                    convertToContainerCoordinates(
-                        imagePoint: point,
-                        containerSize: containerSize,
-                        imageSize: imageSize,
-                        scale: scale,
-                        offset: offset
-                    )
-                }
-                
-                // Draw points
-                for point in containerPoints {
-                    // Draw a small circle at each point
-                    let pointRect = CGRect(
-                        x: point.x - 5,
-                        y: point.y - 5,
-                        width: 10,
-                        height: 10
-                    )
-                    context.fill(Path(ellipseIn: pointRect), with: .color(.white))
-                }
-                
-                // Draw lines between points if there are at least 2 points
-                if containerPoints.count >= 2 {
-                    // Create a path for the lines
-                    var path = Path()
-                    
-                    // Start at the first point
-                    path.move(to: containerPoints[0])
-                    
-                    // Connect each subsequent point
-                    for i in 1..<containerPoints.count {
-                        path.addLine(to: containerPoints[i])
+            // Process each polygon in the array
+            for polygon in polygons {
+                // Draw points and lines only if there are points in this polygon
+                if !polygon.isEmpty {
+                    // Convert image coordinates to container coordinates for display
+                    let containerPoints = polygon.map { point in
+                        convertToContainerCoordinates(
+                            imagePoint: point,
+                            containerSize: containerSize,
+                            imageSize: imageSize,
+                            scale: scale,
+                            offset: offset
+                        )
                     }
                     
-                    // Close the loop if there are 3 or more points
-                    if containerPoints.count >= 3 {
-                        path.addLine(to: containerPoints[0])
+                    // Draw points if drawCircle is true
+                    if drawCircle {
+                        for point in containerPoints {
+                            // Draw a small circle at each point
+                            let pointRect = CGRect(
+                                x: point.x - 5,
+                                y: point.y - 5,
+                                width: 10,
+                                height: 10
+                            )
+                            context.fill(Path(ellipseIn: pointRect), with: .color(.white))
+                        }
                     }
                     
-                    // Draw the path with a white stroke
-                    context.stroke(path, with: .color(.white), lineWidth: 2)
+                    // Draw lines between points if there are at least 2 points
+                    if containerPoints.count >= 2 {
+                        // Create a path for the lines
+                        var path = Path()
+                        
+                        // Start at the first point
+                        path.move(to: containerPoints[0])
+                        
+                        // Connect each subsequent point
+                        for i in 1..<containerPoints.count {
+                            path.addLine(to: containerPoints[i])
+                        }
+                        
+                        // Close the loop if there are 3 or more points
+                        if containerPoints.count >= 3 {
+                            path.addLine(to: containerPoints[0])
+                        }
+                        
+                        // Draw the path with a white stroke
+                        context.stroke(path, with: .color(.white), lineWidth: 2)
+                    }
                 }
             }
         }
     }
 }
-
 // TODO: Have a second test image which is vertically longer than it is horizontally.
 //#Preview {
 //    let image = UIImage(named: "test_wall")!
