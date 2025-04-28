@@ -2,6 +2,9 @@ import SwiftUI
 import SwiftData
 import Foundation
 
+// TODO: Consider a way to fit in a cancel button. Cancel is highly useful.
+// Then if someone clicks on Done with less than 3 holds, show a pop-up which
+// is something like "A hold must be constructed of at least 3 points.
 struct AddHoldsView: View {
     @Environment(\.dismiss) private var dismiss
 
@@ -9,7 +12,6 @@ struct AddHoldsView: View {
 
     @State private var scale: CGFloat = 1.0
     @State private var lastScale: CGFloat = 1.0
-    @State private var imageFrame: CGRect = .zero
     @State private var imageOffset: CGSize = .zero
     @State private var lastOffset: CGSize = .zero
     @State private var tapCoordinates: CGPoint? = nil
@@ -53,11 +55,8 @@ struct AddHoldsView: View {
                                         )
                                         .background(
                                             Color.clear
-                                                .onAppear {
-                                                    imageFrame = computeScaledFrame(baseFrame: baseFrame, scale: scale)
-                                                }
+                                                .onAppear {}
                                                 .onChange(of: scale) { _, newScale in
-                                                    imageFrame = computeScaledFrame(baseFrame: baseFrame, scale: newScale)
                                                     imageOffset = clampedOffset(
                                                         offset: imageOffset,
                                                         scale: newScale,
@@ -133,21 +132,13 @@ struct AddHoldsView: View {
                                     .padding(8)
                                     .background(Circle().fill(Color.clear))
                             }
-                            
-//                            Button(action: {
-//                                redoAction()
-//                            }) {
-//                                Image(systemName: "arrow.uturn.forward")
-//                                    .foregroundColor(.white)
-//                                    .padding(8)
-//                                    .background(Circle().fill(Color.clear))
-//                            }
                         }
                         .padding()
                         
                         Spacer()
                         
                         // Instruction text
+                        // TODO: Make sure this is centrally aligned.
                         Text("Zoom and tap to create hold")
                             .font(.custom("tiny", size: 14))
                             .foregroundColor(.white)
