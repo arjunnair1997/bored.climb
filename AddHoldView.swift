@@ -96,6 +96,7 @@ struct AddHoldView: View {
                 Button("Done") {
                     if currentPoints.count > 2 {
                         wall.holds.append(Hold(points: currentPoints))
+                        
                     }
                     dismiss()
                 }
