@@ -58,9 +58,16 @@ struct EditWallView: View {
                     }) {
                         HStack {
                             Image(systemName: "chevron.left")
-//                            Text("Back")
+                                .foregroundColor(.white)
                         }
                     }
+                }
+                
+                // Title in the center
+                ToolbarItem(placement: .principal) {
+                    Text("Manage Your Wall")
+                        .font(.headline)
+                        .foregroundColor(.white)
                 }
                 
                 // Add Hold button at the top right
@@ -69,8 +76,9 @@ struct EditWallView: View {
                         showAddHoldsView = true
                     }) {
                         HStack {
-//                            Image(systemName: "plus")
-                            Text("Add Hold")
+                            Image(systemName: "plus")
+//                            Text("Add Hold")
+//                                .foregroundColor(.white)
                         }
                     }
                 }
@@ -78,6 +86,10 @@ struct EditWallView: View {
             .navigationDestination(isPresented: $showAddHoldsView) {
                 AddHoldsView(wall: wall)
             }
+            .toolbarBackground(.black, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbarColorScheme(.dark, for: .navigationBar)
         }
         .navigationBarBackButtonHidden(true)
     }

@@ -26,6 +26,8 @@ class Wall {
 }
 
 struct AddHoldsView: View {
+    @Environment(\.dismiss) private var dismiss
+
     var wall: Wall
 
     @State private var scale: CGFloat = 1.0
@@ -181,6 +183,7 @@ struct AddHoldsView: View {
                             // This will do nothing for now
                             // Add view dismissal code here when needed
                             print("Done button tapped")
+                            dismiss()
                         }) {
                             Text("Done")
                                 .font(.headline)
