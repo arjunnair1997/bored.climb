@@ -1,6 +1,28 @@
 import SwiftUI
 import SwiftData
 import Foundation
+import CoreGraphics
+
+// Function to check if a point is inside a polygon using Core Graphics
+func isPointInPolygon(point: CGPoint, points: [CGPoint]) -> Bool {
+    guard points.count > 2 else { return false }
+    
+    let path = CGMutablePath()
+    
+    if let firstPoint = points.first {
+        path.move(to: firstPoint)
+        
+        // Add lines to all other points
+        for i in 1..<points.count {
+            path.addLine(to: points[i])
+        }
+        
+        // Close the path
+        path.closeSubpath()
+    }
+    // Use Core Graphics to check if the point is inside the path
+    return path.contains(point)
+}
 
 struct EditWallView: View {
     var wall: Wall
@@ -8,62 +30,69 @@ struct EditWallView: View {
     @Environment(\.dismiss) private var dismiss
     
     // Add state variables for better image handling
-    @State private var scale: CGFloat = 1.0
-    @State private var lastScale: CGFloat = 1.0
-    @State private var imageOffset: CGSize = .zero
-    @State private var lastOffset: CGSize = .zero
     
-    // TODO: Allow zoom in this view.
+    // Add state for tracking overlapping holds
+    @State private var overlappingHoldPolygons: [[CGPoint]] = []
+    
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
                 GeometryReader { geo in
                         ZStack(alignment: .topLeading) {
                             if let uiImage = UIImage(data: wall.imageData) {
-                                // Calculate proper sizing based on aspect ratio
-                                // let imageAspect = uiImage.size.width / uiImage.size.height
-                                // let containerAspect = geo.size.width / geo.size.height
                                 Image(uiImage: uiImage)
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: geo.size.width, height: geo.size.height)
                                     .scaleEffect(1)
                                     .overlay(
-                                        Color.clear
-                                            .contentShape(Rectangle())
-                                            .onTapGesture { containerLoc in
-                                                // The image fits somewhere within the container depending on its aspect ratio.
-                                                let relativeTapPoint = convertToImageCoordinates(
-                                                    containerPoint: containerLoc,
+                                        ZStack {
+                                            // Render the polygons that overlap with the tapped point
+                                            if !overlappingHoldPolygons.isEmpty {
+                                                PolygonView(
+                                                    polygons: overlappingHoldPolygons,
                                                     containerSize: geo.size,
                                                     imageSize: uiImage.size,
                                                     scale: 1,
-                                                    offset: .zero
+                                                    offset: .zero,
+                                                    drawCircle: false
                                                 )
-                                                
-                                                // Figure out how to draw the points here.
-                                                // Should be easy. Since I have the relative tap point,
-                                                // i can determine if a hold overlaps with the tap. And if
-                                                // i know that a hold overlaps with the tap, then i can make
-                                                // the hold visible.
-                                                //
-                                                // TODO: Need to maintain a per hold state of visible or invisible.
-                                                // Should not be stored in the hold, but stored in the view.
-                                                print("containerLoc", containerLoc)
-                                                print("relativeLoc", relativeTapPoint)
-                                                print(wall.holds.count)
                                             }
+
+                                            // Invisible overlay for tap detection
+                                            Color.clear
+                                                .contentShape(Rectangle())
+                                                .onTapGesture { containerLoc in
+                                                    // Convert tap location to image coordinates
+                                                    let relativeTapPoint = convertToImageCoordinates(
+                                                        containerPoint: containerLoc,
+                                                        containerSize: geo.size,
+                                                        imageSize: uiImage.size,
+                                                        scale: 1,
+                                                        offset: .zero
+                                                    )
+                                                    
+                                                    // Find all holds that contain the tapped point
+                                                    let tappedHolds = wall.holds.filter { hold in
+                                                        isPointInPolygon(point: relativeTapPoint, points: hold.points)
+                                                    }
+                                                    
+                                                    // Update the list of polygons to display
+                                                    overlappingHoldPolygons = tappedHolds.map { $0.points }
+                                                    
+                                                    print("Tapped coordinates: \(relativeTapPoint)")
+                                                    print("Overlapping holds found: \(tappedHolds.count)")
+                                                }
+                                        }
                                     )
                             } else {
-                                Text("Unable to load image")
-                                    .foregroundColor(.red)
+                                fatalError("unable to load image")
                             }
                         }
                         .background(Color.black.ignoresSafeArea())
                 }
                 .background(Color.black.opacity(0.1))
-//                .frame(height: UIScreen.main.bounds.height * 0.5) // Adjust as needed
-                
+
                 // List of holds
                 List {
                     ForEach(wall.holds.indices, id: \.self) { index in
