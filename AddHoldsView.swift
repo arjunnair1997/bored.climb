@@ -92,6 +92,7 @@ func convertToImageCoordinates(
 // is something like "A hold must be constructed of at least 3 points.
 struct AddHoldsView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var context
 
     var wall: Wall
 
@@ -236,6 +237,11 @@ struct AddHoldsView: View {
                             // This will do nothing for now
                             // Add view dismissal code here when needed
                             print("Done button tapped")
+                            if tappedPoints.count > 2 {
+                                wall.holds.append(Hold(points: tappedPoints))
+                                
+                            }
+                            saveContext(context: context)
                             dismiss()
                         }) {
                             Text("Done")

@@ -15,7 +15,7 @@ class Wall {
     var imageData: Data
     var width: CGFloat
     var height: CGFloat
-    var holds: [Hold] = []
+    @Relationship(deleteRule: .cascade) var holds: [Hold] = []
 
     init(imageData: Data, width: CGFloat, height: CGFloat) {
         self.imageData = imageData

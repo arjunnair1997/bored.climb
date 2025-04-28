@@ -51,6 +51,7 @@ struct EditWallView: View {
                                                 // Should not be stored in the hold, but stored in the view.
                                                 print("containerLoc", containerLoc)
                                                 print("relativeLoc", relativeTapPoint)
+                                                print(wall.holds.count)
                                             }
                                     )
                             } else {
@@ -73,6 +74,7 @@ struct EditWallView: View {
                                 .foregroundColor(.gray)
                         }
                     }
+                    // TODO: Show a modal confirming the deletion.
                     .onDelete(perform: deleteHold)
                 }
                 .listStyle(.plain)
@@ -128,10 +130,22 @@ struct EditWallView: View {
         }
     }
 }
+
 #Preview {
-//    let image = UIImage(named: "test_wall")!
-    let image = UIImage(named: "vert_test_wall")!
-    let data = image.pngData()!
-    let wall = getWallFromData(data: data)
-    return EditWallView(wall: wall)
+    // Step 1: Create an in-memory SwiftData container
+    do {
+        let container = try ModelContainer(
+            for: Wall.self,
+            configurations: ModelConfiguration(isStoredInMemoryOnly: false)
+        )
+        //    let image = UIImage(named: "test_wall")!
+        let image = UIImage(named: "vert_test_wall")!
+        let data = image.pngData()!
+        let wall = getWallFromData(data: data)
+        let context = container.mainContext
+        context.insert(wall)
+        return EditWallView(wall: wall).modelContainer(container)
+    } catch {
+        fatalError("Failed to create model container: \(error)")
+    }
 }
