@@ -244,12 +244,6 @@ struct AddHoldsView: View {
         // 2. Apply scale
         let scaledSize = CGSize(width: fittedSize.width * scale, height: fittedSize.height * scale)
 
-        // 3. Compute image edges relative to offset
-        let minX = (containerSize.width - scaledSize.width) / 2 + offset.width
-        let maxX = minX + scaledSize.width
-        let minY = (containerSize.height - scaledSize.height) / 2 + offset.height
-        let maxY = minY + scaledSize.height
-
         // 4. Clamp offsets so image edges stay within container
         let clampX: CGFloat
         if scaledSize.width <= containerSize.width {
@@ -312,47 +306,6 @@ struct AddHoldsView: View {
         let boundedY = max(0, min(imageSize.height, imageY))
         
         return CGPoint(x: boundedX, y: boundedY)
-    }
-    
-    // Convert from image coordinates to view coordinates
-    func convertToContainerCoordinates(
-        imagePoint: CGPoint,
-        containerSize: CGSize,
-        imageSize: CGSize,
-        scale: CGFloat,
-        offset: CGSize
-    ) -> CGPoint {
-        // 1. Calculate the fitted image size within the container (before scaling)
-        let imageAspect = imageSize.width / imageSize.height
-        let containerAspect = containerSize.width / containerSize.height
-        
-        let fittedSize: CGSize
-        if imageAspect > containerAspect {
-            // Fit to width
-            let width = containerSize.width
-            let height = width / imageAspect
-            fittedSize = CGSize(width: width, height: height)
-        } else {
-            // Fit to height
-            let height = containerSize.height
-            let width = height * imageAspect
-            fittedSize = CGSize(width: width, height: height)
-        }
-        
-        // 2. Calculate the scaled size and origin of the image
-        let scaledSize = CGSize(width: fittedSize.width * scale, height: fittedSize.height * scale)
-        let imageOriginX = (containerSize.width - scaledSize.width) / 2 + offset.width
-        let imageOriginY = (containerSize.height - scaledSize.height) / 2 + offset.height
-        
-        // 3. Calculate the relative point within the image (0-1)
-        let relativeX = imagePoint.x / imageSize.width
-        let relativeY = imagePoint.y / imageSize.height
-        
-        // 4. Convert to container coordinates
-        let containerX = imageOriginX + (relativeX * scaledSize.width)
-        let containerY = imageOriginY + (relativeY * scaledSize.height)
-        
-        return CGPoint(x: containerX, y: containerY)
     }
 }
 
