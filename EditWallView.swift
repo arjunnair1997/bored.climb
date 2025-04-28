@@ -13,26 +13,55 @@ struct EditWallView: View {
     @State private var imageOffset: CGSize = .zero
     @State private var lastOffset: CGSize = .zero
     
+    // TODO: Allow zoom in this view.
     var body: some View {
         NavigationStack {
-            VStack {
-                // Improved wall image display
+            VStack(spacing: 0) {
                 GeometryReader { geo in
-                    ZStack {
-                        if let uiImage = UIImage(data: wall.imageData) {
-                            Image(uiImage: uiImage)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: geo.size.width, height: geo.size.height)
-                                .padding(.vertical)
-                        } else {
-                            Text("Unable to load image")
-                                .foregroundColor(.red)
+                        ZStack(alignment: .topLeading) {
+                            if let uiImage = UIImage(data: wall.imageData) {
+                                // Calculate proper sizing based on aspect ratio
+                                // let imageAspect = uiImage.size.width / uiImage.size.height
+                                // let containerAspect = geo.size.width / geo.size.height
+                                Image(uiImage: uiImage)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: geo.size.width, height: geo.size.height)
+                                    .scaleEffect(1)
+                                    .overlay(
+                                        Color.clear
+                                            .contentShape(Rectangle())
+                                            .onTapGesture { containerLoc in
+                                                // The image fits somewhere within the container depending on its aspect ratio.
+                                                let relativeTapPoint = convertToImageCoordinates(
+                                                    containerPoint: containerLoc,
+                                                    containerSize: geo.size,
+                                                    imageSize: uiImage.size,
+                                                    scale: 1,
+                                                    offset: .zero
+                                                )
+                                                
+                                                // Figure out how to draw the points here.
+                                                // Should be easy. Since I have the relative tap point,
+                                                // i can determine if a hold overlaps with the tap. And if
+                                                // i know that a hold overlaps with the tap, then i can make
+                                                // the hold visible.
+                                                //
+                                                // TODO: Need to maintain a per hold state of visible or invisible.
+                                                // Should not be stored in the hold, but stored in the view.
+                                                print("containerLoc", containerLoc)
+                                                print("relativeLoc", relativeTapPoint)
+                                            }
+                                    )
+                            } else {
+                                Text("Unable to load image")
+                                    .foregroundColor(.red)
+                            }
                         }
-                    }
-                    .frame(width: geo.size.width, height: geo.size.height)
+                        .background(Color.black.ignoresSafeArea())
                 }
-                .frame(height: UIScreen.main.bounds.height * 0.4)
+                .background(Color.black.opacity(0.1))
+//                .frame(height: UIScreen.main.bounds.height * 0.5) // Adjust as needed
                 
                 // List of holds
                 List {
@@ -47,8 +76,6 @@ struct EditWallView: View {
                     .onDelete(perform: deleteHold)
                 }
                 .listStyle(.plain)
-                
-                Spacer()
             }
             .toolbar {
                 // Back button at the top left
@@ -77,8 +104,6 @@ struct EditWallView: View {
                     }) {
                         HStack {
                             Image(systemName: "plus")
-//                            Text("Add Hold")
-//                                .foregroundColor(.white)
                         }
                     }
                 }
@@ -103,8 +128,8 @@ struct EditWallView: View {
         }
     }
 }
-
 #Preview {
+//    let image = UIImage(named: "test_wall")!
     let image = UIImage(named: "vert_test_wall")!
     let data = image.pngData()!
     let wall = getWallFromData(data: data)
