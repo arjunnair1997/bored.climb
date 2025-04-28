@@ -69,10 +69,10 @@ struct AddHoldsView: View {
                                         .overlay(
                                             Color.clear
                                                 .contentShape(Rectangle())
-                                                .onTapGesture { location in
+                                                .onTapGesture { containerLoc in
                                                     // Convert container coordinates to image coordinates
                                                     let relativeTapPoint = convertToImageCoordinates(
-                                                        containerPoint: location,
+                                                        containerPoint: containerLoc,
                                                         containerSize: containerSize,
                                                         imageSize: uiImage.size,
                                                         scale: scale,
