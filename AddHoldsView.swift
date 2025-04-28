@@ -140,6 +140,7 @@ struct AddHoldsView: View {
                 }
                 .background(Color.black)
                 
+                // TODO: Maybe replace the Undo button with Undo text. Right now it looks too much like back, and in fact it's more obviously back, because you come into this view from the EditWallView.
                 // Undo, redo, and Done buttons overlay
                 VStack {
                     HStack {
@@ -226,6 +227,7 @@ struct AddHoldsView: View {
                 )
             )
         }
+        .navigationBarBackButtonHidden(true)
     }
     
     // Stub function for undo action
@@ -486,9 +488,9 @@ struct PolygonView: View {
 }
 
 // TODO: Have a second test image which is vertically longer than it is horizontally.
-#Preview {
-    let image = UIImage(named: "test_wall")!
-    let data = image.pngData()!
-    let wall = getWallFromData(data: data)
-    return AddHoldsView(wall: wall)
-}
+//#Preview {
+//    let image = UIImage(named: "test_wall")!
+//    let data = image.pngData()!
+//    let wall = getWallFromData(data: data)
+//    return AddHoldsView(wall: wall)
+//}

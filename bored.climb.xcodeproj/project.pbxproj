@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9708DD092DBF0086006BFE34 /* EditWallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9708DD082DBF0086006BFE34 /* EditWallView.swift */; };
 		9722EDB12DB44A7100377E59 /* bored_climbApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9722EDB02DB44A7100377E59 /* bored_climbApp.swift */; };
 		9722EDB32DB44A7100377E59 /* BoardsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9722EDB22DB44A7100377E59 /* BoardsView.swift */; };
 		9722EDB52DB44A7100377E59 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9722EDB42DB44A7100377E59 /* Item.swift */; };
@@ -38,6 +39,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9708DD082DBF0086006BFE34 /* EditWallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditWallView.swift; sourceTree = "<group>"; };
 		9722EDAD2DB44A7100377E59 /* bored.climb.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = bored.climb.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9722EDB02DB44A7100377E59 /* bored_climbApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bored_climbApp.swift; sourceTree = "<group>"; };
 		9722EDB22DB44A7100377E59 /* BoardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardsView.swift; sourceTree = "<group>"; };
@@ -85,6 +87,7 @@
 			children = (
 				97712E652DB480C200DB24C3 /* AddHoldView.swift */,
 				97712E672DB5C3BC00DB24C3 /* AddHoldsView.swift */,
+				9708DD082DBF0086006BFE34 /* EditWallView.swift */,
 				9722EDAF2DB44A7100377E59 /* bored.climb */,
 				9722EDC32DB44A7300377E59 /* bored.climbTests */,
 				9722EDCD2DB44A7300377E59 /* bored.climbUITests */,
@@ -275,6 +278,7 @@
 				97712E662DB480C200DB24C3 /* AddHoldView.swift in Sources */,
 				9722EDB32DB44A7100377E59 /* BoardsView.swift in Sources */,
 				9722EDB52DB44A7100377E59 /* Item.swift in Sources */,
+				9708DD092DBF0086006BFE34 /* EditWallView.swift in Sources */,
 				97712E622DB4543B00DB24C3 /* EditBoardView.swift in Sources */,
 				9722EDB12DB44A7100377E59 /* bored_climbApp.swift in Sources */,
 			);
