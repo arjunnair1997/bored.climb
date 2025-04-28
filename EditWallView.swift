@@ -105,7 +105,7 @@ struct EditWallView: View {
 }
 
 #Preview {
-    let image = UIImage(named: "test_wall")!
+    let image = UIImage(named: "vert_test_wall")!
     let data = image.pngData()!
     let wall = getWallFromData(data: data)
     return EditWallView(wall: wall)

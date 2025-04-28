@@ -216,13 +216,6 @@ struct AddHoldsView: View {
         // TODO: Implement redo functionality
     }
 
-    func computeScaledFrame(baseFrame: CGRect, scale: CGFloat) -> CGRect {
-        let center = CGPoint(x: baseFrame.midX, y: baseFrame.midY)
-        let newSize = CGSize(width: baseFrame.width * scale, height: baseFrame.height * scale)
-        let newOrigin = CGPoint(x: center.x - newSize.width / 2, y: center.y - newSize.height / 2)
-        return CGRect(origin: newOrigin, size: newSize)
-    }
-
     func clampedOffset(offset: CGSize, scale: CGFloat, containerSize: CGSize, imageSize: CGSize) -> CGSize {
         // 1. Get fitted image size after `.scaledToFit()` but before scaling
         let imageAspect = imageSize.width / imageSize.height
