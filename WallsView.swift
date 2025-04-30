@@ -85,6 +85,7 @@ struct WallsView: View {
         NavigationStack(path: $nav.selectionPath) {
             List {
                 ForEach(walls) { wall in
+                    // TODO: Remove all the dumb padding for each item in the wall.
                     HStack(spacing: 12) {
                         if let uiImage = UIImage(data: wall.imageData) {
                             Image(uiImage: uiImage)
@@ -141,6 +142,16 @@ struct WallsView: View {
                     }
                 }
             }
+            // TODO: Check that this can be done using isPresented so that you don't
+            // have to worry about hashing.
+            //
+            // Someone wrote a how to on navigation which is actually good and not terrible
+             // like the rest
+        /*
+        
+         https://medium.com/@muhammadathief0/solving-common-ios-navigationstack-challenges-practical-solutions-based-on-my-experience-185c81a20940
+         
+         */
             .navigationDestination(for: NavToEditWallView.self) { navWall in
                 EditWallView(wall: navWall.wall)
             }
