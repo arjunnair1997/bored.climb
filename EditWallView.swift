@@ -29,8 +29,6 @@ struct EditWallView: View {
     @State private var showAddHoldsView = false
     @Environment(\.dismiss) private var dismiss
     
-    // Add state variables for better image handling
-    
     // Add state for tracking overlapping holds
     @State private var overlappingHoldPolygons: [[CGPoint]] = []
     
@@ -98,9 +96,14 @@ struct EditWallView: View {
                     ForEach(wall.holds.indices, id: \.self) { index in
                         HStack {
                             Text("Hold \(index + 1)")
+                            // This is needed so that the entire list item registers
+                            // the tap. Otherwise, the tap is only registered for the
+                            // text.
                             Spacer()
-                            Text("\(wall.holds[index].points.count) points")
-                                .foregroundColor(.gray)
+                        }
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            overlappingHoldPolygons = [wall.holds[index].points]
                         }
                     }
                     // TODO: Show a modal confirming the deletion.
@@ -151,6 +154,8 @@ struct EditWallView: View {
     }
     
     func deleteHold(at offsets: IndexSet) {
+        overlappingHoldPolygons = []
+
         // Remove the holds at the specified indices
         offsets.forEach { index in
             if index < wall.holds.count {
@@ -168,7 +173,7 @@ struct EditWallView: View {
             configurations: ModelConfiguration(isStoredInMemoryOnly: false)
         )
         //    let image = UIImage(named: "test_wall")!
-        let image = UIImage(named: "vert_test_wall")!
+        let image = UIImage(named: "test_wall")!
         let data = image.pngData()!
         let wall = getWallFromData(data: data)
         let context = container.mainContext

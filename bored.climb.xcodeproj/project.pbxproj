@@ -89,6 +89,7 @@
 			children = (
 				97712E652DB480C200DB24C3 /* AddHoldView.swift */,
 				97712E672DB5C3BC00DB24C3 /* AddHoldsView.swift */,
+				9722EDB22DB44A7100377E59 /* BoardsView.swift */,
 				9708DD082DBF0086006BFE34 /* EditWallView.swift */,
 				9708DD0A2DBF0749006BFE34 /* models.swift */,
 				9722EDAF2DB44A7100377E59 /* bored.climb */,
@@ -112,7 +113,6 @@
 			isa = PBXGroup;
 			children = (
 				9722EDB02DB44A7100377E59 /* bored_climbApp.swift */,
-				9722EDB22DB44A7100377E59 /* BoardsView.swift */,
 				97712E612DB4543B00DB24C3 /* EditBoardView.swift */,
 				9722EDB42DB44A7100377E59 /* Item.swift */,
 				9722EDB62DB44A7300377E59 /* Assets.xcassets */,
