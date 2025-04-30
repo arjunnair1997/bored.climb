@@ -24,6 +24,8 @@ func isPointInPolygon(point: CGPoint, points: [CGPoint]) -> Bool {
     return path.contains(point)
 }
 
+// TODO: If you add edit support for a wall, then you need to store multiple versions
+// of the same wall to support existing climbs which use the older wall.
 struct EditWallView: View {
     var wall: Wall
     @State private var showAddHoldsView = false
@@ -31,6 +33,8 @@ struct EditWallView: View {
     
     // Add state for tracking overlapping holds
     @State private var overlappingHoldPolygons: [[CGPoint]] = []
+    @State private var showDeleteConfirmation = false
+    @State private var indexToDelete: Int?
     
     var body: some View {
         NavigationStack {
@@ -107,9 +111,26 @@ struct EditWallView: View {
                         }
                     }
                     // TODO: Show a modal confirming the deletion.
-                    .onDelete(perform: deleteHold)
+                    .onDelete { offsets in
+                        if let first = offsets.first {
+                            indexToDelete = first
+                            showDeleteConfirmation = true
+                        }
+                    }
                 }
                 .listStyle(.plain)
+                .alert("Delete Hold?", isPresented: $showDeleteConfirmation, actions: {
+                        Button("Cancel", role: .cancel) { }
+                        Button("Delete", role: .destructive) {
+                            if let index = indexToDelete {
+                                deleteHold(at: IndexSet(integer: index))
+                                indexToDelete = nil
+                                showDeleteConfirmation = false
+                            }
+                        }
+                    }, message: {
+                        Text("Are you sure you want to delete this hold?")
+                    })
             }
             .toolbar {
                 // Back button at the top left
