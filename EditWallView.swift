@@ -27,17 +27,20 @@ func isPointInPolygon(point: CGPoint, points: [CGPoint]) -> Bool {
 // TODO: If you add edit support for a wall, then you need to store multiple versions
 // of the same wall to support existing climbs which use the older wall.
 struct EditWallView: View {
-    var wall: Wall
-    @State private var showAddHoldsView = false
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var context
+
+    var wall: Wall
     
     // Add state for tracking overlapping holds
     @State private var overlappingHoldPolygons: [[CGPoint]] = []
     @State private var showDeleteConfirmation = false
     @State private var indexToDelete: Int?
     
+    @EnvironmentObject var nav: NavigationStateManager
+    
     var body: some View {
-        NavigationStack {
+//        NavigationStack {
             VStack(spacing: 0) {
                 GeometryReader { geo in
                         ZStack(alignment: .topLeading) {
@@ -136,7 +139,10 @@ struct EditWallView: View {
                 // Back button at the top left
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
-                        dismiss()
+                        // Save the wall.
+                        saveContext(context: context)
+//                        dismiss()
+                        nav.removeLast()
                     }) {
                         HStack {
                             Image(systemName: "chevron.left")
@@ -155,7 +161,7 @@ struct EditWallView: View {
                 // Add Hold button at the top right
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
-                        showAddHoldsView = true
+                        nav.selectionPath.append(NavToAddHoldView(wall: wall))
                     }) {
                         HStack {
                             Image(systemName: "plus")
@@ -163,15 +169,14 @@ struct EditWallView: View {
                     }
                 }
             }
-            .navigationDestination(isPresented: $showAddHoldsView) {
-                AddHoldsView(wall: wall)
+            .navigationDestination(for: NavToAddHoldView.self) { navView in
+                return AddHoldsView(wall: navView.wall)
             }
             .toolbarBackground(.black, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
             .navigationBarTitleDisplayMode(.inline)
             .toolbarColorScheme(.dark, for: .navigationBar)
-        }
-        .navigationBarBackButtonHidden(true)
+            .navigationBarBackButtonHidden(true)
     }
     
     func deleteHold(at offsets: IndexSet) {
@@ -186,21 +191,21 @@ struct EditWallView: View {
     }
 }
 
-#Preview {
-    // Step 1: Create an in-memory SwiftData container
-    do {
-        let container = try ModelContainer(
-            for: Wall.self,
-            configurations: ModelConfiguration(isStoredInMemoryOnly: false)
-        )
-        //    let image = UIImage(named: "test_wall")!
-        let image = UIImage(named: "test_wall")!
-        let data = image.pngData()!
-        let wall = getWallFromData(data: data)
-        let context = container.mainContext
-        context.insert(wall)
-        return EditWallView(wall: wall).modelContainer(container)
-    } catch {
-        fatalError("Failed to create model container: \(error)")
-    }
-}
+//#Preview {
+//    // Step 1: Create an in-memory SwiftData container
+//    do {
+//        let container = try ModelContainer(
+//            for: Wall.self,
+//            configurations: ModelConfiguration(isStoredInMemoryOnly: false)
+//        )
+//        //    let image = UIImage(named: "test_wall")!
+//        let image = UIImage(named: "test_wall")!
+//        let data = image.pngData()!
+//        let wall = getWallFromData(data: data)
+//        let context = container.mainContext
+//        context.insert(wall)
+//        return EditWallView(wall: wall).modelContainer(container)
+//    } catch {
+//        fatalError("Failed to create model container: \(error)")
+//    }
+//}

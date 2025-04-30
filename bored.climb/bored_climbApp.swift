@@ -5,7 +5,6 @@ import SwiftData
 struct bored_climbApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
             Wall.self,
             Hold.self,
         ])
@@ -20,7 +19,7 @@ struct bored_climbApp: App {
 
     var body: some Scene {
         WindowGroup {
-            BoardsView()
+            WallsView()
 //            EditWallView()
         }
         .modelContainer(sharedModelContainer)

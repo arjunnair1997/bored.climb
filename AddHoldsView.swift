@@ -93,6 +93,8 @@ func convertToImageCoordinates(
 struct AddHoldsView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
+    
+    @EnvironmentObject var nav: NavigationStateManager
 
     var wall: Wall
 
@@ -243,7 +245,8 @@ struct AddHoldsView: View {
                                 
                             }
                             saveContext(context: context)
-                            dismiss()
+//                            dismiss()
+                            nav.removeLast()
                         }) {
                             Text("Done")
                                 .font(.headline)
