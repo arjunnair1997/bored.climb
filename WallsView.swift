@@ -114,6 +114,7 @@ struct WallsView: View {
                     }
                 }
             }
+            .listStyle(PlainListStyle())
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     HStack {
