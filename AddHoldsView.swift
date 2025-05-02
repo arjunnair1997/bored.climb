@@ -93,6 +93,8 @@ func convertToImageCoordinates(
 struct AddHoldsView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
+    
+    @EnvironmentObject var nav: NavigationStateManager
 
     var wall: Wall
 
@@ -214,10 +216,13 @@ struct AddHoldsView: View {
                             Button(action: {
                                 undoAction()
                             }) {
-                                Image(systemName: "arrow.uturn.backward")
+                                Text("Undo")
+                                    .font(.headline)
                                     .foregroundColor(.white)
-                                    .padding(8)
-                                    .background(Circle().fill(Color.clear))
+                                    .padding(.horizontal, 16)
+                                    .padding(.vertical, 8)
+                                    .background(Color.clear)
+                                    .cornerRadius(8)
                             }
                         }
                         .padding()
@@ -226,7 +231,7 @@ struct AddHoldsView: View {
                         
                         // Instruction text
                         // TODO: Make sure this is centrally aligned.
-                        Text("Zoom and tap to create hold")
+                        Text("Zoom and tap around hold")
                             .font(.custom("tiny", size: 14))
                             .foregroundColor(.white)
                             .padding(.vertical, 8)
@@ -243,7 +248,7 @@ struct AddHoldsView: View {
                                 
                             }
                             saveContext(context: context)
-                            dismiss()
+                            nav.removeLast()
                         }) {
                             Text("Done")
                                 .font(.headline)
@@ -350,7 +355,6 @@ struct AddHoldsView: View {
     }
 }
 
-// Custom view to draw the polygon
 struct PolygonView: View {
     let polygons: [[CGPoint]]  // Array of polygon point arrays
     let containerSize: CGSize
@@ -416,6 +420,7 @@ struct PolygonView: View {
         }
     }
 }
+
 // TODO: Have a second test image which is vertically longer than it is horizontally.
 //#Preview {
 //    let image = UIImage(named: "test_wall")!

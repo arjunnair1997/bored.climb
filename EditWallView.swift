@@ -24,18 +24,22 @@ func isPointInPolygon(point: CGPoint, points: [CGPoint]) -> Bool {
     return path.contains(point)
 }
 
+// TODO: If you add edit support for a wall, then you need to store multiple versions
+// of the same wall to support existing climbs which use the older wall.
 struct EditWallView: View {
-    var wall: Wall
-    @State private var showAddHoldsView = false
     @Environment(\.dismiss) private var dismiss
-    
-    // Add state variables for better image handling
+    @Environment(\.modelContext) private var context
+
+    var wall: Wall
     
     // Add state for tracking overlapping holds
     @State private var overlappingHoldPolygons: [[CGPoint]] = []
+    @State private var showDeleteConfirmation = false
+    @State private var indexToDelete: Int?
+    
+    @EnvironmentObject var nav: NavigationStateManager
     
     var body: some View {
-        NavigationStack {
             VStack(spacing: 0) {
                 GeometryReader { geo in
                         ZStack(alignment: .topLeading) {
@@ -98,21 +102,45 @@ struct EditWallView: View {
                     ForEach(wall.holds.indices, id: \.self) { index in
                         HStack {
                             Text("Hold \(index + 1)")
+                            // This is needed so that the entire list item registers
+                            // the tap. Otherwise, the tap is only registered for the
+                            // text.
                             Spacer()
-                            Text("\(wall.holds[index].points.count) points")
-                                .foregroundColor(.gray)
+                        }
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            overlappingHoldPolygons = [wall.holds[index].points]
                         }
                     }
                     // TODO: Show a modal confirming the deletion.
-                    .onDelete(perform: deleteHold)
+                    .onDelete { offsets in
+                        if let first = offsets.first {
+                            indexToDelete = first
+                            showDeleteConfirmation = true
+                        }
+                    }
                 }
                 .listStyle(.plain)
+                .alert("Delete Hold?", isPresented: $showDeleteConfirmation, actions: {
+                        Button("Cancel", role: .cancel) { }
+                        Button("Delete", role: .destructive) {
+                            if let index = indexToDelete {
+                                deleteHold(at: IndexSet(integer: index))
+                                indexToDelete = nil
+                                showDeleteConfirmation = false
+                            }
+                        }
+                    }, message: {
+                        Text("Are you sure you want to delete this hold?")
+                    })
             }
             .toolbar {
                 // Back button at the top left
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
-                        dismiss()
+                        // Save the wall.
+                        saveContext(context: context)
+                        nav.removeLast()
                     }) {
                         HStack {
                             Image(systemName: "chevron.left")
@@ -131,7 +159,7 @@ struct EditWallView: View {
                 // Add Hold button at the top right
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
-                        showAddHoldsView = true
+                        nav.selectionPath.append(NavToAddHoldView(wall: wall, viewID: "add_hold_view"))
                     }) {
                         HStack {
                             Image(systemName: "plus")
@@ -139,18 +167,19 @@ struct EditWallView: View {
                     }
                 }
             }
-            .navigationDestination(isPresented: $showAddHoldsView) {
-                AddHoldsView(wall: wall)
+            .navigationDestination(for: NavToAddHoldView.self) { navView in
+                return AddHoldsView(wall: navView.wall)
             }
             .toolbarBackground(.black, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
             .navigationBarTitleDisplayMode(.inline)
             .toolbarColorScheme(.dark, for: .navigationBar)
-        }
-        .navigationBarBackButtonHidden(true)
+            .navigationBarBackButtonHidden(true)
     }
     
     func deleteHold(at offsets: IndexSet) {
+        overlappingHoldPolygons = []
+
         // Remove the holds at the specified indices
         offsets.forEach { index in
             if index < wall.holds.count {
@@ -160,21 +189,21 @@ struct EditWallView: View {
     }
 }
 
-#Preview {
-    // Step 1: Create an in-memory SwiftData container
-    do {
-        let container = try ModelContainer(
-            for: Wall.self,
-            configurations: ModelConfiguration(isStoredInMemoryOnly: false)
-        )
-        //    let image = UIImage(named: "test_wall")!
-        let image = UIImage(named: "vert_test_wall")!
-        let data = image.pngData()!
-        let wall = getWallFromData(data: data)
-        let context = container.mainContext
-        context.insert(wall)
-        return EditWallView(wall: wall).modelContainer(container)
-    } catch {
-        fatalError("Failed to create model container: \(error)")
-    }
-}
+//#Preview {
+//    // Step 1: Create an in-memory SwiftData container
+//    do {
+//        let container = try ModelContainer(
+//            for: Wall.self,
+//            configurations: ModelConfiguration(isStoredInMemoryOnly: false)
+//        )
+//        //    let image = UIImage(named: "test_wall")!
+//        let image = UIImage(named: "test_wall")!
+//        let data = image.pngData()!
+//        let wall = getWallFromData(data: data)
+//        let context = container.mainContext
+//        context.insert(wall)
+//        return EditWallView(wall: wall).modelContainer(container)
+//    } catch {
+//        fatalError("Failed to create model container: \(error)")
+//    }
+//}
