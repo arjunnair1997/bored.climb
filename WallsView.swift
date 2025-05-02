@@ -159,7 +159,6 @@ struct WallsView: View {
 #Preview {
     WallsView()
     .modelContainer(try! ModelContainer(for: Wall.self, configurations:
-        ModelConfiguration(isStoredInMemoryOnly: true)
+        ModelConfiguration(isStoredInMemoryOnly: false)
     ))
-//    .environmentObject(NavigationStateManager())
 }

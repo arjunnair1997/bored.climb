@@ -40,7 +40,6 @@ struct EditWallView: View {
     @EnvironmentObject var nav: NavigationStateManager
     
     var body: some View {
-//        NavigationStack {
             VStack(spacing: 0) {
                 GeometryReader { geo in
                         ZStack(alignment: .topLeading) {
@@ -141,7 +140,6 @@ struct EditWallView: View {
                     Button(action: {
                         // Save the wall.
                         saveContext(context: context)
-//                        dismiss()
                         nav.removeLast()
                     }) {
                         HStack {

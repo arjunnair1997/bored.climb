@@ -20,7 +20,6 @@ struct bored_climbApp: App {
     var body: some Scene {
         WindowGroup {
             WallsView()
-//            EditWallView()
         }
         .modelContainer(sharedModelContainer)
     }
