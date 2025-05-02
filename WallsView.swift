@@ -14,7 +14,7 @@ func getWallFromData(data: Data) -> Wall {
     let uiImage = UIImage(data: data).unsafelyUnwrapped
     let height = uiImage.size.height
     let width = uiImage.size.width
-    return Wall(imageData: data, width: width, height: height)
+    return Wall(imageData: data, width: width, height: height, name: "my_test_wall")
 }
 
 func createTestWall() -> Wall {
@@ -103,7 +103,7 @@ struct WallsView: View {
                         }
                         
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("Wall Name")
+                            Text(wall.name)
                                 .font(.headline)
                             Text("Grade: TBD")
                                 .font(.subheadline)
@@ -159,6 +159,6 @@ struct WallsView: View {
 #Preview {
     WallsView()
     .modelContainer(try! ModelContainer(for: Wall.self, configurations:
-        ModelConfiguration(isStoredInMemoryOnly: false)
+        ModelConfiguration(isStoredInMemoryOnly: true)
     ))
 }
