@@ -36,8 +36,23 @@ struct EditWallView: View {
     @State private var overlappingHoldPolygons: [[CGPoint]] = []
     @State private var showDeleteConfirmation = false
     @State private var indexToDelete: Int?
+    @State private var wallName: String
     
     @EnvironmentObject var nav: NavigationStateManager
+    
+    init(wall: Wall) {
+        self.wall = wall
+        
+        // Initialize the state variable with the wall's current name
+        var wallName: String
+        if wall.name != "" {
+            wallName = wall.name
+        } else {
+            wallName = "my home wall"
+        }
+        
+        _wallName = State(initialValue: wallName)
+    }
     
     var body: some View {
             VStack(spacing: 0) {
@@ -96,6 +111,15 @@ struct EditWallView: View {
                         .background(Color.black.ignoresSafeArea())
                 }
                 .background(Color.black.opacity(0.1))
+                
+                // Wall name text field
+                TextField("Enter wall name", text: $wallName)
+                    .textFieldStyle(PlainTextFieldStyle())
+                    .padding(.horizontal)
+                    .onChange(of: wallName) { oldValue, newValue in
+                        wall.name = newValue
+                        saveContext(context: context)
+                    }
 
                 // List of holds
                 List {
@@ -112,7 +136,6 @@ struct EditWallView: View {
                             overlappingHoldPolygons = [wall.holds[index].points]
                         }
                     }
-                    // TODO: Show a modal confirming the deletion.
                     .onDelete { offsets in
                         if let first = offsets.first {
                             indexToDelete = first
@@ -189,21 +212,21 @@ struct EditWallView: View {
     }
 }
 
-//#Preview {
-//    // Step 1: Create an in-memory SwiftData container
-//    do {
-//        let container = try ModelContainer(
-//            for: Wall.self,
-//            configurations: ModelConfiguration(isStoredInMemoryOnly: false)
-//        )
-//        //    let image = UIImage(named: "test_wall")!
-//        let image = UIImage(named: "test_wall")!
-//        let data = image.pngData()!
-//        let wall = getWallFromData(data: data)
-//        let context = container.mainContext
-//        context.insert(wall)
-//        return EditWallView(wall: wall).modelContainer(container)
-//    } catch {
-//        fatalError("Failed to create model container: \(error)")
-//    }
-//}
+#Preview {
+    // Step 1: Create an in-memory SwiftData container
+    do {
+        let container = try ModelContainer(
+            for: Wall.self,
+            configurations: ModelConfiguration(isStoredInMemoryOnly: false)
+        )
+        //    let image = UIImage(named: "test_wall")!
+        let image = UIImage(named: "test_wall")!
+        let data = image.pngData()!
+        let wall = getWallFromData(data: data)
+        let context = container.mainContext
+        context.insert(wall)
+        return EditWallView(wall: wall).modelContainer(container)
+    } catch {
+        fatalError("Failed to create model container: \(error)")
+    }
+}
