@@ -92,7 +92,7 @@ struct WallsView: View {
             List {
                 ForEach(walls) { wall in
                     // TODO: Remove all the dumb padding for each item in the wall.
-                    HStack(spacing: 12) {
+                    HStack {
                         if let uiImage = UIImage(data: wall.imageData) {
                             Image(uiImage: uiImage)
                                 .resizable()
@@ -112,7 +112,6 @@ struct WallsView: View {
                         
                         Spacer()
                     }
-                    .padding(.vertical, 4)
                 }
             }
             .toolbar {
@@ -129,7 +128,7 @@ struct WallsView: View {
                         }
                     }
                     .frame(maxWidth: .infinity)
-                    .padding(.leading, 8) // optional: reduce system margin
+                    .padding(.leading, 8)
                 }
             }
             .toolbarBackground(.black, for: .navigationBar)
@@ -140,7 +139,7 @@ struct WallsView: View {
                 Task {
                     if let dd = try? await newItem?.loadTransferable(type: Data.self) {
                         selectedImageData = dd
-                        let image = UIImage(named: "test_wall")!
+                        let image = UIImage(named: "vert_test_wall")!
                         let g = image.pngData()!
                         let wall = getWallFromData(data: g)
                         context.insert(wall)
