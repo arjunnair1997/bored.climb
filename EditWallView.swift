@@ -115,7 +115,9 @@ struct EditWallView: View {
                 // Wall name text field
                 TextField("Enter wall name", text: $wallName)
                     .textFieldStyle(PlainTextFieldStyle())
+                    .padding(.vertical)
                     .padding(.horizontal)
+                    .font(.title2)
                     .onChange(of: wallName) { oldValue, newValue in
                         wall.name = newValue
                         saveContext(context: context)
@@ -212,21 +214,21 @@ struct EditWallView: View {
     }
 }
 
-#Preview {
-    // Step 1: Create an in-memory SwiftData container
-    do {
-        let container = try ModelContainer(
-            for: Wall.self,
-            configurations: ModelConfiguration(isStoredInMemoryOnly: false)
-        )
-        //    let image = UIImage(named: "test_wall")!
-        let image = UIImage(named: "test_wall")!
-        let data = image.pngData()!
-        let wall = getWallFromData(data: data)
-        let context = container.mainContext
-        context.insert(wall)
-        return EditWallView(wall: wall).modelContainer(container)
-    } catch {
-        fatalError("Failed to create model container: \(error)")
-    }
-}
+//#Preview {
+//    // Step 1: Create an in-memory SwiftData container
+//    do {
+//        let container = try ModelContainer(
+//            for: Wall.self,
+//            configurations: ModelConfiguration(isStoredInMemoryOnly: false)
+//        )
+//        //    let image = UIImage(named: "test_wall")!
+//        let image = UIImage(named: "test_wall")!
+//        let data = image.pngData()!
+//        let wall = getWallFromData(data: data)
+//        let context = container.mainContext
+//        context.insert(wall)
+//        return EditWallView(wall: wall).modelContainer(container)
+//    } catch {
+//        fatalError("Failed to create model container: \(error)")
+//    }
+//}
