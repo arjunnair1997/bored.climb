@@ -161,7 +161,7 @@ struct EditWallView: View {
                 // Add Hold button at the top right
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
-                        nav.selectionPath.append(NavToAddHoldView(wall: wall))
+                        nav.selectionPath.append(NavToAddHoldView(wall: wall, viewID: "add_hold_view"))
                     }) {
                         HStack {
                             Image(systemName: "plus")

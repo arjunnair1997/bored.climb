@@ -39,33 +39,39 @@ class NavigationStateManager: ObservableObject {
 
 class NavToEditWallView: Hashable {
     var wall: Wall
+    var viewID: String
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(wall.id)
+        hasher.combine(viewID)
     }
     
     static func == (lhs: NavToEditWallView, rhs: NavToEditWallView) -> Bool {
-        return lhs.wall.id == rhs.wall.id
+        return lhs.wall.id == rhs.wall.id && lhs.viewID == rhs.viewID
     }
     
-    init(wall: Wall) {
+    init(wall: Wall, viewID: String) {
         self.wall = wall
+        self.viewID = viewID
     }
 }
 
 class NavToAddHoldView: Hashable {
     var wall: Wall
+    var viewID: String
     
     func hash(into hasher: inout Hasher) {
             hasher.combine(wall.id)
+            hasher.combine(viewID)
     }
     
     static func == (lhs: NavToAddHoldView, rhs: NavToAddHoldView) -> Bool {
-        return lhs.wall.id == rhs.wall.id
+        return lhs.wall.id == rhs.wall.id && lhs.viewID == rhs.viewID
     }
 
-    init(wall: Wall) {
+    init(wall: Wall, viewID: String) {
         self.wall = wall
+        self.viewID = viewID
     }
 }
 
@@ -138,20 +144,10 @@ struct WallsView: View {
                         let g = image.pngData()!
                         let wall = getWallFromData(data: g)
                         context.insert(wall)
-                        nav.selectionPath.append(NavToEditWallView(wall: wall))
+                        nav.selectionPath.append(NavToEditWallView(wall: wall, viewID: "edit_wall_view"))
                     }
                 }
             }
-            // TODO: Check that this can be done using isPresented so that you don't
-            // have to worry about hashing.
-            //
-            // Someone wrote a how to on navigation which is actually good and not terrible
-             // like the rest
-        /*
-        
-         https://medium.com/@muhammadathief0/solving-common-ios-navigationstack-challenges-practical-solutions-based-on-my-experience-185c81a20940
-         
-         */
             .navigationDestination(for: NavToEditWallView.self) { navWall in
                 EditWallView(wall: navWall.wall)
             }
