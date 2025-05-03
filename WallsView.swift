@@ -118,15 +118,17 @@ class NavToAddClimbView: Hashable {
 // there should be edit support for wall names.
 struct WallsView: View {
     @Environment(\.modelContext) var context
-
     @Query var walls: [Wall] = []
-
     @StateObject var nav = NavigationStateManager()
-
+    
     @State private var selectedWallImage: PhotosPickerItem? = nil
     @State private var selectedImageData: Data? = nil
     @State private var navigateToEditBoardView: Bool = false
-
+    
+    // Add these state variables for the confirmation dialog
+    @State private var showingDeleteConfirmation = false
+    @State private var wallToDelete: Wall? = nil
+    
     var body: some View {
         NavigationStack(path: $nav.selectionPath) {
             List {
@@ -157,10 +159,6 @@ struct WallsView: View {
                             
                             Spacer()
 
-                            // TODO: This menu is not super clickable, even with
-                            // a mouse. This is because this whole thing is part of a
-                            // Z stack, and the three dots area overrides the nav link
-                            // in the zstack.
                             Menu {
                                 Button(action: {
                                     nav.selectionPath.append(NavToEditWallView(wall: wall, viewID: "edit_wall_view"))
@@ -168,9 +166,10 @@ struct WallsView: View {
                                     Label("Edit", systemImage: "pencil")
                                 }
                                 
+                                // Modified delete button to trigger confirmation
                                 Button(action: {
-                                    context.delete(wall)
-                                    try? context.save()
+                                    wallToDelete = wall
+                                    showingDeleteConfirmation = true
                                 }) {
                                     HStack {
                                         Image(systemName: "trash")
@@ -189,6 +188,27 @@ struct WallsView: View {
                 }
             }
             .listStyle(PlainListStyle())
+            // Add the confirmation dialog
+            .confirmationDialog(
+                "Are you sure you want to delete this wall?",
+                isPresented: $showingDeleteConfirmation,
+                titleVisibility: .visible
+            ) {
+                Button("Delete", role: .destructive) {
+                    if let wall = wallToDelete {
+                        context.delete(wall)
+                        try? context.save()
+                    }
+                    wallToDelete = nil
+                }
+                Button("Cancel", role: .cancel) {
+                    wallToDelete = nil
+                }
+            } message: {
+                Text("This action cannot be undone.")
+            }
+            
+            // Rest of your code remains the same
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     HStack {
@@ -232,6 +252,7 @@ struct WallsView: View {
         .environmentObject(nav)
     }
 }
+
 #Preview {
     WallsView()
     .modelContainer(try! ModelContainer(for: Wall.self, configurations:
