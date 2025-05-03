@@ -94,6 +94,24 @@ class NavToAddHoldView: Hashable {
     }
 }
 
+class NavToAddClimbView: Hashable {
+    var wall: Wall
+    var viewID: String
+    
+    func hash(into hasher: inout Hasher) {
+            hasher.combine(wall.id)
+            hasher.combine(viewID)
+    }
+    
+    static func == (lhs: NavToAddClimbView, rhs: NavToAddClimbView) -> Bool {
+        return lhs.wall.id == rhs.wall.id && lhs.viewID == rhs.viewID
+    }
+
+    init(wall: Wall, viewID: String) {
+        self.wall = wall
+        self.viewID = viewID
+    }
+}
 
 // TODO: prevent rotation of the screen.
 // TODO: Make the naming system better. It's in the way, and i don't think
