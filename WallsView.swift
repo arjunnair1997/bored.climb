@@ -113,11 +113,16 @@ struct WallsView: View {
         NavigationStack(path: $nav.selectionPath) {
             List {
                 ForEach(walls) { wall in
-                    // Make the entire row tappable to navigate to ClimbsView
-                    Button(action: {
-                        nav.selectionPath.append(NavToClimbsView(wall: wall, viewID: "climbs_view"))
-                    }) {
+                    // Full row navigation
+                    ZStack{
+                        NavigationLink(value: NavToClimbsView(wall: wall, viewID: "climbs_view")) {
+                            EmptyView()
+                        }
+                            .opacity(0)
+                            .buttonStyle(PlainButtonStyle())
+
                         HStack {
+                            // Wall image and info
                             if let uiImage = UIImage(data: wall.imageData) {
                                 Image(uiImage: uiImage)
                                     .resizable()
@@ -130,18 +135,39 @@ struct WallsView: View {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(wall.name)
                                     .font(.headline)
-                                Text("Grade: TBD")
-                                    .font(.subheadline)
-                                    .foregroundColor(.gray)
                             }
                             
                             Spacer()
+
+                            // TODO: This menu is not super clickable, even with
+                            // a mouse. This is because this whole thing is part of a
+                            // Z stack, and the three dots area overrides the nav link
+                            // in the zstack.
+                            Menu {
+                                Button(action: {
+                                    nav.selectionPath.append(NavToEditWallView(wall: wall, viewID: "edit_wall_view"))
+                                }) {
+                                    Label("Edit", systemImage: "pencil")
+                                }
+                                
+                                Button(action: {
+                                    context.delete(wall)
+                                    try? context.save()
+                                }) {
+                                    HStack {
+                                        Image(systemName: "trash")
+                                            .foregroundColor(.red)
+                                        Text("Delete")
+                                    }
+                                }
+                            } label: {
+                                Image(systemName: "ellipsis")
+                                    .font(.system(size: 20))
+                                    .foregroundColor(.gray)
+                            }
+                            .buttonStyle(BorderlessButtonStyle())
                         }
-                        // Ensure that the entire section is tappable.
-                        .contentShape(Rectangle())
-                        .frame(maxWidth: .infinity)
                     }
-                    .buttonStyle(PlainButtonStyle())
                 }
             }
             .listStyle(PlainListStyle())
@@ -188,7 +214,6 @@ struct WallsView: View {
         .environmentObject(nav)
     }
 }
-
 #Preview {
     WallsView()
     .modelContainer(try! ModelContainer(for: Wall.self, configurations:
