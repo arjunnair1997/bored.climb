@@ -139,6 +139,10 @@ struct WallsView: View {
                             
                             Spacer()
 
+                            // TODO: This menu is not super clickable, even with
+                            // a mouse. This is because this whole thing is part of a
+                            // Z stack, and the three dots area overrides the nav link
+                            // in the zstack.
                             Menu {
                                 Button(action: {
                                     nav.selectionPath.append(NavToEditWallView(wall: wall, viewID: "edit_wall_view"))
@@ -150,7 +154,11 @@ struct WallsView: View {
                                     context.delete(wall)
                                     try? context.save()
                                 }) {
-                                    Label("Delete", systemImage: "trash")
+                                    HStack {
+                                        Image(systemName: "trash")
+                                            .foregroundColor(.red)
+                                        Text("Delete")
+                                    }
                                 }
                             } label: {
                                 Image(systemName: "ellipsis")
