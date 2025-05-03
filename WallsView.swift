@@ -76,6 +76,7 @@ class NavToAddHoldView: Hashable {
 }
 
 
+// TODO: prevent rotation of the screen.
 struct WallsView: View {
     @Environment(\.modelContext) var context
 
