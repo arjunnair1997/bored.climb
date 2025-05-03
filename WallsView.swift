@@ -37,6 +37,25 @@ class NavigationStateManager: ObservableObject {
     }
 }
 
+class NavToClimbsView: Hashable {
+    var wall: Wall
+    var viewID: String
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(wall.id)
+        hasher.combine(viewID)
+    }
+    
+    static func == (lhs: NavToClimbsView, rhs: NavToClimbsView) -> Bool {
+        return lhs.wall.id == rhs.wall.id && lhs.viewID == rhs.viewID
+    }
+    
+    init(wall: Wall, viewID: String) {
+        self.wall = wall
+        self.viewID = viewID
+    }
+}
+
 class NavToEditWallView: Hashable {
     var wall: Wall
     var viewID: String
@@ -94,27 +113,35 @@ struct WallsView: View {
         NavigationStack(path: $nav.selectionPath) {
             List {
                 ForEach(walls) { wall in
-                    // TODO: Remove all the dumb padding for each item in the wall.
-                    HStack {
-                        if let uiImage = UIImage(data: wall.imageData) {
-                            Image(uiImage: uiImage)
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: 60, height: 60)
-                                .clipped()
-                                .cornerRadius(8)
+                    // Make the entire row tappable to navigate to ClimbsView
+                    Button(action: {
+                        nav.selectionPath.append(NavToClimbsView(wall: wall, viewID: "climbs_view"))
+                    }) {
+                        HStack {
+                            if let uiImage = UIImage(data: wall.imageData) {
+                                Image(uiImage: uiImage)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 60, height: 60)
+                                    .clipped()
+                                    .cornerRadius(8)
+                            }
+                            
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(wall.name)
+                                    .font(.headline)
+                                Text("Grade: TBD")
+                                    .font(.subheadline)
+                                    .foregroundColor(.gray)
+                            }
+                            
+                            Spacer()
                         }
-                        
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(wall.name)
-                                .font(.headline)
-                            Text("Grade: TBD")
-                                .font(.subheadline)
-                                .foregroundColor(.gray)
-                        }
-                        
-                        Spacer()
+                        // Ensure that the entire section is tappable.
+                        .contentShape(Rectangle())
+                        .frame(maxWidth: .infinity)
                     }
+                    .buttonStyle(PlainButtonStyle())
                 }
             }
             .listStyle(PlainListStyle())
@@ -153,6 +180,9 @@ struct WallsView: View {
             }
             .navigationDestination(for: NavToEditWallView.self) { navWall in
                 EditWallView(wall: navWall.wall)
+            }
+            .navigationDestination(for: NavToClimbsView.self) { navWall in
+                ClimbsView(wall: navWall.wall)
             }
         }
         .environmentObject(nav)
