@@ -205,10 +205,12 @@ struct WallsView: View {
                     wallToDelete = nil
                 }
             } message: {
-                Text("This action cannot be undone.")
+                if let wall = wallToDelete {
+                    Text("Are you sure you want to delete \"\(wall.name)\"? This action cannot be undone.")
+                } else {
+                    Text("Are you sure you want to delete this wall? This action cannot be undone.")
+                }
             }
-            
-            // Rest of your code remains the same
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     HStack {

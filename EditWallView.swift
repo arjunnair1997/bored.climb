@@ -24,6 +24,10 @@ func isPointInPolygon(point: CGPoint, points: [CGPoint]) -> Bool {
     return path.contains(point)
 }
 
+func holdNameFromIndex(i: Int) -> String {
+    return "Hold \(i + 1)"
+}
+
 // TODO: If you add edit support for a wall, then you need to store multiple versions
 // of the same wall to support existing climbs which use the older wall.
 struct EditWallView: View {
@@ -127,7 +131,7 @@ struct EditWallView: View {
                 List {
                     ForEach(wall.holds.indices, id: \.self) { index in
                         HStack {
-                            Text("Hold \(index + 1)")
+                            Text(holdNameFromIndex(i: index))
                             // This is needed so that the entire list item registers
                             // the tap. Otherwise, the tap is only registered for the
                             // text.
@@ -156,7 +160,11 @@ struct EditWallView: View {
                             }
                         }
                     }, message: {
-                        Text("Are you sure you want to delete this hold?")
+                        if let index = indexToDelete {
+                            Text("Are you sure you want to delete hold \"\(holdNameFromIndex(i: index))\"?")
+                        } else {
+                            Text("Are you sure you want to delete this hold?")
+                        }
                     })
             }
             .toolbar {
