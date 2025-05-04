@@ -106,22 +106,19 @@ struct AddClimbView: View {
                 // Undo, redo, and Done buttons overlay
                 VStack {
                     HStack {
-                        // Undo and redo buttons
-                        HStack {
-                            Button(action: {
-//                                undoAction()
-                            }) {
-                                Text("Undo")
-                                    .font(.headline)
+                        Button(action: {
+                            // Save the wall.
+                            saveContext(context: context)
+                            nav.removeLast()
+                        }) {
+                            HStack {
+                                Image(systemName: "chevron.left")
                                     .foregroundColor(.white)
                                     .padding(.horizontal, 16)
                                     .padding(.vertical, 8)
-                                    .background(Color.clear)
-                                    .cornerRadius(8)
                             }
                         }
-                        .padding()
-                        
+
                         Spacer()
                         
                         // Instruction text
@@ -141,7 +138,7 @@ struct AddClimbView: View {
                             saveContext(context: context)
                             nav.removeLast()
                         }) {
-                            Text("Done")
+                            Text("Next")
                                 .font(.headline)
                                 .foregroundColor(.white)
                                 .padding(.horizontal, 16)
