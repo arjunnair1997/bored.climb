@@ -2,6 +2,47 @@ import SwiftUI
 import SwiftData
 import Foundation
 
+func clampedOffset(offset: CGSize, scale: CGFloat, containerSize: CGSize, imageSize: CGSize) -> CGSize {
+    // 1. Get fitted image size after `.scaledToFit()` but before scaling
+    let imageAspect = imageSize.width / imageSize.height
+    let containerAspect = containerSize.width / containerSize.height
+
+    let fittedSize: CGSize
+    if imageAspect > containerAspect {
+        // Fit to width
+        let width = containerSize.width
+        let height = width / imageAspect
+        fittedSize = CGSize(width: width, height: height)
+    } else {
+        // Fit to height
+        let height = containerSize.height
+        let width = height * imageAspect
+        fittedSize = CGSize(width: width, height: height)
+    }
+
+    // 2. Apply scale
+    let scaledSize = CGSize(width: fittedSize.width * scale, height: fittedSize.height * scale)
+
+    // 4. Clamp offsets so image edges stay within container
+    let clampX: CGFloat
+    if scaledSize.width <= containerSize.width {
+        clampX = 0  // no panning allowed
+    } else {
+        let maxOffsetX = (scaledSize.width - containerSize.width) / 2
+        clampX = min(max(offset.width, -maxOffsetX), maxOffsetX)
+    }
+
+    let clampY: CGFloat
+    if scaledSize.height <= containerSize.height {
+        clampY = 0
+    } else {
+        let maxOffsetY = (scaledSize.height - containerSize.height) / 2
+        clampY = min(max(offset.height, -maxOffsetY), maxOffsetY)
+    }
+
+    return CGSize(width: clampX, height: clampY)
+}
+
 // Helper function to convert image coordinates to container coordinates
 func convertToContainerCoordinates(
     imagePoint: CGPoint,
@@ -231,7 +272,7 @@ struct AddHoldsView: View {
                         
                         // Instruction text
                         // TODO: Make sure this is centrally aligned.
-                        Text("Zoom and tap around hold")
+                        Text("Zoom and tap around one hold")
                             .font(.custom("tiny", size: 14))
                             .foregroundColor(.white)
                             .padding(.vertical, 8)
@@ -311,47 +352,6 @@ struct AddHoldsView: View {
     func redoAction() {
         print("Redo action triggered")
         // TODO: Implement redo functionality
-    }
-
-    func clampedOffset(offset: CGSize, scale: CGFloat, containerSize: CGSize, imageSize: CGSize) -> CGSize {
-        // 1. Get fitted image size after `.scaledToFit()` but before scaling
-        let imageAspect = imageSize.width / imageSize.height
-        let containerAspect = containerSize.width / containerSize.height
-
-        let fittedSize: CGSize
-        if imageAspect > containerAspect {
-            // Fit to width
-            let width = containerSize.width
-            let height = width / imageAspect
-            fittedSize = CGSize(width: width, height: height)
-        } else {
-            // Fit to height
-            let height = containerSize.height
-            let width = height * imageAspect
-            fittedSize = CGSize(width: width, height: height)
-        }
-
-        // 2. Apply scale
-        let scaledSize = CGSize(width: fittedSize.width * scale, height: fittedSize.height * scale)
-
-        // 4. Clamp offsets so image edges stay within container
-        let clampX: CGFloat
-        if scaledSize.width <= containerSize.width {
-            clampX = 0  // no panning allowed
-        } else {
-            let maxOffsetX = (scaledSize.width - containerSize.width) / 2
-            clampX = min(max(offset.width, -maxOffsetX), maxOffsetX)
-        }
-
-        let clampY: CGFloat
-        if scaledSize.height <= containerSize.height {
-            clampY = 0
-        } else {
-            let maxOffsetY = (scaledSize.height - containerSize.height) / 2
-            clampY = min(max(offset.height, -maxOffsetY), maxOffsetY)
-        }
-
-        return CGSize(width: clampX, height: clampY)
     }
 }
 

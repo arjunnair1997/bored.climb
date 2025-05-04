@@ -17,9 +17,8 @@ struct ClimbsView: View {
                         .font(.title)
                         .fontWeight(.bold)
                     Spacer()
-                    // Plus button that does nothing as requested
                     Button(action: {
-                        // Does nothing
+                        nav.selectionPath.append(NavToAddClimbView(wall: wall, viewID: "add_climb_view"))
                     }) {
                         Image(systemName: "plus")
                             .font(.title2)
@@ -44,5 +43,8 @@ struct ClimbsView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbarColorScheme(.dark, for: .navigationBar)
         .navigationBarBackButtonHidden(true)
+        .navigationDestination(for: NavToAddClimbView.self) { navWall in
+            AddClimbView(wall: navWall.wall)
+        }
     }
 }

@@ -10,6 +10,10 @@ class Hold {
     }
 }
 
+// Invariant: Once a wall has at least one climb, it is considered immutable.
+//
+// TODO: Perform all mutations on the wall through custom functions so that
+// the invariants can be verified.
 @Model
 class Wall {
     var imageData: Data
