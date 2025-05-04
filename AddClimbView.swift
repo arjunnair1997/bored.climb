@@ -230,11 +230,17 @@ struct SelectStartHoldView: View {
     init(wall: Wall, selectedHolds: [Hold]) {
         self.wall = wall
         self.selectedHolds = selectedHolds
-        self.holdTypes = []
         
+        var tempHoldTypes: [HoldType] = []
         for _ in selectedHolds {
-            // Default hold type must be middle.
-            self.holdTypes.append(.middle)
+            tempHoldTypes.append(.middle)
+        }
+        
+        // Assign to the @State property
+        _holdTypes = State(initialValue: tempHoldTypes)
+        
+        if selectedHolds.count != holdTypes.count {
+            fatalError("hold type invariant not met")
         }
     }
 
@@ -294,19 +300,33 @@ struct SelectStartHoldView: View {
                                                         offset: imageOffset
                                                     )
                                                     
-                                                    // Find all holds that contain the tapped point
-                                                    let tappedHolds = wall.holds.filter { hold in
+                                                    // Out of all selected holds, which ones were just tapped.
+                                                    let tappedHolds = selectedHolds.filter { hold in
                                                         isPointInPolygon(point: relativeTapPoint, points: hold.points)
                                                     }
                                                     
                                                     print("Tapped coordinates: \(relativeTapPoint)")
                                                     print("Overlapping holds found: \(tappedHolds.count)")
+                                                    print("htcount is \(holdTypes.count)")
                                                     
                                                     if !tappedHolds.isEmpty {
                                                         // Add each tapped hold to the selection
                                                         for hold in tappedHolds {
-                                                            if selectedHolds.contains(where: {$0.id == hold.id}) {
-                                                                
+                                                            // Get all indices of the tapped hold in the selectedHolds array
+                                                            let matchingIndices = selectedHolds.indices.filter { selectedHolds[$0] == hold }
+                                                            
+                                                            for index in matchingIndices {
+                                                                // If this hold is already marked as .start, flip it to .middle
+                                                                if holdTypes[index] == .start {
+                                                                    holdTypes[index] = .middle
+                                                                } else {
+                                                                    // Count how many holds are already marked as .start
+                                                                    let currentStartCount = holdTypes.filter { $0 == .start }.count
+                                                                    
+                                                                    if currentStartCount < maxStartHolds {
+                                                                        holdTypes[index] = .start
+                                                                    }
+                                                                }
                                                             }
                                                         }
                                                     }
@@ -362,9 +382,9 @@ struct SelectStartHoldView: View {
                                 .padding(.horizontal, 16)
                                 .padding(.vertical, 8)
                                 .opacity(0)
-
-                            // Actual Next button
-                            if selectedHolds.count > 0 {
+                            
+                            let currentStartCount = holdTypes.filter { $0 == .start }.count
+                            if currentStartCount > 0 {
                                 Button(action: {
                                     print("Next button tapped")
                                     saveContext(context: context)

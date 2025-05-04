@@ -55,6 +55,8 @@ enum Grade: Codable {
         V_17
 }
 
+let maxStartHolds = 4
+
 enum HoldType: Codable {
     case
         start,
