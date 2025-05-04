@@ -133,21 +133,32 @@ struct AddClimbView: View {
                         
                         Spacer()
 
-                        // Done button
-                        Button(action: {
-                            // This will do nothing for now
-                            // Add view dismissal code here when needed
-                            print("Next button tapped")
-                            saveContext(context: context)
-                            nav.removeLast()
-                        }) {
+                        ZStack {
+                            // Invisible placeholder with same size as Next button. This is so that
+                            // the previous text stays aligned.
                             Text("Next")
                                 .font(.headline)
-                                .foregroundColor(.white)
+                                .foregroundColor(.clear) // Invisible
                                 .padding(.horizontal, 16)
                                 .padding(.vertical, 8)
-                                .background(Color.clear)
-                                .cornerRadius(8)
+                                .opacity(0)
+
+                            // Actual Next button
+                            if selectedHolds.count > 0 {
+                                Button(action: {
+                                    print("Next button tapped")
+                                    saveContext(context: context)
+                                    nav.removeLast()
+                                }) {
+                                    Text("Next")
+                                        .font(.headline)
+                                        .foregroundColor(.white)
+                                        .padding(.horizontal, 16)
+                                        .padding(.vertical, 8)
+                                        .background(Color.clear)
+                                        .cornerRadius(8)
+                                }
+                            }
                         }
                         .padding()
                     }
