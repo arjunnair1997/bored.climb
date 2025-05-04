@@ -135,6 +135,57 @@ class NavToSelectStartHoldView: Hashable {
     }
 }
 
+class NavToSelectFinishHoldView: Hashable {
+    var wall: Wall
+    // Invariant: Holds must belong to the wall.
+    var selectedHolds: [Hold]
+    var holdTypes: [HoldType]
+    var viewID: String
+    
+    func hash(into hasher: inout Hasher) {
+            hasher.combine(wall.id)
+            hasher.combine(viewID)
+    }
+    
+    static func == (lhs: NavToSelectFinishHoldView, rhs: NavToSelectFinishHoldView) -> Bool {
+        return lhs.wall.id == rhs.wall.id && lhs.viewID == rhs.viewID
+    }
+
+    init(wall: Wall, selectedHolds: [Hold], holdTypes: [HoldType], viewID: String) {
+        self.wall = wall
+        self.viewID = viewID
+        self.selectedHolds = selectedHolds
+        self.holdTypes = holdTypes
+    }
+}
+
+class NavToFinishClimbView: Hashable {
+    var wall: Wall
+    // Invariant: Holds must belong to the wall.
+    var selectedHolds: [Hold]
+    // Invariant: len(holdTypes) == len(selectedHolds).
+    //
+    // TODO: verify this invariant.
+    var holdTypes: [HoldType]
+    var viewID: String
+    
+    func hash(into hasher: inout Hasher) {
+            hasher.combine(wall.id)
+            hasher.combine(viewID)
+    }
+    
+    static func == (lhs: NavToFinishClimbView, rhs: NavToFinishClimbView) -> Bool {
+        return lhs.wall.id == rhs.wall.id && lhs.viewID == rhs.viewID
+    }
+
+    init(wall: Wall, selectedHolds: [Hold], holdTypes: [HoldType], viewID: String) {
+        self.wall = wall
+        self.viewID = viewID
+        self.selectedHolds = selectedHolds
+        self.holdTypes = holdTypes
+    }
+}
+
 // TODO: prevent rotation of the screen.
 // TODO: Make the naming system better. It's in the way, and i don't think
 // there should be edit support for wall names.
@@ -260,7 +311,7 @@ struct WallsView: View {
                         selectedImageData = dd
                         let image = UIImage(named: "vert_test_wall")!
                         let g = image.pngData()!
-                        let wall = getWallFromData(data: g)
+                        let wall = getWallFromData(data: dd)
                         context.insert(wall)
                         nav.selectionPath.append(NavToEditWallView(wall: wall, viewID: "edit_wall_view"))
                     }

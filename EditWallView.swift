@@ -30,6 +30,8 @@ func holdNameFromIndex(i: Int) -> String {
 
 // TODO: If you add edit support for a wall, then you need to store multiple versions
 // of the same wall to support existing climbs which use the older wall.
+//
+// TODO: It's instinctive to make this view zoomable.
 struct EditWallView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
