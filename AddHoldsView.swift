@@ -180,7 +180,8 @@ struct AddHoldsView: View {
                                                 imageSize: uiImage.size,
                                                 scale: scale,
                                                 offset: imageOffset,
-                                                drawCircle: true
+                                                drawCircle: true,
+                                                holdTypes: []
                                             )
                                         )
                                         .overlay(
@@ -190,7 +191,8 @@ struct AddHoldsView: View {
                                                 imageSize: uiImage.size,
                                                 scale: scale,
                                                 offset: imageOffset,
-                                                drawCircle: false
+                                                drawCircle: false,
+                                                holdTypes: []
                                             )
                                         )
                                         .background(
@@ -360,19 +362,23 @@ struct AddHoldsView: View {
 }
 
 struct PolygonView: View {
-    let polygons: [[CGPoint]]  // Array of polygon point arrays
+    let polygons: [[CGPoint]]
     let containerSize: CGSize
     let imageSize: CGSize
     let scale: CGFloat
     let offset: CGSize
     let drawCircle: Bool
+    let holdTypes: [HoldType]
 
     var body: some View {
         Canvas { context, size in
             // Process each polygon in the array
-            for polygon in polygons {
+            for (index, polygon) in polygons.enumerated() {
                 // Draw points and lines only if there are points in this polygon
                 if !polygon.isEmpty {
+                    // Get the hold type if available, otherwise default to a regular hold
+                    let holdType = index < holdTypes.count ? holdTypes[index] : .middle
+                    
                     // Convert image coordinates to container coordinates for display
                     let containerPoints = polygon.map { point in
                         convertToContainerCoordinates(
@@ -384,47 +390,118 @@ struct PolygonView: View {
                         )
                     }
                     
-                    // Draw points if drawCircle is true
-                    if drawCircle {
-                        for point in containerPoints {
-                            // Draw a small circle at each point
-                            let pointRect = CGRect(
-                                x: point.x - 5,
-                                y: point.y - 5,
-                                width: 10,
-                                height: 10
-                            )
-                            context.fill(Path(ellipseIn: pointRect), with: .color(.white))
-                        }
-                    }
-                    
-                    // Draw lines between points if there are at least 2 points
-                    if containerPoints.count >= 2 {
-                        // Create a path for the lines
-                        var path = Path()
-                        
-                        // Start at the first point
-                        path.move(to: containerPoints[0])
-                        
-                        // Connect each subsequent point
-                        for i in 1..<containerPoints.count {
-                            path.addLine(to: containerPoints[i])
-                        }
-                        
-                        // Close the loop if there are 3 or more points
-                        if containerPoints.count >= 3 {
-                            path.addLine(to: containerPoints[0])
-                        }
-                        
-                        // Draw the path with a white stroke
-                        context.stroke(path, with: .color(.white), lineWidth: 2)
+                    // Draw based on hold type
+                    if holdType == .start {
+                        // For start holds, draw a double boundary
+                        drawDoubleBoundary(context: context, points: containerPoints, drawCircle: drawCircle)
+                    } else {
+                        // For other hold types, use the original drawing logic
+                        drawRegularPolygon(context: context, points: containerPoints, drawCircle: drawCircle)
                     }
                 }
             }
         }
     }
+    
+    // Function to draw a regular polygon
+    private func drawRegularPolygon(context: GraphicsContext, points: [CGPoint], drawCircle: Bool) {
+        // Draw points if drawCircle is true
+        if drawCircle {
+            for point in points {
+                // Draw a small circle at each point
+                let pointRect = CGRect(
+                    x: point.x - 5,
+                    y: point.y - 5,
+                    width: 10,
+                    height: 10
+                )
+                context.fill(Path(ellipseIn: pointRect), with: .color(.white))
+            }
+        }
+        
+        // Draw lines between points if there are at least 2 points
+        if points.count >= 2 {
+            // Create a path for the lines
+            var path = Path()
+            
+            // Start at the first point
+            path.move(to: points[0])
+            
+            // Connect each subsequent point
+            for i in 1..<points.count {
+                path.addLine(to: points[i])
+            }
+            
+            // Close the loop if there are 3 or more points
+            if points.count >= 3 {
+                path.addLine(to: points[0])
+            }
+            
+            // Draw the path with a white stroke
+            context.stroke(path, with: .color(.white), lineWidth: 2)
+        }
+    }
+    
+    // Function to draw a double boundary polygon for start holds
+    private func drawDoubleBoundary(context: GraphicsContext, points: [CGPoint], drawCircle: Bool) {
+        // First draw the outer polygon (slightly larger)
+        if points.count >= 2 {
+            var outerPath = Path()
+            
+            // Calculate center point of the polygon
+            let centerX = points.reduce(0) { $0 + $1.x } / CGFloat(points.count)
+            let centerY = points.reduce(0) { $0 + $1.y } / CGFloat(points.count)
+            let center = CGPoint(x: centerX, y: centerY)
+            
+            // Create outer points (scaled outward from center)
+            let outerPoints = points.map { point -> CGPoint in
+                // Calculate vector from center to point
+                let dx = point.x - center.x
+                let dy = point.y - center.y
+                
+                // Scale the vector by 1.15 (15% larger)
+                return CGPoint(
+                    x: center.x + dx * 1.15,
+                    y: center.y + dy * 1.15
+                )
+            }
+            
+            // Draw the outer path
+            outerPath.move(to: outerPoints[0])
+            for i in 1..<outerPoints.count {
+                outerPath.addLine(to: outerPoints[i])
+            }
+            if outerPoints.count >= 3 {
+                outerPath.closeSubpath()
+            }
+            context.stroke(outerPath, with: .color(.white), lineWidth: 2)
+            
+            // Draw the inner polygon (original size)
+            var innerPath = Path()
+            innerPath.move(to: points[0])
+            for i in 1..<points.count {
+                innerPath.addLine(to: points[i])
+            }
+            if points.count >= 3 {
+                innerPath.closeSubpath()
+            }
+            context.stroke(innerPath, with: .color(.white), lineWidth: 2)
+        }
+        
+        // Draw points if drawCircle is true
+        if drawCircle {
+            for point in points {
+                let pointRect = CGRect(
+                    x: point.x - 5,
+                    y: point.y - 5,
+                    width: 10,
+                    height: 10
+                )
+                context.fill(Path(ellipseIn: pointRect), with: .color(.white))
+            }
+        }
+    }
 }
-
 // TODO: Have a second test image which is vertically longer than it is horizontally.
 //#Preview {
 //    let image = UIImage(named: "test_wall")!

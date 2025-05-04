@@ -78,7 +78,8 @@ struct EditWallView: View {
                                                     imageSize: uiImage.size,
                                                     scale: 1,
                                                     offset: .zero,
-                                                    drawCircle: false
+                                                    drawCircle: false,
+                                                    holdTypes: []
                                                 )
                                             }
 

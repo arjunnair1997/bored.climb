@@ -50,7 +50,8 @@ struct AddClimbView: View {
                                                 imageSize: uiImage.size,
                                                 scale: scale,
                                                 offset: imageOffset,
-                                                drawCircle: false
+                                                drawCircle: false,
+                                                holdTypes: []
                                             )
                                         )
                                         .background(
@@ -271,7 +272,8 @@ struct SelectStartHoldView: View {
                                                 imageSize: uiImage.size,
                                                 scale: scale,
                                                 offset: imageOffset,
-                                                drawCircle: false
+                                                drawCircle: false,
+                                                holdTypes: holdTypes
                                             )
                                         )
                                         .background(
