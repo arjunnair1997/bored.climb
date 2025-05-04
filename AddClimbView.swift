@@ -43,6 +43,7 @@ struct AddClimbView: View {
                                             width: containerSize.width,
                                             height: containerSize.height
                                         )
+                                        .clipped()
                                         .overlay(
                                             PolygonView(
                                                 polygons: selectedHolds.map { $0.points },
@@ -265,6 +266,7 @@ struct SelectStartHoldView: View {
                                             width: containerSize.width,
                                             height: containerSize.height
                                         )
+                                        .clipped()
                                         .overlay(
                                             PolygonView(
                                                 polygons: selectedHolds.map { $0.points },

@@ -173,6 +173,7 @@ struct AddHoldsView: View {
                                             width: containerSize.width,
                                             height: containerSize.height
                                         )
+                                        .clipped()
                                         .overlay(
                                             PolygonView(
                                                 polygons: [tappedPoints],
