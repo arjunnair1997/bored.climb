@@ -393,13 +393,11 @@ struct PolygonView: View {
                     
                     // Draw based on hold type
                     if holdType == .finish {
-                        // For start holds, draw a double boundary
                         drawDoubleBoundary(context: context, points: containerPoints, drawCircle: drawCircle)
                     } else if holdType == .middle {
-                        // For other hold types, use the original drawing logic
                         drawRegularPolygon(context: context, points: containerPoints, drawCircle: drawCircle)
                     } else if holdType == .start {
-                        drawPolygonWithTick(context: context, points: containerPoints, drawCircle: drawCircle)
+                        drawPolygonWithTick(context: context, points: containerPoints, drawCircle: drawCircle, scale: scale)
                     } else {
                         fatalError("unknown hold type")
                     }
@@ -408,31 +406,30 @@ struct PolygonView: View {
         }
     }
     
-    // Function to draw a polygon with a vertical tick below it for start holds
-    private func drawPolygonWithTick(context: GraphicsContext, points: [CGPoint], drawCircle: Bool) {
+    // Function to draw a polygon with a vertical tick starting from the polygon boundary
+    private func drawPolygonWithTick(context: GraphicsContext, points: [CGPoint], drawCircle: Bool, scale: CGFloat) {
         // First draw the regular polygon
         drawRegularPolygon(context: context, points: points, drawCircle: drawCircle)
         
         // Then add the vertical tick below the polygon
         if points.count > 2 {
-            // Calculate the center bottom point of the polygon
-            let centerX = points.reduce(0) { $0 + $1.x } / CGFloat(points.count)
-            let centerY = points.reduce(0) { $0 + $1.y } / CGFloat(points.count)
+            // Find the point on the boundary by finding the lowest point
+            var lowestPoint = points[0]
+            for point in points {
+                if point.y > lowestPoint.y {
+                    lowestPoint = point
+                }
+            }
             
-            // Find the lowest point in the polygon
-            let lowestY = points.max(by: { $0.y < $1.y })?.y ?? centerY
-            
-            // Draw the vertical tick
+            // Draw the vertical tick starting from the lowest point
             var tickPath = Path()
-            let tickStart = CGPoint(x: centerX, y: lowestY)
-            let tickEnd = CGPoint(x: centerX, y: lowestY + 15) // 15 points down
+            let tickStart = lowestPoint
+            // Scale the tick length based on the scale factor - base length is 15
+            let tickLength = 15 * scale
+            let tickEnd = CGPoint(x: tickStart.x, y: tickStart.y + tickLength)
             
             tickPath.move(to: tickStart)
             tickPath.addLine(to: tickEnd)
-            
-            // Add a small horizontal line at the end of the tick
-//            tickPath.move(to: CGPoint(x: centerX - 5, y: tickEnd.y))
-//            tickPath.addLine(to: CGPoint(x: centerX + 5, y: tickEnd.y))
             
             // Draw the tick with a white stroke
             context.stroke(tickPath, with: .color(.white), lineWidth: 2)
@@ -478,7 +475,7 @@ struct PolygonView: View {
         }
     }
     
-    // Function to draw a double boundary polygon for start holds
+    // Function to draw a double boundary polygon for finish holds
     private func drawDoubleBoundary(context: GraphicsContext, points: [CGPoint], drawCircle: Bool) {
         // First draw the outer polygon (slightly larger)
         if points.count > 2 {
@@ -538,7 +535,6 @@ struct PolygonView: View {
         }
     }
 }
-
 // TODO: Have a second test image which is vertically longer than it is horizontally.
 //#Preview {
 //    let image = UIImage(named: "test_wall")!
