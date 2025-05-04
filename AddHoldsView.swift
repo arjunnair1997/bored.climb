@@ -283,7 +283,7 @@ struct AddHoldsView: View {
                         
                         // Instruction text
                         // TODO: Make sure this is centrally aligned.
-                        Text("Zoom and tap around one hold")
+                        Text("Zoom & tap around 1 hold")
                             .font(.custom("tiny", size: 14))
                             .foregroundColor(.white)
                             .padding(.vertical, 8)
