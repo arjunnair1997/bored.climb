@@ -123,18 +123,18 @@ struct AddClimbView: View {
                         
                         // Instruction text
                         // TODO: Make sure this is centrally aligned.
-                        Text("Zoom and tap around one hold")
+                        Text("Tap to select holds")
                             .font(.custom("tiny", size: 14))
                             .foregroundColor(.white)
                             .padding(.vertical, 8)
                         
                         Spacer()
-                        
+
                         // Done button
                         Button(action: {
                             // This will do nothing for now
                             // Add view dismissal code here when needed
-                            print("Done button tapped")
+                            print("Next button tapped")
                             saveContext(context: context)
                             nav.removeLast()
                         }) {
