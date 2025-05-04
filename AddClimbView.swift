@@ -107,21 +107,24 @@ struct AddClimbView: View {
                 VStack {
                     HStack {
                         Button(action: {
-                            // Save the wall.
+                            // This will do nothing for now
+                            // Add view dismissal code here when needed
+                            print("Cancel button tapped")
                             saveContext(context: context)
                             nav.removeLast()
                         }) {
-                            HStack {
-                                Image(systemName: "chevron.left")
-                                    .foregroundColor(.white)
-                                    .padding(.horizontal, 16)
-                                    .padding(.vertical, 8)
-                            }
+                            Text("Cancel")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 8)
+                                .background(Color.clear)
+                                .cornerRadius(8)
                         }
+                        .padding()
 
                         Spacer()
-                        
-                        // Instruction text
+
                         // TODO: Make sure this is centrally aligned.
                         Text("Tap to select holds")
                             .font(.custom("tiny", size: 14))
