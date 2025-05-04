@@ -10,31 +10,29 @@ struct ClimbsView: View {
             // For now it's empty as per your requirements
         }
         .listStyle(PlainListStyle())
-        .toolbar {
-            ToolbarItem(placement: .principal) {
-                HStack {
-                    Text("Climbs")
-                        .font(.title)
-                        .fontWeight(.bold)
-                    Spacer()
-                    Button(action: {
-                        nav.selectionPath.append(NavToAddClimbView(wall: wall, viewID: "add_climb_view"))
-                    }) {
-                        Image(systemName: "plus")
-                            .font(.title2)
-                            .padding(.trailing, 0)
-                    }
-                }
-                .frame(maxWidth: .infinity)
-                .padding(.leading, 8)
-            }
-            
+        .toolbar {            
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: {
                     nav.removeLast()
                 }) {
                     Image(systemName: "chevron.left")
                         .foregroundColor(.white)
+                }
+            }
+            
+            ToolbarItem(placement: .navigationBarLeading) {
+                Text("Climbs")
+                    .font(.title)
+                    .fontWeight(.bold)
+            }
+                
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: {
+                    nav.selectionPath.append(NavToAddClimbView(wall: wall, viewID: "add_climb_view"))
+                }) {
+                    Image(systemName: "plus")
+                        .font(.title2)
+                        .padding(.trailing, 0)
                 }
             }
         }

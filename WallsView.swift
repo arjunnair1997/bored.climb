@@ -195,7 +195,6 @@ struct WallsView: View {
     @StateObject var nav = NavigationStateManager()
     
     @State private var selectedWallImage: PhotosPickerItem? = nil
-    @State private var selectedImageData: Data? = nil
     @State private var navigateToEditBoardView: Bool = false
     
     // Add these state variables for the confirmation dialog
@@ -232,6 +231,7 @@ struct WallsView: View {
                             
                             Spacer()
 
+                            // TODO: Make this menu more clickable. Too easy to fat finger right now.
                             Menu {
                                 Button(action: {
                                     nav.selectionPath.append(NavToEditWallView(wall: wall, viewID: "edit_wall_view"))
@@ -285,20 +285,17 @@ struct WallsView: View {
                 }
             }
             .toolbar {
-                ToolbarItem(placement: .principal) {
-                    HStack {
-                        Text("Walls")
-                            .font(.title)
-                            .fontWeight(.bold)
-                        Spacer()
-                        PhotosPicker(selection: $selectedWallImage, matching: .images, photoLibrary: .shared()) {
-                            Image(systemName: "plus")
-                                .font(.title2)
-                                .padding(.trailing, 0)
-                        }
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Text("Walls")
+                        .font(.title)
+                        .fontWeight(.bold)
+                }
+                    
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    PhotosPicker(selection: $selectedWallImage, matching: .images, photoLibrary: .shared()) {
+                        Image(systemName: "plus")
+                            .font(.title2)
                     }
-                    .frame(maxWidth: .infinity)
-                    .padding(.leading, 8)
                 }
             }
             .toolbarBackground(.black, for: .navigationBar)
@@ -308,9 +305,6 @@ struct WallsView: View {
             .onChange(of: selectedWallImage) { oldItem, newItem in
                 Task {
                     if let dd = try? await newItem?.loadTransferable(type: Data.self) {
-                        selectedImageData = dd
-                        let image = UIImage(named: "vert_test_wall")!
-                        let g = image.pngData()!
                         let wall = getWallFromData(data: dd)
                         context.insert(wall)
                         nav.selectionPath.append(NavToEditWallView(wall: wall, viewID: "edit_wall_view"))
