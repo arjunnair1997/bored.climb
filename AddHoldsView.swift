@@ -357,12 +357,6 @@ struct AddHoldsView: View {
         }
         print("Undo action triggered")
     }
-    
-    // Stub function for redo action
-    func redoAction() {
-        print("Redo action triggered")
-        // TODO: Implement redo functionality
-    }
 }
 
 struct PolygonView: View {

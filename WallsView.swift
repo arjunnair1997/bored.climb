@@ -113,6 +113,28 @@ class NavToAddClimbView: Hashable {
     }
 }
 
+class NavToSelectStartHoldView: Hashable {
+    var wall: Wall
+    // Invariant: Holds must belong to the wall.
+    var selectedHolds: [Hold]
+    var viewID: String
+    
+    func hash(into hasher: inout Hasher) {
+            hasher.combine(wall.id)
+            hasher.combine(viewID)
+    }
+    
+    static func == (lhs: NavToSelectStartHoldView, rhs: NavToSelectStartHoldView) -> Bool {
+        return lhs.wall.id == rhs.wall.id && lhs.viewID == rhs.viewID
+    }
+
+    init(wall: Wall, selectedHolds: [Hold], viewID: String) {
+        self.wall = wall
+        self.viewID = viewID
+        self.selectedHolds = selectedHolds
+    }
+}
+
 // TODO: prevent rotation of the screen.
 // TODO: Make the naming system better. It's in the way, and i don't think
 // there should be edit support for wall names.
