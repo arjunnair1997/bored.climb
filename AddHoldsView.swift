@@ -406,7 +406,10 @@ struct PolygonView: View {
         }
     }
     
-    // Function to draw a polygon with a vertical tick starting from the polygon boundary
+    // Function to draw a polygon with a vertical tick starting from the polygon boundary.
+    //
+    // TODO: There's a weird edge case where if a hold is near the bottom boundary, then the tick goes out of the image
+    // container.
     private func drawPolygonWithTick(context: GraphicsContext, points: [CGPoint], drawCircle: Bool, scale: CGFloat) {
         // First draw the regular polygon
         drawRegularPolygon(context: context, points: points, drawCircle: drawCircle)
