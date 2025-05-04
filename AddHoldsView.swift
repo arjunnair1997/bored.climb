@@ -410,6 +410,9 @@ struct PolygonView: View {
     //
     // TODO: There's a weird edge case where if a hold is near the bottom boundary, then the tick goes out of the image
     // container.
+    //
+    // TODO: The holds stop rendering near the bottom and top of the screen even if the image is available. Figure that
+    // out.
     private func drawPolygonWithTick(context: GraphicsContext, points: [CGPoint], drawCircle: Bool, scale: CGFloat) {
         // First draw the regular polygon
         drawRegularPolygon(context: context, points: points, drawCircle: drawCircle)
