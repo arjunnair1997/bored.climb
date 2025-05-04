@@ -32,6 +32,10 @@ class NavigationStateManager: ObservableObject {
         selectionPath = NavigationPath()
     }
     
+    func removeN(n: Int) {
+        selectionPath.removeLast(n)
+    }
+
     func removeLast() {
         selectionPath.removeLast()
     }

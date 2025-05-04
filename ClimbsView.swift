@@ -1,16 +1,37 @@
 import SwiftUI
 
+// TODO: restrict length of climb.name.
 struct ClimbsView: View {
     @EnvironmentObject var nav: NavigationStateManager
     var wall: Wall
     
     var body: some View {
         List {
-            // This would contain the list of climbs for the selected wall
-            // For now it's empty as per your requirements
+            ForEach(wall.climbs) { climb in
+                VStack(alignment: .leading, spacing: 4) {
+                    HStack {
+                        Text(climb.name)
+                            .font(.headline)
+                        
+                        Spacer()
+                        
+                        Text(formatGrade(climb.grade))
+                            .font(.subheadline)
+                            .padding(6)
+                            .background(Color.blue.opacity(0.2))
+                            .cornerRadius(8)
+                    }
+                    
+                    Text(climb.desc)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .lineLimit(2)
+                }
+                .padding(.vertical, 4)
+            }
         }
         .listStyle(PlainListStyle())
-        .toolbar {            
+        .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: {
                     nav.removeLast()

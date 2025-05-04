@@ -667,8 +667,8 @@ struct SelectFinishHoldView: View {
     }
 }
 
+// TODO: Get rid of all of the references to dismiss.
 struct FinishClimbView: View {
-    @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
     
     @EnvironmentObject var nav: NavigationStateManager
@@ -681,9 +681,124 @@ struct FinishClimbView: View {
     @State private var lastScale: CGFloat = 1.0
     @State private var imageOffset: CGSize = .zero
     @State private var lastOffset: CGSize = .zero
+    
+    // State variables for climb properties
+    @State private var climbName: String = ""
+    @State private var climbDescription: String = ""
+    @State private var selectedGrade: Grade = .V_0
+
+    private let grades: [Grade] = [
+        .V_0, .V_1, .V_2, .V_3, .V_4, .V_5, .V_6, .V_7, .V_8,
+        .V_9, .V_10, .V_11, .V_12, .V_13, .V_14, .V_15, .V_16, .V_17
+    ]
 
     var body: some View {
-        EmptyView()
+        Form {
+            Section("Climb Details") {
+                TextField("Climb Name", text: $climbName)
+                    .padding(.vertical, 8)
+                
+                VStack(alignment: .leading) {
+                    Text("Grade")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .padding(.top, 8)
+                    
+                    Picker("", selection: $selectedGrade) {
+                        ForEach(grades, id: \.self) { grade in
+                            Text(formatGrade(grade)).tag(grade)
+                        }
+                    }
+                    .pickerStyle(WheelPickerStyle())
+                    .frame(height: 100)
+                }
+                
+                VStack(alignment: .leading) {
+                    Text("Description")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .padding(.top, 8)
+                    
+                    TextEditor(text: $climbDescription)
+                        .frame(minHeight: 100)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 5)
+                                .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+                        )
+                }
+                .padding(.bottom, 8)
+            }
+        }
+        .navigationTitle("Finish Climb")
         .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button("Back") {
+                    nav.selectionPath.removeLast()
+                }
+            }
+            
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button("Save") {
+                    saveClimb()
+                    // this view, select finish hold view, select start hold view, select hold view.
+                    nav.removeN(n: 4)
+                }
+                .disabled(!isValidClimb())
+            }
+        }
+        .alert("Missing Information", isPresented: $showAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text(alertMessage)
+        }
+    }
+    
+    @State private var showAlert = false
+    @State private var alertMessage = ""
+    
+    private func isValidClimb() -> Bool {
+        let startCount = holdTypes.filter { $0 == .start }.count
+        let finishCount = holdTypes.filter { $0 == .finish }.count
+        
+        return !climbName.isEmpty && startCount > 0 && finishCount > 0
+    }
+    
+    private func saveClimb() {
+        guard !climbName.isEmpty else {
+            alertMessage = "Please enter a climb name."
+            showAlert = true
+            return
+        }
+        
+        let startCount = holdTypes.filter { $0 == .start }.count
+        if startCount == 0 {
+            alertMessage = "You need at least one start hold."
+            showAlert = true
+            return
+        }
+        
+        let finishCount = holdTypes.filter { $0 == .finish }.count
+        if finishCount == 0 {
+            alertMessage = "You need at least one finish hold."
+            showAlert = true
+            return
+        }
+        
+        // Create the new climb
+        let newClimb = Climb(
+            name: climbName,
+            grade: selectedGrade,
+            wall: wall,
+            desc: climbDescription,
+            holds: selectedHolds,
+            holdTypes: holdTypes
+        )
+        
+        // Add to the wall's climbs
+        wall.climbs.append(newClimb)
+
+        // TODO: any uses of try? should just throw a fatal error if the climb cannot be saved for some reason.
+        try? context.save()
     }
 }
