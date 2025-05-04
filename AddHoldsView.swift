@@ -183,6 +183,16 @@ struct AddHoldsView: View {
                                                 drawCircle: true
                                             )
                                         )
+                                        .overlay(
+                                            PolygonView(
+                                                polygons:  wall.holds.map { $0.points },
+                                                containerSize: containerSize,
+                                                imageSize: uiImage.size,
+                                                scale: scale,
+                                                offset: imageOffset,
+                                                drawCircle: false
+                                            )
+                                        )
                                         .background(
                                             Color.clear
                                                 .onAppear {}
