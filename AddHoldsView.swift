@@ -260,9 +260,7 @@ struct AddHoldsView: View {
                     }
                 }
                 .background(Color.black)
-                
-                // TODO: Maybe replace the Undo button with Undo text. Right now it looks too much like back, and in fact it's more obviously back, because you come into this view from the EditWallView.
-                // Undo, redo, and Done buttons overlay
+
                 VStack {
                     HStack {
                         // Undo and redo buttons
@@ -410,10 +408,7 @@ struct PolygonView: View {
     // Function to draw a polygon with a vertical tick starting from the polygon boundary.
     //
     // TODO: There's a weird edge case where if a hold is near the bottom boundary, then the tick goes out of the image
-    // container.
-    //
-    // TODO: The holds stop rendering near the bottom and top of the screen even if the image is available. Figure that
-    // out.
+    // but still within the container.
     private func drawPolygonWithTick(context: GraphicsContext, points: [CGPoint], drawCircle: Bool, scale: CGFloat) {
         // First draw the regular polygon
         drawRegularPolygon(context: context, points: points, drawCircle: drawCircle)
@@ -542,7 +537,7 @@ struct PolygonView: View {
         }
     }
 }
-// TODO: Have a second test image which is vertically longer than it is horizontally.
+
 //#Preview {
 //    let image = UIImage(named: "test_wall")!
 //    let data = image.pngData()!
