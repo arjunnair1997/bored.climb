@@ -56,6 +56,7 @@ enum Grade: Codable {
 }
 
 let maxStartHolds = 4
+let maxFinishHolds = 2
 
 enum HoldType: Codable {
     case

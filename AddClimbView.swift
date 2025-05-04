@@ -112,9 +112,7 @@ struct AddClimbView: View {
                     }
                 }
                 .background(Color.black)
-                
-                // TODO: Maybe replace the Undo button with Undo text. Right now it looks too much like back, and in fact it's more obviously back, because you come into this view from the EditWallView.
-                // Undo, redo, and Done buttons overlay
+
                 VStack {
                     HStack {
                         Button(action: {
@@ -445,8 +443,6 @@ struct SelectStartHoldView: View {
     }
 }
 
-// TODO: If back is hit here, then all the changes to the holdTypes array should be ignored, and not reflected in the
-// select start hold view.
 struct SelectFinishHoldView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
@@ -539,27 +535,26 @@ struct SelectFinishHoldView: View {
                                                     print("Overlapping holds found: \(tappedHolds.count)")
                                                     print("htcount is \(holdTypes.count)")
                                                     
-//                                                    if !tappedHolds.isEmpty {
-//                                                        // Add each tapped hold to the selection
-//                                                        for hold in tappedHolds {
-//                                                            // Get all indices of the tapped hold in the selectedHolds array
-//                                                            let matchingIndices = selectedHolds.indices.filter { selectedHolds[$0] == hold }
-//                                                            
-//                                                            for index in matchingIndices {
-//                                                                // If this hold is already marked as .start, flip it to .middle
-//                                                                if holdTypes[index] == .start {
-//                                                                    holdTypes[index] = .middle
-//                                                                } else {
-//                                                                    // Count how many holds are already marked as .start
-//                                                                    let currentStartCount = holdTypes.filter { $0 == .start }.count
-//                                                                    
-//                                                                    if currentStartCount < maxStartHolds {
-//                                                                        holdTypes[index] = .start
-//                                                                    }
-//                                                                }
-//                                                            }
-//                                                        }
-//                                                    }
+                                                    if !tappedHolds.isEmpty {
+                                                        // Add each tapped hold to the selection
+                                                        for hold in tappedHolds {
+                                                            // Get all indices of the tapped hold in the selectedHolds array
+                                                            let matchingIndices = selectedHolds.indices.filter { selectedHolds[$0] == hold }
+                                                            
+                                                            for index in matchingIndices {
+                                                                // If this hold is already marked as .finish, flip it to .middle
+                                                                if holdTypes[index] == .finish {
+                                                                    holdTypes[index] = .middle
+                                                                } else if holdTypes[index] == .middle {
+                                                                    // Count how many holds are already marked as .finish
+                                                                    let currentFinishCount = holdTypes.filter { $0 == .finish }.count
+                                                                    if currentFinishCount < maxFinishHolds {
+                                                                        holdTypes[index] = .finish
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
                                                 }
                                         )
                                 }
@@ -571,9 +566,7 @@ struct SelectFinishHoldView: View {
                     }
                 }
                 .background(Color.black)
-                
-                // TODO: Maybe replace the Undo button with Undo text. Right now it looks too much like back, and in fact it's more obviously back, because you come into this view from the EditWallView.
-                // Undo, redo, and Done buttons overlay
+
                 VStack {
                     HStack {
                         Button(action: {
@@ -597,7 +590,7 @@ struct SelectFinishHoldView: View {
                         Spacer()
 
                         // TODO: Make sure this is centrally aligned.
-                        Text("Select upto 2 finish holds")
+                        Text("Select upto 2 finish holds. Cannot be same as start.")
                             .font(.custom("tiny", size: 14))
                             .foregroundColor(.white)
                             .padding(.vertical, 8)
@@ -614,12 +607,11 @@ struct SelectFinishHoldView: View {
                                 .padding(.vertical, 8)
                                 .opacity(0)
                             
-                            let currentStartCount = holdTypes.filter { $0 == .start }.count
-                            if currentStartCount > 0 {
+                            let currentFinishCount = holdTypes.filter { $0 == .finish }.count
+                            if currentFinishCount > 0 {
                                 Button(action: {
                                     print("Next button tapped")
-                                    saveContext(context: context)
-                                    nav.removeLast()
+                                    nav.selectionPath.append(NavToFinishClimbView(wall: wall, selectedHolds: selectedHolds, holdTypes: holdTypes, viewID: "finish_climb_view"))
                                 }) {
                                     Text("Next")
                                         .font(.headline)
