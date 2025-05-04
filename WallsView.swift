@@ -258,7 +258,7 @@ struct WallsView: View {
                 Task {
                     if let dd = try? await newItem?.loadTransferable(type: Data.self) {
                         selectedImageData = dd
-                        let image = UIImage(named: "vert_test_wall")!
+                        let image = UIImage(named: "test_wall")!
                         let g = image.pngData()!
                         let wall = getWallFromData(data: g)
                         context.insert(wall)

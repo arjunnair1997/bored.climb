@@ -293,8 +293,9 @@ struct AddHoldsView: View {
                         
                         // Done button
                         Button(action: {
-                            // This will do nothing for now
                             // Add view dismissal code here when needed
+                            //
+                            // TODO: Only show done if tappedPoints.count > 2.
                             print("Done button tapped")
                             if tappedPoints.count > 2 {
                                 wall.holds.append(Hold(points: tappedPoints))
@@ -391,7 +392,7 @@ struct PolygonView: View {
                     }
                     
                     // Draw based on hold type
-                    if holdType == .start {
+                    if holdType == .finish {
                         // For start holds, draw a double boundary
                         drawDoubleBoundary(context: context, points: containerPoints, drawCircle: drawCircle)
                     } else {
@@ -420,7 +421,7 @@ struct PolygonView: View {
         }
         
         // Draw lines between points if there are at least 2 points
-        if points.count >= 2 {
+        if points.count > 2 {
             // Create a path for the lines
             var path = Path()
             
@@ -445,7 +446,7 @@ struct PolygonView: View {
     // Function to draw a double boundary polygon for start holds
     private func drawDoubleBoundary(context: GraphicsContext, points: [CGPoint], drawCircle: Bool) {
         // First draw the outer polygon (slightly larger)
-        if points.count >= 2 {
+        if points.count > 2 {
             var outerPath = Path()
             
             // Calculate center point of the polygon
@@ -459,10 +460,10 @@ struct PolygonView: View {
                 let dx = point.x - center.x
                 let dy = point.y - center.y
                 
-                // Scale the vector by 1.15 (15% larger)
+                // Scale the vector by 1.25 (25% larger)
                 return CGPoint(
-                    x: center.x + dx * 1.15,
-                    y: center.y + dy * 1.15
+                    x: center.x + dx * 1.25,
+                    y: center.y + dy * 1.25
                 )
             }
             
