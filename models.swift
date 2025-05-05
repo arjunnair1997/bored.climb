@@ -100,21 +100,21 @@ class Climb {
     // Set of holds associated with this climb.
     //
     // INVARIANT: holdTypes and holds have the same length.
-    var holds: [Hold]
-    var holdTypes: [HoldType]
+    var holds: [Hold] = []
+    var holdTypes: [HoldType] = []
 
     // TODO: deal with the case where the hold is deleted. What happens to the climb?
-    init(name: String, grade: Grade, wall: Wall, desc: String, holds: [Hold], holdTypes: [HoldType]) {
+    init(name: String, grade: Grade, wall: Wall, desc: String) {
         self.name = name
         self.grade = grade
         self.wall = wall
         self.desc = desc
-        self.holds = holds
-        self.holdTypes = holdTypes
         
+        print("counts are", holdTypes.count, holds.count)
+
         // TODO: Check other invariants here.
-        if holdTypes.count != holds.count {
-            fatalError("invalid len holds/holdTypes")
-        }
+//        if holdTypes.count != holds.count {
+//            fatalError("invalid len holds/holdTypes")
+//        }
     }
 }

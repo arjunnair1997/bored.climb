@@ -785,15 +785,19 @@ struct FinishClimbView: View {
             return
         }
         
+        print("Creating climb")
+        
+        // Example: if your model requires loading an image or file
         // Create the new climb
         let newClimb = Climb(
             name: climbName,
             grade: selectedGrade,
             wall: wall,
-            desc: climbDescription,
-            holds: selectedHolds,
-            holdTypes: holdTypes
+            desc: climbDescription
         )
+        
+        newClimb.holds = selectedHolds
+        newClimb.holdTypes = holdTypes
         
         // Add to the wall's climbs
         wall.climbs.append(newClimb)

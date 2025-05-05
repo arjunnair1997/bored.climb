@@ -7,6 +7,7 @@ struct bored_climbApp: App {
         let schema = Schema([
             Wall.self,
             Hold.self,
+            Climb.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
