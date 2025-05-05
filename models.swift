@@ -33,6 +33,7 @@ class Wall {
     }
 }
 
+// Add a .project enum
 enum Grade: Codable {
     case
         V_0,
