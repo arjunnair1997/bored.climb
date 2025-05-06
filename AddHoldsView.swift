@@ -280,8 +280,7 @@ struct AddHoldsView: View {
                         .padding()
                         
                         Spacer()
-                        
-                        // Instruction text
+
                         // TODO: Make sure this is centrally aligned.
                         Text("Zoom & tap around 1 hold")
                             .font(.custom("tiny", size: 14))
@@ -289,16 +288,10 @@ struct AddHoldsView: View {
                             .padding(.vertical, 8)
                         
                         Spacer()
-                        
-                        // Done button
+
                         Button(action: {
-                            // Add view dismissal code here when needed
-                            //
-                            // TODO: Only show done if tappedPoints.count > 2.
-                            print("Done button tapped")
                             if tappedPoints.count > 2 {
-                                wall.holds.append(Hold(points: tappedPoints))
-                                
+                                wall.addHold(hold: Hold(points: tappedPoints))
                             }
                             saveContext(context: context)
                             nav.removeLast()

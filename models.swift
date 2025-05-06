@@ -8,6 +8,12 @@ class Hold {
     init(points: [CGPoint]) {
         self.points = points
     }
+    
+    func validate() {
+        if self.points.count < 3 {
+            fatalError("hold does not have enough points: \(self.points.count)")
+        }
+    }
 }
 
 // Invariant: Once a wall has at least one climb, it is considered immutable.
@@ -30,6 +36,23 @@ class Wall {
         self.width = width
         self.height = height
         self.name = name
+    }
+    
+    func addHold(hold: Hold) {
+        hold.validate()
+        holds.append(hold)
+    }
+    
+    func deleteHold(index: Int) {
+        if index < 0 || index >= holds.count {
+            fatalError("invalid hold index: \(index)")
+        }
+        
+        if climbs.count > 0 {
+            fatalError("cannot delete hold when wall already has climbs")
+        }
+        
+        self.holds.remove(at: index)
     }
 }
 
@@ -110,12 +133,10 @@ class Climb {
         self.grade = grade
         self.wall = wall
         self.desc = desc
-        
-        print("counts are", holdTypes.count, holds.count)
 
         // TODO: Check other invariants here.
-//        if holdTypes.count != holds.count {
-//            fatalError("invalid len holds/holdTypes")
-//        }
+        if holdTypes.count != holds.count {
+            fatalError("invalid len holds/holdTypes")
+        }
     }
 }

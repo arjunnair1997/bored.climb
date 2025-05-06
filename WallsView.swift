@@ -156,6 +156,12 @@ class NavToSelectFinishHoldView: Hashable {
     }
 
     init(wall: Wall, selectedHolds: [Hold], holdTypes: [HoldType], viewID: String) {
+        for hold in selectedHolds {
+            if !wall.holds.contains(where: { $0 === hold }) {
+                fatalError("Selected hold does not belong to the wall")
+            }
+        }
+
         self.wall = wall
         self.viewID = viewID
         self.selectedHolds = selectedHolds

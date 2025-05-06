@@ -158,9 +158,11 @@ struct EditWallView: View {
                         Button("Cancel", role: .cancel) { }
                         Button("Delete", role: .destructive) {
                             if let index = indexToDelete {
-                                deleteHold(at: IndexSet(integer: index))
+                                overlappingHoldPolygons = []
+                                wall.deleteHold(index: index)
                                 indexToDelete = nil
                                 showDeleteConfirmation = false
+                                saveContext(context: context)
                             }
                         }
                     }, message: {
@@ -213,17 +215,6 @@ struct EditWallView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbarColorScheme(.dark, for: .navigationBar)
             .navigationBarBackButtonHidden(true)
-    }
-    
-    func deleteHold(at offsets: IndexSet) {
-        overlappingHoldPolygons = []
-
-        // Remove the holds at the specified indices
-        offsets.forEach { index in
-            if index < wall.holds.count {
-                wall.holds.remove(at: index)
-            }
-        }
     }
 }
 
