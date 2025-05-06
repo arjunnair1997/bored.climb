@@ -10,7 +10,6 @@ import SwiftUI
 // 4. Transition to FinishClimbView on next. Allows user to name the climb
 //    assign it a grade, and add a description.
 struct AddClimbView: View {
-    @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
     
     @EnvironmentObject var nav: NavigationStateManager
@@ -86,9 +85,6 @@ struct AddClimbView: View {
                                                         isPointInPolygon(point: relativeTapPoint, points: hold.points)
                                                     }
                                                     
-                                                    print("Tapped coordinates: \(relativeTapPoint)")
-                                                    print("Overlapping holds found: \(tappedHolds.count)")
-                                                    
                                                     if !tappedHolds.isEmpty {
                                                         // Add each tapped hold to the selection
                                                         for hold in tappedHolds {
@@ -117,8 +113,6 @@ struct AddClimbView: View {
                     HStack {
                         Button(action: {
                             // This will do nothing for now
-                            // Add view dismissal code here when needed
-                            print("Cancel button tapped")
                             saveContext(context: context)
                             nav.removeLast()
                         }) {
@@ -155,7 +149,6 @@ struct AddClimbView: View {
                             // Actual Next button
                             if selectedHolds.count > 0 {
                                 Button(action: {
-                                    print("Next button tapped")
                                     nav.selectionPath.append(NavToSelectStartHoldView(wall: wall, selectedHolds: selectedHolds, viewID: "select_start_hold_view"))
                                 }) {
                                     Text("Next")
@@ -213,7 +206,6 @@ struct AddClimbView: View {
 }
 
 struct SelectStartHoldView: View {
-    @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
     
     @EnvironmentObject var nav: NavigationStateManager
@@ -307,10 +299,6 @@ struct SelectStartHoldView: View {
                                                         isPointInPolygon(point: relativeTapPoint, points: hold.points)
                                                     }
                                                     
-                                                    print("Tapped coordinates: \(relativeTapPoint)")
-                                                    print("Overlapping holds found: \(tappedHolds.count)")
-                                                    print("htcount is \(holdTypes.count)")
-                                                    
                                                     if !tappedHolds.isEmpty {
                                                         // Add each tapped hold to the selection
                                                         for hold in tappedHolds {
@@ -348,8 +336,6 @@ struct SelectStartHoldView: View {
                     HStack {
                         Button(action: {
                             // This will do nothing for now
-                            // Add view dismissal code here when needed
-                            print("Cancel button tapped")
                             nav.removeLast()
                         }) {
                             // TODO: try chevron left.
@@ -386,7 +372,6 @@ struct SelectStartHoldView: View {
                             let currentStartCount = holdTypes.filter { $0 == .start }.count
                             if currentStartCount > 0 {
                                 Button(action: {
-                                    print("Next button tapped")
                                     nav.selectionPath.append(NavToSelectFinishHoldView(wall: wall, selectedHolds: selectedHolds, holdTypes: holdTypes, viewID: "finish_hold_view"))
                                 }) {
                                     Text("Next")
@@ -444,7 +429,6 @@ struct SelectStartHoldView: View {
 }
 
 struct SelectFinishHoldView: View {
-    @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
     
     @EnvironmentObject var nav: NavigationStateManager
@@ -531,10 +515,6 @@ struct SelectFinishHoldView: View {
                                                         isPointInPolygon(point: relativeTapPoint, points: hold.points)
                                                     }
                                                     
-                                                    print("Tapped coordinates: \(relativeTapPoint)")
-                                                    print("Overlapping holds found: \(tappedHolds.count)")
-                                                    print("htcount is \(holdTypes.count)")
-                                                    
                                                     if !tappedHolds.isEmpty {
                                                         // Add each tapped hold to the selection
                                                         for hold in tappedHolds {
@@ -571,8 +551,6 @@ struct SelectFinishHoldView: View {
                     HStack {
                         Button(action: {
                             // This will do nothing for now
-                            // Add view dismissal code here when needed
-                            print("Cancel button tapped")
                             saveContext(context: context)
                             nav.removeLast()
                         }) {
@@ -610,7 +588,6 @@ struct SelectFinishHoldView: View {
                             let currentFinishCount = holdTypes.filter { $0 == .finish }.count
                             if currentFinishCount > 0 {
                                 Button(action: {
-                                    print("Next button tapped")
                                     nav.selectionPath.append(NavToFinishClimbView(wall: wall, selectedHolds: selectedHolds, holdTypes: holdTypes, viewID: "finish_climb_view"))
                                 }) {
                                     Text("Next")
@@ -667,7 +644,6 @@ struct SelectFinishHoldView: View {
     }
 }
 
-// TODO: Get rid of all of the references to dismiss.
 struct FinishClimbView: View {
     @Environment(\.modelContext) private var context
     

@@ -34,7 +34,6 @@ func holdNameFromIndex(i: Int) -> String {
 // TODO: It's instinctive to make this view zoomable. This is because some walls are extremely
 // zoomed out, and you need to be able to zoom in to tap on the holds.
 struct EditWallView: View {
-    @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
 
     var wall: Wall
@@ -106,9 +105,6 @@ struct EditWallView: View {
                                                     
                                                     // Update the list of polygons to display
                                                     overlappingHoldPolygons = tappedHolds.map { $0.points }
-                                                    
-                                                    print("Tapped coordinates: \(relativeTapPoint)")
-                                                    print("Overlapping holds found: \(tappedHolds.count)")
                                                 }
                                         }
                                     )

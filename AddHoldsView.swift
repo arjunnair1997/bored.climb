@@ -132,7 +132,6 @@ func convertToImageCoordinates(
 // Then if someone clicks on Done with less than 3 holds, show a pop-up which
 // is something like "A hold must be constructed of at least 3 points.
 struct AddHoldsView: View {
-    @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
     
     @EnvironmentObject var nav: NavigationStateManager
@@ -350,7 +349,6 @@ struct AddHoldsView: View {
         if !tappedPoints.isEmpty {
             tappedPoints.removeLast()
         }
-        print("Undo action triggered")
     }
 }
 
