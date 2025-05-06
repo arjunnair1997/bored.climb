@@ -1,6 +1,21 @@
 import SwiftUI
 
-// TODO: restrict length of climb.name.
+func truncateName(_ name: String) -> String {
+    let maxClimbNameLengthForViews = 25
+    if name.count > maxClimbNameLengthForViews {
+        return String(name.prefix(maxClimbNameLengthForViews)) + "..."
+    }
+    return name
+}
+
+func truncateDescription(_ description: String) -> String {
+    let maxClimbDescLengthForViews = 100
+    if description.count > maxClimbDescLengthForViews {
+        return String(description.prefix(maxClimbDescLengthForViews)) + "..."
+    }
+    return description
+}
+
 struct ClimbsView: View {
     @EnvironmentObject var nav: NavigationStateManager
     var wall: Wall
@@ -10,7 +25,7 @@ struct ClimbsView: View {
             ForEach(wall.climbs) { climb in
                 VStack(alignment: .leading, spacing: 4) {
                     HStack {
-                        Text(climb.name)
+                        Text(truncateName(climb.name))
                             .font(.headline)
                         
                         Spacer()
@@ -21,11 +36,11 @@ struct ClimbsView: View {
                             .background(Color.blue.opacity(0.2))
                             .cornerRadius(8)
                     }
-                    
-                    Text(climb.desc)
+
+                    Text(truncateDescription(climb.desc))
                         .font(.subheadline)
                         .foregroundColor(.secondary)
-                        .lineLimit(2)
+                        .lineLimit(1)
                 }
                 .padding(.vertical, 4)
             }
