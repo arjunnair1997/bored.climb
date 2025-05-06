@@ -785,8 +785,6 @@ struct FinishClimbView: View {
             return
         }
         
-        print("Creating climb")
-        
         // Example: if your model requires loading an image or file
         // Create the new climb
         let newClimb = Climb(
@@ -795,12 +793,9 @@ struct FinishClimbView: View {
             wall: wall,
             desc: climbDescription
         )
-        
-        newClimb.holds = selectedHolds
-        newClimb.holdTypes = holdTypes
-        
-        // Add to the wall's climbs
-        wall.climbs.append(newClimb)
+        newClimb.setHolds(holds: selectedHolds, holdTypes: holdTypes)
+
+        wall.addClimb(climb: newClimb)
 
         // TODO: any uses of try? should just throw a fatal error if the climb cannot be saved for some reason.
         try? context.save()

@@ -7,9 +7,7 @@ class Hold {
 
     init(points: [CGPoint]) {
         self.points = points
-    }
-    
-    func validate() {
+        
         if self.points.count < 3 {
             fatalError("hold does not have enough points: \(self.points.count)")
         }
@@ -39,10 +37,14 @@ class Wall {
     }
     
     func addHold(hold: Hold) {
-        hold.validate()
         holds.append(hold)
     }
     
+    func addClimb(climb: Climb) {
+        climb.validate()
+        self.climbs.append(climb)
+    }
+
     func deleteHold(index: Int) {
         if index < 0 || index >= holds.count {
             fatalError("invalid hold index: \(index)")
@@ -129,14 +131,64 @@ class Climb {
 
     // TODO: deal with the case where the hold is deleted. What happens to the climb?
     init(name: String, grade: Grade, wall: Wall, desc: String) {
+        if name == "" {
+            fatalError("climb name cannot be empty")
+        }
+
         self.name = name
         self.grade = grade
         self.wall = wall
         self.desc = desc
-
-        // TODO: Check other invariants here.
+    }
+    
+    func setHolds(holds: [Hold], holdTypes: [HoldType]) {
         if holdTypes.count != holds.count {
             fatalError("invalid len holds/holdTypes")
         }
+        
+        for hold in holds {
+            if !wall.holds.contains(where: { $0 === hold }) {
+                fatalError("hold not contained in wall")
+            }
+        }
+
+        self.holds = holds
+        self.holdTypes = holdTypes
+    }
+    
+    func validate() {
+        if holdTypes.count != holds.count {
+            fatalError("invalid len holds/holdTypes")
+        }
+
+        if name == "" {
+            fatalError("climb name cannot be empty")
+        }
+        
+        for hold in holds {
+            if !wall.holds.contains(where: { $0 === hold }) {
+                fatalError("hold not contained in wall")
+            }
+        }
+        
+        // Count start and finish holds
+       let startHoldCount = holdTypes.filter { $0 == .start }.count
+       let finishHoldCount = holdTypes.filter { $0 == .finish }.count
+       
+       // Validate start holds (at least 1, at most 4)
+       if startHoldCount < 1 {
+           fatalError("climb must have at least 1 start hold")
+       }
+       if startHoldCount > maxStartHolds {
+           fatalError("climb cannot have more than \(maxStartHolds) start holds")
+       }
+       
+       // Validate finish holds (at least 1, at most 2)
+       if finishHoldCount < 1 {
+           fatalError("climb must have at least 1 finish hold")
+       }
+       if finishHoldCount > maxFinishHolds {
+           fatalError("climb cannot have more than \(maxFinishHolds) finish holds")
+       }
     }
 }
