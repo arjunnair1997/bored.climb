@@ -61,6 +61,7 @@ class Wall {
 // Add a .project enum
 enum Grade: Codable {
     case
+        proj,
         V_0,
         V_1,
         V_2,
@@ -83,6 +84,7 @@ enum Grade: Codable {
 
 func formatGrade(_ grade: Grade) -> String {
     switch grade {
+    case .proj: return "proj"
     case .V_0: return "V0"
     case .V_1: return "V1"
     case .V_2: return "V2"
@@ -103,6 +105,7 @@ func formatGrade(_ grade: Grade) -> String {
     case .V_17: return "V17"
     }
 }
+
 
 let maxStartHolds = 4
 let maxFinishHolds = 2

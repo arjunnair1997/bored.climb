@@ -151,6 +151,9 @@ struct AddHoldsView: View {
     // Timer for showing tap coordinates temporarily
     let tapDisplayDuration: Double = 2.0
 
+    // TODO: In all of the views which display the wall image, can probably get away with not
+    // using so much nesting. Here, the vstack can definitely be deleted, and maybe so many
+    // geometry readers are unnecessary.
     var body: some View {
         GeometryReader { geometryProxy in
             ZStack {

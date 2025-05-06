@@ -664,7 +664,7 @@ struct FinishClimbView: View {
     @State private var selectedGrade: Grade = .V_0
 
     private let grades: [Grade] = [
-        .V_0, .V_1, .V_2, .V_3, .V_4, .V_5, .V_6, .V_7, .V_8,
+        .proj, .V_0, .V_1, .V_2, .V_3, .V_4, .V_5, .V_6, .V_7, .V_8,
         .V_9, .V_10, .V_11, .V_12, .V_13, .V_14, .V_15, .V_16, .V_17
     ]
 
