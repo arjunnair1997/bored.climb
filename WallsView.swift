@@ -133,6 +133,12 @@ class NavToSelectStartHoldView: Hashable {
     }
 
     init(wall: Wall, selectedHolds: [Hold], viewID: String) {
+        for hold in selectedHolds {
+            if !wall.holds.contains(where: { $0 === hold }) {
+                fatalError("Selected hold does not belong to the wall")
+            }
+        }
+
         self.wall = wall
         self.viewID = viewID
         self.selectedHolds = selectedHolds
@@ -174,8 +180,6 @@ class NavToFinishClimbView: Hashable {
     // Invariant: Holds must belong to the wall.
     var selectedHolds: [Hold]
     // Invariant: len(holdTypes) == len(selectedHolds).
-    //
-    // TODO: verify this invariant.
     var holdTypes: [HoldType]
     var viewID: String
     
@@ -189,6 +193,18 @@ class NavToFinishClimbView: Hashable {
     }
 
     init(wall: Wall, selectedHolds: [Hold], holdTypes: [HoldType], viewID: String) {
+        for hold in selectedHolds {
+            if !wall.holds.contains(where: { $0 === hold }) {
+                fatalError("Selected hold does not belong to the wall")
+            }
+        }
+        
+        if holdTypes.count != selectedHolds.count {
+            fatalError(
+                "len holdtypes does not match selected holds: \(holdTypes.count), \(selectedHolds.count)"
+            )
+        }
+
         self.wall = wall
         self.viewID = viewID
         self.selectedHolds = selectedHolds
