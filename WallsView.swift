@@ -212,6 +212,14 @@ class NavToFinishClimbView: Hashable {
     }
 }
 
+func truncateWallName(_ name: String) -> String {
+    let maxNameLengthForViews = 25
+    if name.count > maxNameLengthForViews {
+        return String(name.prefix(maxNameLengthForViews)) + "..."
+    }
+    return name
+}
+
 // TODO: prevent rotation of the screen.
 // TODO: Make the naming system better. It's in the way, and i don't think
 // there should be edit support for wall names.
@@ -252,10 +260,11 @@ struct WallsView: View {
                             }
                             
                             VStack(alignment: .leading, spacing: 4) {
-                                Text(wall.name)
+                                Text(truncateWallName(wall.name))
                                     .font(.headline)
+                                    .lineLimit(1)
                             }
-                            
+
                             Spacer()
 
                             // TODO: Make this menu more clickable. Too easy to fat finger right now.

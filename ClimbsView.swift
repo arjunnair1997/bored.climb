@@ -1,6 +1,6 @@
 import SwiftUI
 
-func truncateName(_ name: String) -> String {
+func truncateClimbName(_ name: String) -> String {
     let maxClimbNameLengthForViews = 25
     if name.count > maxClimbNameLengthForViews {
         return String(name.prefix(maxClimbNameLengthForViews)) + "..."
@@ -25,7 +25,7 @@ struct ClimbsView: View {
             ForEach(wall.climbs) { climb in
                 VStack(alignment: .leading, spacing: 4) {
                     HStack {
-                        Text(truncateName(climb.name))
+                        Text(truncateClimbName(climb.name))
                             .font(.headline)
                         
                         Spacer()
