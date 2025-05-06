@@ -260,9 +260,10 @@ struct WallsView: View {
                             }
                             
                             VStack(alignment: .leading, spacing: 4) {
-                                Text(truncateWallName(wall.name))
+                                Text(wall.name)
                                     .font(.headline)
                                     .lineLimit(1)
+                                    .truncationMode(/*@START_MENU_TOKEN@*/.tail/*@END_MENU_TOKEN@*/)
                             }
 
                             Spacer()

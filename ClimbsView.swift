@@ -25,9 +25,11 @@ struct ClimbsView: View {
             ForEach(wall.climbs) { climb in
                 VStack(alignment: .leading, spacing: 4) {
                     HStack {
-                        Text(truncateClimbName(climb.name))
+                        Text(climb.name)
                             .font(.headline)
-                        
+                            .truncationMode(/*@START_MENU_TOKEN@*/.tail/*@END_MENU_TOKEN@*/)
+                            .lineLimit(1)
+
                         Spacer()
                         
                         Text(formatGrade(climb.grade))
@@ -37,10 +39,11 @@ struct ClimbsView: View {
                             .cornerRadius(8)
                     }
 
-                    Text(truncateDescription(climb.desc))
+                    Text(climb.desc)
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                         .lineLimit(1)
+                        .truncationMode(/*@START_MENU_TOKEN@*/.tail/*@END_MENU_TOKEN@*/)
                 }
                 .padding(.vertical, 4)
             }
