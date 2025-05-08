@@ -118,19 +118,28 @@ enum HoldType: Codable {
 }
 
 @Model
+class ClimbHold {
+    @Relationship var climb: Climb
+    @Relationship var hold: Hold
+    var holdType: HoldType
+    
+    init(climb: Climb, hold: Hold, holdType: HoldType) {
+        self.climb = climb
+        self.hold = hold
+        self.holdType = holdType
+    }
+}
+
+@Model
 class Climb {
     var name: String
     var grade: Grade
     
     // Wall associated with this climb.
-    var wall: Wall
+    @Relationship var wall: Wall
     var desc: String
 
-    // Set of holds associated with this climb.
-    //
-    // INVARIANT: holdTypes and holds have the same length.
-    var holds: [Hold] = []
-    var holdTypes: [HoldType] = []
+    @Relationship(deleteRule: .cascade) var climbHolds: [ClimbHold] = []
 
     // TODO: deal with the case where the hold is deleted. What happens to the climb?
     init(name: String, grade: Grade, wall: Wall, desc: String) {
@@ -144,39 +153,47 @@ class Climb {
         self.desc = desc
     }
     
+    func addHold(hold: Hold, holdType: HoldType) {
+        let climbHold = ClimbHold(climb: self, hold: hold, holdType: holdType)
+        climbHolds.append(climbHold)
+    }
+
     func setHolds(holds: [Hold], holdTypes: [HoldType]) {
         if holdTypes.count != holds.count {
             fatalError("invalid len holds/holdTypes")
         }
         
+        // Verify holds belong to wall
         for hold in holds {
             if !wall.holds.contains(where: { $0 === hold }) {
                 fatalError("hold not contained in wall")
             }
         }
 
-        self.holds = holds
-        self.holdTypes = holdTypes
+        // Clear existing relationships
+        climbHolds = []
+        
+        // Create new relationships preserving order
+        for i in 0..<holds.count {
+            self.addHold(hold: holds[i], holdType: holdTypes[i])
+        }
     }
-    
-    func validate() {
-        if holdTypes.count != holds.count {
-            fatalError("invalid len holds/holdTypes")
-        }
 
-        if name == "" {
-            fatalError("climb name cannot be empty")
-        }
-        
-        for hold in holds {
-            if !wall.holds.contains(where: { $0 === hold }) {
-                fatalError("hold not contained in wall")
-            }
-        }
-        
-        // Count start and finish holds
-       let startHoldCount = holdTypes.filter { $0 == .start }.count
-       let finishHoldCount = holdTypes.filter { $0 == .finish }.count
+    // Modified to use the computed properties
+   func validate() {
+       if name == "" {
+           fatalError("climb name cannot be empty")
+       }
+       
+       for climbHold in climbHolds {
+           if !wall.holds.contains(where: { $0 === climbHold.hold }) {
+               fatalError("hold not contained in wall")
+           }
+       }
+       
+       // Count start and finish holds
+       let startHoldCount = climbHolds.filter { $0.holdType == .start }.count
+       let finishHoldCount = climbHolds.filter { $0.holdType == .finish }.count
        
        // Validate start holds (at least 1, at most 4)
        if startHoldCount < 1 {
@@ -193,5 +210,5 @@ class Climb {
        if finishHoldCount > maxFinishHolds {
            fatalError("climb cannot have more than \(maxFinishHolds) finish holds")
        }
-    }
+   }
 }

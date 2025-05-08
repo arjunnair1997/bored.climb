@@ -212,6 +212,25 @@ class NavToFinishClimbView: Hashable {
     }
 }
 
+class NavToClimbView: Hashable {
+    var climb: Climb
+    var viewID: String
+    
+    func hash(into hasher: inout Hasher) {
+            hasher.combine(climb.id)
+            hasher.combine(viewID)
+    }
+    
+    static func == (lhs: NavToClimbView, rhs: NavToClimbView) -> Bool {
+        return lhs.climb.id == rhs.climb.id && lhs.viewID == rhs.viewID
+    }
+
+    init(climb: Climb, viewID: String) {
+        self.climb = climb
+        self.viewID = viewID
+    }
+}
+
 func truncateWallName(_ name: String) -> String {
     let maxNameLengthForViews = 25
     if name.count > maxNameLengthForViews {
@@ -224,6 +243,7 @@ func truncateWallName(_ name: String) -> String {
 // TODO: Make the naming system better. It's in the way, and i don't think
 // there should be edit support for wall names.
 // TODO: Force white background and don't respect dark theme.
+// TODO: Force unique constraint on climb names.
 struct WallsView: View {
     @Environment(\.modelContext) var context
     @Query var walls: [Wall] = []
