@@ -287,8 +287,7 @@ struct WallsView: View {
                             }
 
                             Spacer()
-
-                            // TODO: Make this menu more clickable. Too easy to fat finger right now.
+                            
                             Menu {
                                 Button(action: {
                                     nav.selectionPath.append(NavToEditWallView(wall: wall, viewID: "edit_wall_view"))
@@ -296,7 +295,6 @@ struct WallsView: View {
                                     Label("Edit", systemImage: "pencil")
                                 }
                                 
-                                // Modified delete button to trigger confirmation
                                 Button(action: {
                                     wallToDelete = wall
                                     showingDeleteConfirmation = true
@@ -311,6 +309,9 @@ struct WallsView: View {
                                 Image(systemName: "ellipsis")
                                     .font(.system(size: 20))
                                     .foregroundColor(.gray)
+                                    // Add these modifiers to increase the tap target
+                                    .frame(width: 44, height: 44)  // Apple's recommended minimum touch target size
+                                    .contentShape(Rectangle())     // Makes the entire frame tappable
                             }
                             .buttonStyle(BorderlessButtonStyle())
                         }
