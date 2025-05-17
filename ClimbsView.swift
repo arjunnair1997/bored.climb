@@ -123,13 +123,13 @@ struct ClimbsView: View {
             AddClimbView(wall: navWall.wall)
         }
         .navigationDestination(for: NavToClimbView.self) { navWall in
-            ClimbView(climb: navWall.climb)
+            ClimbImageView(climb: navWall.climb)
         }
     }
 }
 
 
-struct ClimbView: View {
+struct ClimbImageView: View {
     @Environment(\.modelContext) private var context
     @EnvironmentObject var nav: NavigationStateManager
 
