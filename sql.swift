@@ -83,7 +83,7 @@ class Wall: Identifiable {
     // Relationships
     private var _holds: [Hold]? = nil
     private var _climbs: [Climb]? = nil
-    
+
     var holds: [Hold] {
         if let holds = _holds {
             return holds
