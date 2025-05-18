@@ -55,5 +55,14 @@ CREATE INDEX IF NOT EXISTS idx_climb_wall_id ON Climb(wall_id);
 CREATE INDEX IF NOT EXISTS idx_climb_hold_climb_id ON ClimbHold(climb_id);
 CREATE INDEX IF NOT EXISTS idx_climb_hold_hold_id ON ClimbHold(hold_id);
 
+-- Comments table
+CREATE TABLE IF NOT EXISTS ClimbComment (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    climb_id INTEGER NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (climb_id) REFERENCES Climb(id) ON DELETE CASCADE
+);
 
-
+-- Create index for better performance
+CREATE INDEX IF NOT EXISTS idx_comment_climb_id ON ClimbComment(climb_id);

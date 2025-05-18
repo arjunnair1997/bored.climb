@@ -201,6 +201,36 @@ class ClimbHold {
     }
 }
 
+class ClimbComment: Identifiable {
+    var id: Int64?
+    var climbID: Int64
+    var content: String
+    var createdAt: Date
+    
+    init(climbID: Int64, content: String) {
+        if content.isEmpty {
+            fatalError("comment content cannot be empty")
+        }
+        
+        self.climbID = climbID
+        self.content = content
+        self.createdAt = Date()
+    }
+    
+    init(id: Int64, climbID: Int64, content: String, createdAt: Date) {
+        self.id = id
+        self.climbID = climbID
+        self.content = content
+        self.createdAt = createdAt
+    }
+    
+    func save() -> Int64 {
+        let id = DatabaseManager.shared.saveClimbComment(comment: self)
+        self.id = id
+        return id
+    }
+}
+
 class Climb: Identifiable {
     var id: Int64?
     var name: String
@@ -210,7 +240,50 @@ class Climb: Identifiable {
 
     // Relationships
     private var _climbHolds: [ClimbHold]? = nil
+    private var _comments: [ClimbComment]? = nil
     
+    var comments: [ClimbComment] {
+        if let comments = _comments {
+            return comments
+        }
+        
+        // Load comments if id exists
+        if let id = id {
+            _comments = DatabaseManager.shared.getCommentsForClimb(climbId: id)
+            return _comments ?? []
+        }
+        
+        return []
+    }
+    
+    func addComment(content: String) {
+        guard let climbId = id else {
+            fatalError("Climb must be saved before adding a comment")
+        }
+        
+        let comment = ClimbComment(climbID: climbId, content: content)
+        
+        // Save to database
+        let commentId = DatabaseManager.shared.saveClimbComment(comment: comment)
+        comment.id = commentId
+        
+        // Add to in-memory collection
+        if _comments == nil {
+            _comments = []
+        }
+        _comments?.append(comment)
+    }
+    
+    func deleteComment(commentId: Int64) {
+        // Delete from database
+        DatabaseManager.shared.deleteClimbComment(commentId: commentId)
+        
+        // Remove from in-memory collection if it exists
+        if let index = _comments?.firstIndex(where: { $0.id == commentId }) {
+            _comments?.remove(at: index)
+        }
+    }
+
     func wall() -> Wall {
         DatabaseManager.shared.getWall(id: wallID).unsafelyUnwrapped
     }
@@ -358,41 +431,26 @@ class DatabaseManager {
     }
     
     private func initializeDatabase() throws {
-        // Check if database is already initialized by checking for Wall table
-        var stmt: OpaquePointer?
-        let query = "SELECT EXISTS (SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'Wall')"
-        
-        if sqlite3_prepare_v2(db, query, -1, &stmt, nil) != SQLITE_OK {
-            let errmsg = String(cString: sqlite3_errmsg(db)!)
-            throw NSError(domain: "DatabaseManager", code: 3, userInfo: [NSLocalizedDescriptionKey: "Error checking table existence: \(errmsg)"])
+        // Always load the schema from SQL file
+        guard let schemaPath = Bundle.main.path(forResource: "schema", ofType: "sql"),
+              let schemaSQL = try? String(contentsOfFile: schemaPath, encoding: .utf8) else {
+            fatalError("Schema SQL file not found")
         }
         
-        defer {
-            sqlite3_finalize(stmt)
-        }
+        // Split SQL statements and execute them individually
+        let statements = schemaSQL.components(separatedBy: ";")
         
-        if sqlite3_step(stmt) == SQLITE_ROW && sqlite3_column_int(stmt, 0) == 0 {
-            // Database not initialized, load schema from SQL file
-            if let schemaPath = Bundle.main.path(forResource: "schema", ofType: "sql"),
-               let schemaSQL = try? String(contentsOfFile: schemaPath, encoding: .utf8) {
-                
-                // Split SQL statements and execute them individually
-                let statements = schemaSQL.components(separatedBy: ";")
-                
-                for statement in statements where !statement.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                    if sqlite3_exec(db, statement, nil, nil, nil) != SQLITE_OK {
-                        let errmsg = String(cString: sqlite3_errmsg(db)!)
-                        throw NSError(domain: "DatabaseManager", code: 4, userInfo: [NSLocalizedDescriptionKey: "Error executing SQL: \(errmsg)"])
-                    }
-                }
-                
-                print("Database initialized from schema.sql")
-            } else {
-                fatalError("Schema SQL file not found")
+        for statement in statements where !statement.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            // Execute statement - using SQLITE_OK to ignore errors if tables already exist
+            if sqlite3_exec(db, statement, nil, nil, nil) != SQLITE_OK {
+                let errmsg = String(cString: sqlite3_errmsg(db)!)
+                print("Notice: \(errmsg) - This may be expected if objects already exist")
             }
         }
+        
+        print("Database schema loaded from schema.sql")
     }
-    
+
     // MARK: - Wall Operations
     
     func saveWall(wall: Wall) -> Int64 {
@@ -977,6 +1035,132 @@ class DatabaseManager {
         if sqlite3_step(statement) != SQLITE_DONE {
             let errmsg = String(cString: sqlite3_errmsg(db)!)
             fatalError("Error deleting climb: \(errmsg)")
+        }
+    }
+
+    func saveClimbComment(comment: ClimbComment) -> Int64 {
+        var query: String
+        var statement: OpaquePointer?
+        
+        if let id = comment.id {
+            // Update existing comment
+            query = "UPDATE ClimbComment SET content = ? WHERE id = ?"
+            
+            if sqlite3_prepare_v2(db, query, -1, &statement, nil) != SQLITE_OK {
+                let errmsg = String(cString: sqlite3_errmsg(db)!)
+                fatalError("Error preparing update statement: \(errmsg)")
+            }
+            
+            sqlite3_bind_text(statement, 1, (comment.content as NSString).utf8String, -1, SQLITE_TRANSIENT)
+            sqlite3_bind_int64(statement, 2, id)
+            
+            if sqlite3_step(statement) != SQLITE_DONE {
+                let errmsg = String(cString: sqlite3_errmsg(db)!)
+                fatalError("Error updating comment: \(errmsg)")
+            }
+            
+            sqlite3_finalize(statement)
+            return id
+        } else {
+            // Insert new comment
+            query = "INSERT INTO ClimbComment (climb_id, content) VALUES (?, ?)"
+            
+            if sqlite3_prepare_v2(db, query, -1, &statement, nil) != SQLITE_OK {
+                let errmsg = String(cString: sqlite3_errmsg(db)!)
+                fatalError("Error preparing insert statement: \(errmsg)")
+            }
+            
+            sqlite3_bind_int64(statement, 1, comment.climbID)
+            sqlite3_bind_text(statement, 2, (comment.content as NSString).utf8String, -1, SQLITE_TRANSIENT)
+            
+            if sqlite3_step(statement) != SQLITE_DONE {
+                let errmsg = String(cString: sqlite3_errmsg(db)!)
+                fatalError("Error inserting comment: \(errmsg)")
+            }
+            
+            let id = sqlite3_last_insert_rowid(db)
+            sqlite3_finalize(statement)
+            return id
+        }
+    }
+        
+    func getCommentsForClimb(climbId: Int64) -> [ClimbComment] {
+        var result = [ClimbComment]()
+        
+        let query = "SELECT id, content, created_at FROM ClimbComment WHERE climb_id = ? ORDER BY created_at DESC"
+        var statement: OpaquePointer?
+        
+        if sqlite3_prepare_v2(db, query, -1, &statement, nil) != SQLITE_OK {
+            let errmsg = String(cString: sqlite3_errmsg(db)!)
+            fatalError("Error preparing select statement: \(errmsg)")
+        }
+        
+        defer {
+            sqlite3_finalize(statement)
+        }
+        
+        sqlite3_bind_int64(statement, 1, climbId)
+        
+        while sqlite3_step(statement) == SQLITE_ROW {
+            let commentId = sqlite3_column_int64(statement, 0)
+            
+            let contentPtr = sqlite3_column_text(statement, 1)
+            let content = contentPtr != nil ? String(cString: contentPtr!) : ""
+            
+            // Parse date from SQLite timestamp
+            let datePtr = sqlite3_column_text(statement, 2)
+            let dateString = datePtr != nil ? String(cString: datePtr!) : ""
+            
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            let createdAt = dateFormatter.date(from: dateString) ?? Date()
+            
+            let comment = ClimbComment(id: commentId, climbID: climbId, content: content, createdAt: createdAt)
+            result.append(comment)
+        }
+        
+        return result
+    }
+    
+    func deleteClimbComment(commentId: Int64) {
+        let query = "DELETE FROM ClimbComment WHERE id = ?"
+        var statement: OpaquePointer?
+        
+        if sqlite3_prepare_v2(db, query, -1, &statement, nil) != SQLITE_OK {
+            let errmsg = String(cString: sqlite3_errmsg(db)!)
+            fatalError("Error preparing delete statement: \(errmsg)")
+        }
+        
+        defer {
+            sqlite3_finalize(statement)
+        }
+        
+        sqlite3_bind_int64(statement, 1, commentId)
+        
+        if sqlite3_step(statement) != SQLITE_DONE {
+            let errmsg = String(cString: sqlite3_errmsg(db)!)
+            fatalError("Error deleting comment: \(errmsg)")
+        }
+    }
+    
+    func deleteCommentsForClimb(climbId: Int64) {
+        let query = "DELETE FROM ClimbComment WHERE climb_id = ?"
+        var statement: OpaquePointer?
+        
+        if sqlite3_prepare_v2(db, query, -1, &statement, nil) != SQLITE_OK {
+            let errmsg = String(cString: sqlite3_errmsg(db)!)
+            fatalError("Error preparing delete statement: \(errmsg)")
+        }
+        
+        defer {
+            sqlite3_finalize(statement)
+        }
+        
+        sqlite3_bind_int64(statement, 1, climbId)
+        
+        if sqlite3_step(statement) != SQLITE_DONE {
+            let errmsg = String(cString: sqlite3_errmsg(db)!)
+            fatalError("Error deleting comments: \(errmsg)")
         }
     }
 }

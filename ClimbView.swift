@@ -7,6 +7,37 @@ func getDescriptionForClimbView(desc: String) -> (String, Bool) {
     return (desc, false)
 }
 
+// Comment cell view component
+struct CommentCell: View {
+    let comment: ClimbComment
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack {
+                Text(formattedDate(comment.createdAt))
+                    .font(.caption)
+                    .foregroundColor(.gray)
+                Spacer()
+            }
+            
+            Text(comment.content)
+                .font(.body)
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .padding(10)
+        .background(Color(.systemGray6).opacity(0.3))
+        .cornerRadius(8)
+    }
+    
+    private func formattedDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        return formatter.string(from: date)
+    }
+}
+
 // TODO: add support for slide to go back.
 struct ClimbView: View {
     @EnvironmentObject var nav: NavigationStateManager
@@ -17,6 +48,7 @@ struct ClimbView: View {
     @State private var imageOffset: CGSize = .zero
     @State private var lastOffset: CGSize = .zero
     @State private var commentText: String = ""
+    @State private var comments: [ClimbComment] = []
     
     var body: some View {
         GeometryReader { superGeo in
@@ -101,7 +133,7 @@ struct ClimbView: View {
                         .padding(6)
                         .foregroundColor(textColor)
                         .lineLimit(3)
-                        .truncationMode(/*@START_MENU_TOKEN@*/.tail/*@END_MENU_TOKEN@*/)
+                        .truncationMode(.tail)
                         .multilineTextAlignment(.center)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -129,7 +161,9 @@ struct ClimbView: View {
                         Button(action: {
                             // Handle comment submission
                             if !commentText.isEmpty {
-                                // Add code to save the comment
+                                climb.addComment(content: commentText)
+                                // Refresh comments after adding
+                                comments = climb.comments
                                 commentText = ""
                             }
                         }) {
@@ -139,8 +173,36 @@ struct ClimbView: View {
                         }
                     }
                     .padding(.horizontal, 10)
+                    
+                    // Comments list
+                    ScrollView {
+                        VStack(spacing: 12) {
+                            if comments.isEmpty {
+                                Text("No comments yet")
+                                    .foregroundColor(.gray)
+                                    .padding(.top, 20)
+                            } else {
+                                ForEach(comments, id: \.id) { comment in
+                                    CommentCell(comment: comment)
+                                        .contextMenu {
+                                            Button(role: .destructive, action: {
+                                                if let commentId = comment.id {
+                                                    climb.deleteComment(commentId: commentId)
+                                                    // Refresh comments after deleting
+                                                    comments = climb.comments
+                                                }
+                                            }) {
+                                                Label("Delete", systemImage: "trash")
+                                            }
+                                        }
+                                }
+                            }
+                        }
+                        .padding(.horizontal, 10)
+                    }
                     .padding(.bottom, 10)
                 }
+//                .background(Color.black.opacity(0.7))
             }
         }
         .background(Color.black.opacity(0.7))
@@ -183,5 +245,9 @@ struct ClimbView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbarColorScheme(.dark, for: .navigationBar)
         .navigationBarBackButtonHidden(true)
+        .onAppear {
+            // Load comments when view appears
+            comments = climb.comments
+        }
     }
 }
