@@ -289,6 +289,7 @@ struct ClimbView: View {
     @State private var lastScale: CGFloat = 1.0
     @State private var imageOffset: CGSize = .zero
     @State private var lastOffset: CGSize = .zero
+    @State private var commentText: String = ""
     
     var body: some View {
             VStack(spacing: 0) {
@@ -369,6 +370,57 @@ struct ClimbView: View {
                 .padding(.horizontal, 10)
                 .padding(.vertical, 8)
                 .background(Color.black.opacity(0.8))
+                
+                // Horizontal line to demarcate the end of the banner
+                Rectangle()
+                    .fill(Color.gray.opacity(0.5))
+                    .frame(height: 1)
+                    .padding(.horizontal, 0)
+                
+                // Comment box section
+                VStack(spacing: 12) {
+                    Text("Comments")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal, 10)
+                        .padding(.top, 10)
+                    
+                    VStack {
+                        // Existing comments would go here
+                        // This is a placeholder - you'd typically have a ForEach to display comments
+                        Text("No comments yet. Be the first to add one!")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                            .padding(.vertical, 10)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                    }
+                    .padding(.horizontal, 10)
+                    
+                    // Text input for new comment
+                    HStack {
+                        TextField("Add a comment...", text: $commentText)
+                            .padding(10)
+                            .background(Color(.systemGray6))
+                            .cornerRadius(8)
+                            .foregroundColor(.primary)
+                        
+                        Button(action: {
+                            // Handle comment submission
+                            if !commentText.isEmpty {
+                                // Add code to save the comment
+                                commentText = ""
+                            }
+                        }) {
+                            Image(systemName: "paperplane.fill")
+                                .foregroundColor(.blue)
+                                .padding(10)
+                        }
+                    }
+                    .padding(.horizontal, 10)
+                    .padding(.bottom, 10)
+                }
+                .background(Color.black.opacity(0.7))
             }
             .toolbar {
                 // Back button at the top left

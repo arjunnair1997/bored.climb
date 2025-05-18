@@ -381,7 +381,9 @@ struct WallsView: View {
             .onChange(of: selectedWallImage) { oldItem, newItem in
                 Task {
                     if let dd = try? await newItem?.loadTransferable(type: Data.self) {
-                        let wall = getWallFromData(data: dd)
+                        let image = UIImage(named: "test_wall")!
+                        let data = image.pngData()!
+                        let wall = getWallFromData(data: data)
                         let _ = DatabaseManager.shared.saveWall(wall: wall)
                         nav.selectionPath.append(NavToEditWallView(wall: wall, viewID: "edit_wall_view"))
                     }
