@@ -754,7 +754,7 @@ struct FinishClimbView: View {
         let newClimb = Climb(
             name: climbName,
             grade: selectedGrade,
-            wall: wall,
+            wallID: wall.id.unsafelyUnwrapped,
             desc: climbDescription
         )
         newClimb.setHolds(holds: selectedHolds, holdTypes: holdTypes)

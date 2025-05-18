@@ -150,7 +150,7 @@ struct ClimbImageView: View {
                 VStack(spacing: 0) {
                     GeometryReader { containerGeo in
                         ZStack(alignment: .topLeading) {
-                            if let uiImage = UIImage(data: climb.wall.unsafelyUnwrapped.imageData) {
+                            if let uiImage = UIImage(data: climb.wall().imageData) {
                                 GeometryReader { imageGeo in
                                     let containerSize = containerGeo.size
                                     let baseFrame = imageGeo.frame(in: .global)
@@ -260,11 +260,12 @@ struct ClimbImageView: View {
                                 width: lastOffset.width + value.translation.width,
                                 height: lastOffset.height + value.translation.height
                             )
+                            let wall = climb.wall()
                             imageOffset = clampedOffset(
                                 offset: newOffset,
                                 scale: scale,
                                 containerSize: geometryProxy.size,
-                                imageSize: CGSize(width: climb.wall.unsafelyUnwrapped.width, height: climb.wall.unsafelyUnwrapped.height)
+                                imageSize: CGSize(width: wall.width, height: wall.height)
                             )
                         }
                         .onEnded { _ in

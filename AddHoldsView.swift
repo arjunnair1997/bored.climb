@@ -292,7 +292,7 @@ struct AddHoldsView: View {
                         Button(action: {
                             if tappedPoints.count > 2 {
                                 wall.addHold(hold: Hold(cgPoints: tappedPoints))
-                                wall.save()
+                                let _ = wall.save()
                             }
                             nav.removeLast()
                         }) {

@@ -142,8 +142,8 @@ class Wall: Identifiable {
         
         if climb.id == nil {
             // Save climb to database
-            if let _ = id {
-                climb.wall = self
+            if let wallID = id {
+                climb.wallID = wallID
                 let climbId = DatabaseManager.shared.saveClimb(climb: climb)
                 climb.id = climbId
             }
@@ -205,12 +205,16 @@ class Climb: Identifiable {
     var id: Int64?
     var name: String
     var grade: Grade
-    weak var wall: Wall?
+    var wallID: Int64
     var desc: String
-    
+
     // Relationships
     private var _climbHolds: [ClimbHold]? = nil
     
+    func wall() -> Wall {
+        DatabaseManager.shared.getWall(id: wallID).unsafelyUnwrapped
+    }
+
     var climbHolds: [ClimbHold] {
         if let climbHolds = _climbHolds {
             return climbHolds
@@ -225,17 +229,17 @@ class Climb: Identifiable {
         return []
     }
     
-    init(name: String, grade: Grade, wall: Wall, desc: String) {
+    init(name: String, grade: Grade, wallID: Int64, desc: String) {
         if name.isEmpty {
             fatalError("climb name cannot be empty")
         }
         
         self.name = name
         self.grade = grade
-        self.wall = wall
+        self.wallID = wallID
         self.desc = desc
     }
-    
+
     func addHold(hold: Hold, holdType: HoldType) {
         guard let holdId = hold.id else {
             fatalError("Hold must be saved before adding to a climb")
@@ -261,10 +265,7 @@ class Climb: Identifiable {
             fatalError("invalid len holds/holdTypes")
         }
         
-        // Verify holds belong to wall
-        guard let wall = wall else {
-            fatalError("Climb must be associated with a wall")
-        }
+        let wall = DatabaseManager.shared.getWall(id: wallID).unsafelyUnwrapped
         
         for hold in holds {
             if !wall.holds.contains(where: { $0.id == hold.id }) {
@@ -286,16 +287,14 @@ class Climb: Identifiable {
             fatalError("climb name cannot be empty")
         }
         
-        guard let wall = wall else {
-            fatalError("Climb must be associated with a wall")
-        }
-        
+        let wall = DatabaseManager.shared.getWall(id: wallID).unsafelyUnwrapped
+
         for climbHold in climbHolds {
             if !wall.holds.contains(where: { $0.id == climbHold.hold.id }) {
                 fatalError("hold not contained in wall")
             }
         }
-        
+
         // Count start and finish holds
         let startHoldCount = climbHolds.filter { $0.holdType == .start }.count
         let finishHoldCount = climbHolds.filter { $0.holdType == .finish }.count
@@ -715,12 +714,10 @@ class DatabaseManager {
             let errmsg = String(cString: sqlite3_errmsg(db)!)
             fatalError("Error beginning transaction: \(errmsg)")
         }
+
+        let wall = getWall(id: climb.wallID).unsafelyUnwrapped
         
         do {
-            guard let wall = climb.wall, let wallId = wall.id else {
-                throw NSError(domain: "DatabaseManager", code: 12, userInfo: [NSLocalizedDescriptionKey: "Climb must be associated with a saved wall"])
-            }
-            
             var climbId: Int64
             
             if let id = climb.id {
@@ -735,10 +732,10 @@ class DatabaseManager {
                 
                 sqlite3_bind_text(statement, 1, (climb.name as NSString).utf8String, -1, SQLITE_TRANSIENT)
                 sqlite3_bind_int(statement, 2, Int32(climb.grade.rawValue))
-                sqlite3_bind_int64(statement, 3, wallId)
+                sqlite3_bind_int64(statement, 3, wall.id.unsafelyUnwrapped)
                 sqlite3_bind_text(statement, 4, (climb.desc as NSString).utf8String, -1, SQLITE_TRANSIENT)
                 sqlite3_bind_int64(statement, 5, id)
-                
+
                 if sqlite3_step(statement) != SQLITE_DONE {
                     let errmsg = String(cString: sqlite3_errmsg(db)!)
                     throw NSError(domain: "DatabaseManager", code: 14, userInfo: [NSLocalizedDescriptionKey: "Error updating climb: \(errmsg)"])
@@ -758,9 +755,9 @@ class DatabaseManager {
                 
                 sqlite3_bind_text(statement, 1, (climb.name as NSString).utf8String, -1, SQLITE_TRANSIENT)
                 sqlite3_bind_int(statement, 2, Int32(climb.grade.rawValue))
-                sqlite3_bind_int64(statement, 3, wallId)
+                sqlite3_bind_int64(statement, 3, wall.id.unsafelyUnwrapped)
                 sqlite3_bind_text(statement, 4, (climb.desc as NSString).utf8String, -1, SQLITE_TRANSIENT)
-                
+
                 if sqlite3_step(statement) != SQLITE_DONE {
                     let errmsg = String(cString: sqlite3_errmsg(db)!)
                     throw NSError(domain: "DatabaseManager", code: 16, userInfo: [NSLocalizedDescriptionKey: "Error inserting climb: \(errmsg)"])
@@ -874,7 +871,7 @@ class DatabaseManager {
             let descPtr = sqlite3_column_text(statement, 3)
             let desc = descPtr != nil ? String(cString: descPtr!) : ""
             
-            let climb = Climb(name: name, grade: grade, wall: wall, desc: desc)
+            let climb = Climb(name: name, grade: grade, wallID: wall.id.unsafelyUnwrapped, desc: desc)
             climb.id = climbId
             
             result.append(climb)
@@ -919,9 +916,9 @@ class DatabaseManager {
         let descPtr = sqlite3_column_text(climbStatement, 3)
         let desc = descPtr != nil ? String(cString: descPtr!) : ""
         
-        let climb = Climb(name: name, grade: grade, wall: wall, desc: desc)
+        let climb = Climb(name: name, grade: grade, wallID: wall.id.unsafelyUnwrapped, desc: desc)
         climb.id = climbId
-        
+
         // Get all holds for this wall (for reference)
         let allHolds = getHoldsForWall(wallId: wallId)
         let holdsDict = Dictionary(uniqueKeysWithValues: allHolds.map { ($0.id!, $0) })
