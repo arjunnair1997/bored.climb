@@ -442,6 +442,7 @@ class DatabaseManager {
             
             let id = sqlite3_last_insert_rowid(db)
             sqlite3_finalize(statement)
+            wall.id = id
             return id
         }
     }
