@@ -128,135 +128,6 @@ struct ClimbsView: View {
     }
 }
 
-struct ClimbView: View {
-    @EnvironmentObject var nav: NavigationStateManager
-
-    var climb: Climb
-    @State private var scale: CGFloat = 1.0
-    @State private var lastScale: CGFloat = 1.0
-    @State private var imageOffset: CGSize = .zero
-    @State private var lastOffset: CGSize = .zero
-    
-    var body: some View {
-            VStack(spacing: 0) {
-                GeometryReader { containerGeo in
-                        ZStack(alignment: .topLeading) {
-                            if let uiImage = UIImage(data: climb.wall().imageData) {
-                                GeometryReader { imageGeo in
-                                    let containerSize = containerGeo.size
-                                    let baseFrame = imageGeo.frame(in: .global)
-
-                                    Image(uiImage: uiImage)
-                                        .resizable()
-                                        .scaledToFit()
-                                        .scaleEffect(scale)
-                                        .offset(imageOffset)
-                                        .frame(
-                                            width: containerSize.width,
-                                            height: containerSize.height
-                                        )
-                                        .clipped()
-                                        .overlay(
-                                            PolygonView(
-                                                polygons: climb.climbHolds.map { $0.hold.cgPoints() },
-                                                containerSize: containerSize,
-                                                imageSize: uiImage.size,
-                                                scale: scale,
-                                                offset: imageOffset,
-                                                drawCircle: false,
-                                                holdTypes: climb.climbHolds.map { $0.holdType}
-                                            )
-                                        )
-                                        .background(
-                                            Color.clear
-                                                .onAppear {}
-                                                .onChange(of: scale) { _, newScale in
-                                                    imageOffset = clampedOffset(
-                                                        offset: imageOffset,
-                                                        scale: newScale,
-                                                        containerSize: containerSize,
-                                                        imageSize: baseFrame.size
-                                                    )
-                                                    lastOffset = imageOffset
-                                                }
-                                        )
-                                        .contentShape(Rectangle()) // Ensures the entire area is tappable
-                                        .onTapGesture {
-                                            // Navigate to ClimbImageView on tap
-                                            nav.selectionPath.append(NavToClimbImageView(climb: climb, viewID: "climb_image_view"))
-                                        }
-                                }
-                            } else {
-                                fatalError("unable to load image")
-                            }
-                        }
-                        .background(Color.black.ignoresSafeArea())
-                }
-                .background(Color.black.opacity(0.1))
-                
-                // TODO: Add grade display + comment box.
-
-                // List of holds
-//                List {
-//                    ForEach(climb.wall().holds.indices, id: \.self) { index in
-//                        HStack {
-//                            Text(holdNameFromIndex(i: index))
-//                            // This is needed so that the entire list item registers
-//                            // the tap. Otherwise, the tap is only registered for the
-//                            // text.
-//                            Spacer()
-//                        }
-//                        .contentShape(Rectangle())
-////                        .onTapGesture {
-////                            overlappingHoldPolygons = [wall.holds[index].cgPoints()]
-////                        }
-//                    }
-//                }
-//                .listStyle(.plain)
-            }
-            .toolbar {
-                // Back button at the top left
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
-                        nav.removeLast()
-                    }) {
-                        HStack {
-                            Image(systemName: "chevron.left")
-                                .foregroundColor(.white)
-                        }
-                    }
-                }
-                
-                // Title in the center
-                ToolbarItem(placement: .principal) {
-                    Text(climb.name)
-                        .font(.headline)
-                        .foregroundColor(.white)
-                }
-                
-                // Add Hold button at the top right
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        nav.selectionPath.append(NavToClimbImageView(climb: climb, viewID: "climb_image_view"))
-                    }) {
-                        HStack {
-                            Image(systemName: "plus")
-                        }
-                    }
-                }
-            }
-            .navigationDestination(for: NavToClimbImageView.self) { navView in
-                ClimbImageView(climb: navView.climb)
-            }
-            .toolbarBackground(.black, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbarColorScheme(.dark, for: .navigationBar)
-            .navigationBarBackButtonHidden(true)
-    }
-}
-
-
 struct ClimbImageView: View {
     @EnvironmentObject var nav: NavigationStateManager
 
@@ -406,5 +277,137 @@ struct ClimbImageView: View {
         .navigationDestination(for: NavToFinishClimbView.self) { navWall in
             FinishClimbView(wall: navWall.wall, selectedHolds: navWall.selectedHolds, holdTypes: navWall.holdTypes)
         }
+    }
+}
+
+// TODO: add support for slide to go back.
+struct ClimbView: View {
+    @EnvironmentObject var nav: NavigationStateManager
+
+    var climb: Climb
+    @State private var scale: CGFloat = 1.0
+    @State private var lastScale: CGFloat = 1.0
+    @State private var imageOffset: CGSize = .zero
+    @State private var lastOffset: CGSize = .zero
+    
+    var body: some View {
+            VStack(spacing: 0) {
+                GeometryReader { containerGeo in
+                        ZStack(alignment: .topLeading) {
+                            if let uiImage = UIImage(data: climb.wall().imageData) {
+                                GeometryReader { imageGeo in
+                                    let containerSize = containerGeo.size
+                                    let baseFrame = imageGeo.frame(in: .global)
+
+                                    Image(uiImage: uiImage)
+                                        .resizable()
+                                        .scaledToFit()
+                                        .scaleEffect(scale)
+                                        .offset(imageOffset)
+                                        .frame(
+                                            width: containerSize.width,
+                                            height: containerSize.height
+                                        )
+                                        .clipped()
+                                        .overlay(
+                                            PolygonView(
+                                                polygons: climb.climbHolds.map { $0.hold.cgPoints() },
+                                                containerSize: containerSize,
+                                                imageSize: uiImage.size,
+                                                scale: scale,
+                                                offset: imageOffset,
+                                                drawCircle: false,
+                                                holdTypes: climb.climbHolds.map { $0.holdType}
+                                            )
+                                        )
+                                        .background(
+                                            Color.clear
+                                                .onAppear {}
+                                                .onChange(of: scale) { _, newScale in
+                                                    imageOffset = clampedOffset(
+                                                        offset: imageOffset,
+                                                        scale: newScale,
+                                                        containerSize: containerSize,
+                                                        imageSize: baseFrame.size
+                                                    )
+                                                    lastOffset = imageOffset
+                                                }
+                                        )
+                                        .contentShape(Rectangle()) // Ensures the entire area is tappable
+                                        .onTapGesture {
+                                            // Navigate to ClimbImageView on tap
+                                            nav.selectionPath.append(NavToClimbImageView(climb: climb, viewID: "climb_image_view"))
+                                        }
+                                }
+                            } else {
+                                fatalError("unable to load image")
+                            }
+                        }
+                        .background(Color.black.ignoresSafeArea())
+                }
+                .background(Color.black.opacity(0.1))
+                
+                // Banner displaying climb grade and description - no spacing between image and banner
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack {
+                        Text(climb.grade.displayString())
+                            .font(.subheadline)
+                            .padding(6)
+                            .background(colorForGrade(climb.grade))
+                            .cornerRadius(8)
+                        
+                        Spacer()
+                    }
+                    
+                    Text(climb.desc)
+                        .font(.subheadline)
+                        .foregroundColor(.white.opacity(0.9))
+                        .lineLimit(3)
+                        .multilineTextAlignment(.leading)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 8)
+                .background(Color.black.opacity(0.8))
+            }
+            .toolbar {
+                // Back button at the top left
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {
+                        nav.removeLast()
+                    }) {
+                        HStack {
+                            Image(systemName: "chevron.left")
+                                .foregroundColor(.white)
+                        }
+                    }
+                }
+                
+                // Title in the center
+                ToolbarItem(placement: .principal) {
+                    Text(climb.name)
+                        .font(.headline)
+                        .foregroundColor(.white)
+                }
+                
+                // Add Hold button at the top right
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        nav.selectionPath.append(NavToClimbImageView(climb: climb, viewID: "climb_image_view"))
+                    }) {
+                        HStack {
+                            Image(systemName: "plus")
+                        }
+                    }
+                }
+            }
+            .navigationDestination(for: NavToClimbImageView.self) { navView in
+                ClimbImageView(climb: navView.climb)
+            }
+            .toolbarBackground(.black, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbarColorScheme(.dark, for: .navigationBar)
+            .navigationBarBackButtonHidden(true)
     }
 }
