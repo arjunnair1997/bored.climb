@@ -245,7 +245,6 @@ func truncateWallName(_ name: String) -> String {
 // TODO: Force white background and don't respect dark theme.
 // TODO: Force unique constraint on climb names.
 struct WallsView: View {
-    var walls: [Wall] = []
     @StateObject var nav = NavigationStateManager()
 
     @State private var selectedWallImage: PhotosPickerItem? = nil
@@ -254,15 +253,11 @@ struct WallsView: View {
     // Add these state variables for the confirmation dialog
     @State private var showingDeleteConfirmation = false
     @State private var wallToDelete: Wall? = nil
-    
-    init() {
-        walls = DatabaseManager.shared.getAllWalls()
-    }
 
     var body: some View {
         NavigationStack(path: $nav.selectionPath) {
             List {
-                ForEach(walls) { wall in
+                ForEach(DatabaseManager.shared.getAllWalls()) { wall in
                     // Full row navigation
                     ZStack{
                         NavigationLink(value: NavToClimbsView(wall: wall, viewID: "climbs_view")) {
@@ -332,6 +327,8 @@ struct WallsView: View {
                     if let wall = wallToDelete {
                         DatabaseManager.shared.deleteWall(id: wall.id.unsafelyUnwrapped)
                     }
+                    
+                    // Needs to be updated.
                     wallToDelete = nil
                 }
                 Button("Cancel", role: .cancel) {
