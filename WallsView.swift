@@ -402,4 +402,5 @@ struct WallsView: View {
 
 #Preview {
     WallsView()
+        .preferredColorScheme(.light)
 }

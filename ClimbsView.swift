@@ -344,12 +344,14 @@ struct ClimbView: View {
                                 fatalError("unable to load image")
                             }
                         }
-                        .background(Color.black.ignoresSafeArea())
+//                        .background(Color.black.ignoresSafeArea())
                 }
-                .background(Color.black.opacity(0.1))
-                
+                .background(Color.white)
+
                 // Banner displaying climb grade and description - no spacing between image and banner
-                VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    // TODO: Make the grade banner take up the entire Hstack height. Or even use a fixed height
+                    // for the entire hstack.
                     HStack {
                         Text(climb.grade.displayString())
                             .font(.subheadline)
@@ -360,6 +362,7 @@ struct ClimbView: View {
                         Spacer()
                     }
                     
+                    // TODO: truncate this and make sure it is aligned right after the grade.
                     Text(climb.desc)
                         .font(.subheadline)
                         .foregroundColor(.white.opacity(0.9))
