@@ -231,6 +231,25 @@ class NavToClimbView: Hashable {
     }
 }
 
+class NavToClimbImageView: Hashable {
+    var climb: Climb
+    var viewID: String
+    
+    func hash(into hasher: inout Hasher) {
+            hasher.combine(climb.id)
+            hasher.combine(viewID)
+    }
+    
+    static func == (lhs: NavToClimbImageView, rhs: NavToClimbImageView) -> Bool {
+        return lhs.climb.id == rhs.climb.id && lhs.viewID == rhs.viewID
+    }
+
+    init(climb: Climb, viewID: String) {
+        self.climb = climb
+        self.viewID = viewID
+    }
+}
+
 func truncateWallName(_ name: String) -> String {
     let maxNameLengthForViews = 25
     if name.count > maxNameLengthForViews {
