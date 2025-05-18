@@ -65,3 +65,9 @@ CREATE TABLE IF NOT EXISTS ClimbComment (
 
 -- Create index for better performance
 CREATE INDEX IF NOT EXISTS idx_comment_climb_id ON ClimbComment(climb_id);
+
+CREATE TABLE IF NOT EXISTS JournalEntry (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+);

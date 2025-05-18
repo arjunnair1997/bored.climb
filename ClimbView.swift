@@ -150,7 +150,7 @@ struct ClimbView: View {
                 VStack(spacing: 12) {
                     Text("Comments")
                         .font(.headline)
-                        .foregroundColor(.white)
+                        .foregroundColor(.black)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal, 10)
                         .padding(.top, 10)
@@ -183,7 +183,7 @@ struct ClimbView: View {
                     ScrollView {
                         VStack(spacing: 0) { // Changed spacing to 0
                             if comments.isEmpty {
-                                Text("No comments yet")
+                                Text("No comments yet.")
                                     .foregroundColor(.gray)
                                     .padding(.top, 20)
                             } else {

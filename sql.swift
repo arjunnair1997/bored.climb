@@ -396,6 +396,33 @@ class Climb: Identifiable {
     }
 }
 
+class JournalEntry: Identifiable {
+    var id: Int64?
+    var content: String
+    var createdAt: Date
+    
+    init(content: String) {
+        if content.isEmpty {
+            fatalError("journal entry content cannot be empty")
+        }
+        
+        self.content = content
+        self.createdAt = Date()
+    }
+    
+    init(id: Int64, content: String, createdAt: Date) {
+        self.id = id
+        self.content = content
+        self.createdAt = createdAt
+    }
+    
+    func save() -> Int64 {
+        let id = DatabaseManager.shared.saveJournalEntry(entry: self)
+        self.id = id
+        return id
+    }
+}
+
 class DatabaseManager {
     static let shared = DatabaseManager()
 
@@ -450,6 +477,147 @@ class DatabaseManager {
         
         print("Database schema loaded from schema.sql")
     }
+    
+    // Journal entry operations.
+    func saveJournalEntry(entry: JournalEntry) -> Int64 {
+            var query: String
+            var statement: OpaquePointer?
+            
+            if let id = entry.id {
+                // Update existing entry
+                query = "UPDATE JournalEntry SET content = ? WHERE id = ?"
+                
+                if sqlite3_prepare_v2(db, query, -1, &statement, nil) != SQLITE_OK {
+                    let errmsg = String(cString: sqlite3_errmsg(db)!)
+                    fatalError("Error preparing update statement: \(errmsg)")
+                }
+                
+                sqlite3_bind_text(statement, 1, (entry.content as NSString).utf8String, -1, SQLITE_TRANSIENT)
+                sqlite3_bind_int64(statement, 2, id)
+                
+                if sqlite3_step(statement) != SQLITE_DONE {
+                    let errmsg = String(cString: sqlite3_errmsg(db)!)
+                    fatalError("Error updating journal entry: \(errmsg)")
+                }
+                
+                sqlite3_finalize(statement)
+                return id
+            } else {
+                // Insert new entry
+                query = "INSERT INTO JournalEntry (content) VALUES (?)"
+                
+                if sqlite3_prepare_v2(db, query, -1, &statement, nil) != SQLITE_OK {
+                    let errmsg = String(cString: sqlite3_errmsg(db)!)
+                    fatalError("Error preparing insert statement: \(errmsg)")
+                }
+                
+                sqlite3_bind_text(statement, 1, (entry.content as NSString).utf8String, -1, SQLITE_TRANSIENT)
+                
+                if sqlite3_step(statement) != SQLITE_DONE {
+                    let errmsg = String(cString: sqlite3_errmsg(db)!)
+                    fatalError("Error inserting journal entry: \(errmsg)")
+                }
+                
+                let id = sqlite3_last_insert_rowid(db)
+                sqlite3_finalize(statement)
+                return id
+            }
+        }
+        
+        // Get all journal entries, sorted by creation date (newest first)
+        func getAllJournalEntries() -> [JournalEntry] {
+            var result = [JournalEntry]()
+            
+            let query = "SELECT id, content, created_at FROM JournalEntry ORDER BY created_at DESC"
+            var statement: OpaquePointer?
+            
+            if sqlite3_prepare_v2(db, query, -1, &statement, nil) != SQLITE_OK {
+                let errmsg = String(cString: sqlite3_errmsg(db)!)
+                fatalError("Error preparing select statement: \(errmsg)")
+            }
+            
+            defer {
+                sqlite3_finalize(statement)
+            }
+            
+            while sqlite3_step(statement) == SQLITE_ROW {
+                let entryId = sqlite3_column_int64(statement, 0)
+                
+                let contentPtr = sqlite3_column_text(statement, 1)
+                let content = contentPtr != nil ? String(cString: contentPtr!) : ""
+                
+                // Parse date from SQLite timestamp
+                let datePtr = sqlite3_column_text(statement, 2)
+                let dateString = datePtr != nil ? String(cString: datePtr!) : ""
+                
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                let createdAt = dateFormatter.date(from: dateString) ?? Date()
+                
+                let entry = JournalEntry(id: entryId, content: content, createdAt: createdAt)
+                result.append(entry)
+            }
+            
+            return result
+        }
+        
+        // Get a specific journal entry by ID
+        func getJournalEntry(id: Int64) -> JournalEntry? {
+            let query = "SELECT id, content, created_at FROM JournalEntry WHERE id = ?"
+            var statement: OpaquePointer?
+            
+            if sqlite3_prepare_v2(db, query, -1, &statement, nil) != SQLITE_OK {
+                let errmsg = String(cString: sqlite3_errmsg(db)!)
+                fatalError("Error preparing select statement: \(errmsg)")
+            }
+            
+            defer {
+                sqlite3_finalize(statement)
+            }
+            
+            sqlite3_bind_int64(statement, 1, id)
+            
+            if sqlite3_step(statement) == SQLITE_ROW {
+                let entryId = sqlite3_column_int64(statement, 0)
+                
+                let contentPtr = sqlite3_column_text(statement, 1)
+                let content = contentPtr != nil ? String(cString: contentPtr!) : ""
+                
+                // Parse date from SQLite timestamp
+                let datePtr = sqlite3_column_text(statement, 2)
+                let dateString = datePtr != nil ? String(cString: datePtr!) : ""
+                
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                let createdAt = dateFormatter.date(from: dateString) ?? Date()
+                
+                return JournalEntry(id: entryId, content: content, createdAt: createdAt)
+            }
+            
+            return nil
+        }
+        
+        // Delete a journal entry
+        func deleteJournalEntry(entryId: Int64) {
+            let query = "DELETE FROM JournalEntry WHERE id = ?"
+            var statement: OpaquePointer?
+            
+            if sqlite3_prepare_v2(db, query, -1, &statement, nil) != SQLITE_OK {
+                let errmsg = String(cString: sqlite3_errmsg(db)!)
+                fatalError("Error preparing delete statement: \(errmsg)")
+            }
+            
+            defer {
+                sqlite3_finalize(statement)
+            }
+            
+            sqlite3_bind_int64(statement, 1, entryId)
+            
+            if sqlite3_step(statement) != SQLITE_DONE {
+                let errmsg = String(cString: sqlite3_errmsg(db)!)
+                fatalError("Error deleting journal entry: \(errmsg)")
+            }
+        }
 
     // MARK: - Wall Operations
     
