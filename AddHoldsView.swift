@@ -2,9 +2,7 @@ import SwiftUI
 import SwiftData
 import Foundation
 
-func clampedOffset(offset: CGSize, scale: CGFloat, containerSize: CGSize, imageSize: CGSize) -> CGSize {
-    // 1. Get fitted image size after `.scaledToFit()` but before scaling
-    let imageAspect = imageSize.width / imageSize.height
+func getFittedSize(imageAspect: CGFloat, containerSize: CGSize) -> CGSize {
     let containerAspect = containerSize.width / containerSize.height
 
     let fittedSize: CGSize
@@ -19,6 +17,13 @@ func clampedOffset(offset: CGSize, scale: CGFloat, containerSize: CGSize, imageS
         let width = height * imageAspect
         fittedSize = CGSize(width: width, height: height)
     }
+    return fittedSize
+}
+
+func clampedOffset(offset: CGSize, scale: CGFloat, containerSize: CGSize, imageSize: CGSize) -> CGSize {
+    // 1. Get fitted image size after `.scaledToFit()` but before scaling
+    let imageAspect = imageSize.width / imageSize.height
+    let fittedSize = getFittedSize(imageAspect: imageAspect, containerSize: containerSize)
 
     // 2. Apply scale
     let scaledSize = CGSize(width: fittedSize.width * scale, height: fittedSize.height * scale)
