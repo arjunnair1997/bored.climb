@@ -245,10 +245,9 @@ func truncateWallName(_ name: String) -> String {
 // TODO: Force white background and don't respect dark theme.
 // TODO: Force unique constraint on climb names.
 struct WallsView: View {
-    @Environment(\.modelContext) var context
-    @Query var walls: [Wall] = []
+    var walls: [Wall] = []
     @StateObject var nav = NavigationStateManager()
-    
+
     @State private var selectedWallImage: PhotosPickerItem? = nil
     @State private var navigateToEditBoardView: Bool = false
     
@@ -256,6 +255,10 @@ struct WallsView: View {
     @State private var showingDeleteConfirmation = false
     @State private var wallToDelete: Wall? = nil
     
+    init() {
+        walls = DatabaseManager.shared.getAllWalls()
+    }
+
     var body: some View {
         NavigationStack(path: $nav.selectionPath) {
             List {
@@ -327,8 +330,7 @@ struct WallsView: View {
             ) {
                 Button("Delete", role: .destructive) {
                     if let wall = wallToDelete {
-                        context.delete(wall)
-                        try? context.save()
+                        DatabaseManager.shared.deleteWall(id: wall.id.unsafelyUnwrapped)
                     }
                     wallToDelete = nil
                 }
@@ -364,7 +366,7 @@ struct WallsView: View {
                 Task {
                     if let dd = try? await newItem?.loadTransferable(type: Data.self) {
                         let wall = getWallFromData(data: dd)
-                        context.insert(wall)
+                        let _ = DatabaseManager.shared.saveWall(wall: wall)
                         nav.selectionPath.append(NavToEditWallView(wall: wall, viewID: "edit_wall_view"))
                     }
                 }
@@ -382,7 +384,4 @@ struct WallsView: View {
 
 #Preview {
     WallsView()
-    .modelContainer(try! ModelContainer(for: Wall.self, configurations:
-        ModelConfiguration(isStoredInMemoryOnly: true)
-    ))
 }

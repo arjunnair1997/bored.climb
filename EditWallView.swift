@@ -34,8 +34,6 @@ func holdNameFromIndex(i: Int) -> String {
 // TODO: It's instinctive to make this view zoomable. This is because some walls are extremely
 // zoomed out, and you need to be able to zoom in to tap on the holds.
 struct EditWallView: View {
-    @Environment(\.modelContext) private var context
-
     var wall: Wall
     
     // Add state for tracking overlapping holds
@@ -100,11 +98,11 @@ struct EditWallView: View {
                                                     
                                                     // Find all holds that contain the tapped point
                                                     let tappedHolds = wall.holds.filter { hold in
-                                                        isPointInPolygon(point: relativeTapPoint, points: hold.points)
+                                                        isPointInPolygon(point: relativeTapPoint, points: hold.cgPoints())
                                                     }
                                                     
                                                     // Update the list of polygons to display
-                                                    overlappingHoldPolygons = tappedHolds.map { $0.points }
+                                                    overlappingHoldPolygons = tappedHolds.map { $0.cgPoints() }
                                                 }
                                         }
                                     )
@@ -124,7 +122,7 @@ struct EditWallView: View {
                     .font(.title2)
                     .onChange(of: wallName) { oldValue, newValue in
                         wall.name = newValue
-                        saveContext(context: context)
+                        let _ = wall.save()
                     }
 
                 // List of holds
@@ -139,7 +137,7 @@ struct EditWallView: View {
                         }
                         .contentShape(Rectangle())
                         .onTapGesture {
-                            overlappingHoldPolygons = [wall.holds[index].points]
+                            overlappingHoldPolygons = [wall.holds[index].cgPoints()]
                         }
                     }
                     .onDelete { offsets in
@@ -158,7 +156,7 @@ struct EditWallView: View {
                                 wall.deleteHold(index: index)
                                 indexToDelete = nil
                                 showDeleteConfirmation = false
-                                saveContext(context: context)
+                                let _ = wall.save()
                             }
                         }
                     }, message: {
@@ -173,8 +171,6 @@ struct EditWallView: View {
                 // Back button at the top left
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
-                        // Save the wall.
-                        saveContext(context: context)
                         nav.removeLast()
                     }) {
                         HStack {

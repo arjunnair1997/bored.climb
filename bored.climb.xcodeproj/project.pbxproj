@@ -18,6 +18,8 @@
 		9722EDC52DB44A7300377E59 /* bored_climbTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9722EDC42DB44A7300377E59 /* bored_climbTests.swift */; };
 		9722EDCF2DB44A7300377E59 /* bored_climbUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9722EDCE2DB44A7300377E59 /* bored_climbUITests.swift */; };
 		9722EDD12DB44A7300377E59 /* bored_climbUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9722EDD02DB44A7300377E59 /* bored_climbUITestsLaunchTests.swift */; };
+		9744869B2DD958880038DD2A /* schema.sql in Resources */ = {isa = PBXBuildFile; fileRef = 9744869A2DD958880038DD2A /* schema.sql */; };
+		9744869D2DD9593F0038DD2A /* sql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9744869C2DD9593F0038DD2A /* sql.swift */; };
 		97712E682DB5C3BC00DB24C3 /* AddHoldsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97712E672DB5C3BC00DB24C3 /* AddHoldsView.swift */; };
 /* End PBXBuildFile section */
 
@@ -54,6 +56,8 @@
 		9722EDCA2DB44A7300377E59 /* bored.climbUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = bored.climbUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9722EDCE2DB44A7300377E59 /* bored_climbUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bored_climbUITests.swift; sourceTree = "<group>"; };
 		9722EDD02DB44A7300377E59 /* bored_climbUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bored_climbUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		9744869A2DD958880038DD2A /* schema.sql */ = {isa = PBXFileReference; lastKnownFileType = text; path = schema.sql; sourceTree = "<group>"; };
+		9744869C2DD9593F0038DD2A /* sql.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = sql.swift; sourceTree = "<group>"; };
 		97712E672DB5C3BC00DB24C3 /* AddHoldsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddHoldsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -85,8 +89,10 @@
 		9722EDA42DB44A7100377E59 = {
 			isa = PBXGroup;
 			children = (
+				9744869A2DD958880038DD2A /* schema.sql */,
 				97712E672DB5C3BC00DB24C3 /* AddHoldsView.swift */,
 				9722EDB22DB44A7100377E59 /* WallsView.swift */,
+				9744869C2DD9593F0038DD2A /* sql.swift */,
 				9708DD0C2DC6B120006BFE34 /* ClimbsView.swift */,
 				9708DD0E2DC6BEC7006BFE34 /* AddClimbView.swift */,
 				9708DD082DBF0086006BFE34 /* EditWallView.swift */,
@@ -248,6 +254,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9744869B2DD958880038DD2A /* schema.sql in Resources */,
 				9722EDBB2DB44A7300377E59 /* Preview Assets.xcassets in Resources */,
 				9722EDB72DB44A7300377E59 /* Assets.xcassets in Resources */,
 			);
@@ -278,6 +285,7 @@
 				9722EDB32DB44A7100377E59 /* WallsView.swift in Sources */,
 				9708DD0D2DC6B120006BFE34 /* ClimbsView.swift in Sources */,
 				9708DD0B2DBF0749006BFE34 /* models.swift in Sources */,
+				9744869D2DD9593F0038DD2A /* sql.swift in Sources */,
 				9708DD092DBF0086006BFE34 /* EditWallView.swift in Sources */,
 				9722EDB12DB44A7100377E59 /* bored_climbApp.swift in Sources */,
 				9708DD0F2DC6BEC7006BFE34 /* AddClimbView.swift in Sources */,

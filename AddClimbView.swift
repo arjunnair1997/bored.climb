@@ -10,8 +10,6 @@ import SwiftUI
 // 4. Transition to FinishClimbView on next. Allows user to name the climb
 //    assign it a grade, and add a description.
 struct AddClimbView: View {
-    @Environment(\.modelContext) private var context
-    
     @EnvironmentObject var nav: NavigationStateManager
 
     var wall: Wall
@@ -45,7 +43,7 @@ struct AddClimbView: View {
                                         .clipped()
                                         .overlay(
                                             PolygonView(
-                                                polygons: selectedHolds.map { $0.points },
+                                                polygons: selectedHolds.map { $0.cgPoints() },
                                                 containerSize: containerSize,
                                                 imageSize: uiImage.size,
                                                 scale: scale,
@@ -82,7 +80,7 @@ struct AddClimbView: View {
                                                     
                                                     // Find all holds that contain the tapped point
                                                     let tappedHolds = wall.holds.filter { hold in
-                                                        isPointInPolygon(point: relativeTapPoint, points: hold.points)
+                                                        isPointInPolygon(point: relativeTapPoint, points: hold.cgPoints())
                                                     }
                                                     
                                                     if !tappedHolds.isEmpty {
@@ -112,8 +110,6 @@ struct AddClimbView: View {
                 VStack {
                     HStack {
                         Button(action: {
-                            // This will do nothing for now
-                            saveContext(context: context)
                             nav.removeLast()
                         }) {
                             Text("Cancel")
@@ -206,8 +202,6 @@ struct AddClimbView: View {
 }
 
 struct SelectStartHoldView: View {
-    @Environment(\.modelContext) private var context
-    
     @EnvironmentObject var nav: NavigationStateManager
 
     var wall: Wall
@@ -259,7 +253,7 @@ struct SelectStartHoldView: View {
                                         .clipped()
                                         .overlay(
                                             PolygonView(
-                                                polygons: selectedHolds.map { $0.points },
+                                                polygons: selectedHolds.map { $0.cgPoints() },
                                                 containerSize: containerSize,
                                                 imageSize: uiImage.size,
                                                 scale: scale,
@@ -296,7 +290,7 @@ struct SelectStartHoldView: View {
                                                     
                                                     // Out of all selected holds, which ones were just tapped.
                                                     let tappedHolds = selectedHolds.filter { hold in
-                                                        isPointInPolygon(point: relativeTapPoint, points: hold.points)
+                                                        isPointInPolygon(point: relativeTapPoint, points: hold.cgPoints())
                                                     }
                                                     
                                                     if !tappedHolds.isEmpty {
@@ -429,8 +423,6 @@ struct SelectStartHoldView: View {
 }
 
 struct SelectFinishHoldView: View {
-    @Environment(\.modelContext) private var context
-    
     @EnvironmentObject var nav: NavigationStateManager
 
     var wall: Wall
@@ -475,7 +467,7 @@ struct SelectFinishHoldView: View {
                                         .clipped()
                                         .overlay(
                                             PolygonView(
-                                                polygons: selectedHolds.map { $0.points },
+                                                polygons: selectedHolds.map { $0.cgPoints() },
                                                 containerSize: containerSize,
                                                 imageSize: uiImage.size,
                                                 scale: scale,
@@ -509,20 +501,20 @@ struct SelectFinishHoldView: View {
                                                         scale: scale,
                                                         offset: imageOffset
                                                     )
-                                                    
+//
                                                     // Out of all selected holds, which ones were just tapped.
                                                     let tappedHolds = selectedHolds.filter { hold in
-                                                        isPointInPolygon(point: relativeTapPoint, points: hold.points)
+                                                        isPointInPolygon(point: relativeTapPoint, points: hold.cgPoints())
                                                     }
-                                                    
+
                                                     if !tappedHolds.isEmpty {
                                                         // Add each tapped hold to the selection
                                                         for hold in tappedHolds {
                                                             // Get all indices of the tapped hold in the selectedHolds array
                                                             let matchingIndices = selectedHolds.indices.filter { selectedHolds[$0] == hold }
-                                                            
+   
                                                             for index in matchingIndices {
-                                                                // If this hold is already marked as .finish, flip it to .middle
+//                                                                // If this hold is already marked as .finish, flip it to .middle
                                                                 if holdTypes[index] == .finish {
                                                                     holdTypes[index] = .middle
                                                                 } else if holdTypes[index] == .middle {
@@ -550,8 +542,6 @@ struct SelectFinishHoldView: View {
                 VStack {
                     HStack {
                         Button(action: {
-                            // This will do nothing for now
-                            saveContext(context: context)
                             nav.removeLast()
                         }) {
                             // TODO: try chevron left.
@@ -645,8 +635,6 @@ struct SelectFinishHoldView: View {
 }
 
 struct FinishClimbView: View {
-    @Environment(\.modelContext) private var context
-    
     @EnvironmentObject var nav: NavigationStateManager
 
     var wall: Wall
@@ -682,7 +670,7 @@ struct FinishClimbView: View {
                     
                     Picker("", selection: $selectedGrade) {
                         ForEach(grades, id: \.self) { grade in
-                            Text(formatGrade(grade)).tag(grade)
+                            Text(grade.displayString()).tag(grade)
                         }
                     }
                     .pickerStyle(WheelPickerStyle())
@@ -772,8 +760,6 @@ struct FinishClimbView: View {
         newClimb.setHolds(holds: selectedHolds, holdTypes: holdTypes)
 
         wall.addClimb(climb: newClimb)
-
-        // TODO: any uses of try? should just throw a fatal error if the climb cannot be saved for some reason.
-        try? context.save()
+        let _ = wall.save()
     }
 }
