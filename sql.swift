@@ -271,9 +271,9 @@ class Climb: Identifiable {
         if _comments == nil {
             _comments = []
         }
-        _comments?.append(comment)
+        _comments?.insert(comment, at: 0)
     }
-    
+
     func deleteComment(commentId: Int64) {
         // Delete from database
         DatabaseManager.shared.deleteClimbComment(commentId: commentId)

@@ -23,7 +23,7 @@ struct CommentCell: View {
             HStack {
                 Text(comment.content)
                     .font(.body)
-                    .foregroundColor(.white)
+                    .foregroundColor(.black)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 
                 Spacer()
@@ -205,7 +205,7 @@ struct ClimbView: View {
                                         // Add thin white divider line after each comment (except the last one)
                                         if comment.id != comments.last?.id {
                                             Divider()
-                                                .background(Color.white.opacity(0.3))
+                                                .background(Color.black.opacity(0.3))
                                                 .padding(.horizontal, 10)
                                         }
                                     }
@@ -218,7 +218,7 @@ struct ClimbView: View {
                 }
             }
         }
-        .background(Color.black.opacity(0.7))
+        .background(Color.white)
         .toolbar {
             // Back button at the top left
             ToolbarItem(placement: .navigationBarLeading) {
