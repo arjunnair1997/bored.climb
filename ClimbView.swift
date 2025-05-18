@@ -26,8 +26,6 @@ struct CommentCell: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
         .padding(10)
-        .background(Color(.systemGray6).opacity(0.3))
-        .cornerRadius(8)
     }
     
     private func formattedDate(_ date: Date) -> String {
@@ -176,25 +174,34 @@ struct ClimbView: View {
                     
                     // Comments list
                     ScrollView {
-                        VStack(spacing: 12) {
+                        VStack(spacing: 0) { // Changed spacing to 0
                             if comments.isEmpty {
                                 Text("No comments yet")
                                     .foregroundColor(.gray)
                                     .padding(.top, 20)
                             } else {
                                 ForEach(comments, id: \.id) { comment in
-                                    CommentCell(comment: comment)
-                                        .contextMenu {
-                                            Button(role: .destructive, action: {
-                                                if let commentId = comment.id {
-                                                    climb.deleteComment(commentId: commentId)
-                                                    // Refresh comments after deleting
-                                                    comments = climb.comments
+                                    VStack {
+                                        CommentCell(comment: comment)
+                                            .contextMenu {
+                                                Button(role: .destructive, action: {
+                                                    if let commentId = comment.id {
+                                                        climb.deleteComment(commentId: commentId)
+                                                        // Refresh comments after deleting
+                                                        comments = climb.comments
+                                                    }
+                                                }) {
+                                                    Label("Delete", systemImage: "trash")
                                                 }
-                                            }) {
-                                                Label("Delete", systemImage: "trash")
                                             }
+                                        
+                                        // Add thin white divider line after each comment (except the last one)
+                                        if comment.id != comments.last?.id {
+                                            Divider()
+                                                .background(Color.white.opacity(0.3))
+                                                .padding(.horizontal, 10)
                                         }
+                                    }
                                 }
                             }
                         }
