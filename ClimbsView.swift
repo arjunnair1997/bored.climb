@@ -70,7 +70,7 @@ struct ClimbsView: View {
 
                             Spacer()
                             
-                            Text(formatGrade(climb.grade))
+                            Text(climb.grade.displayString())
                                 .font(.subheadline)
                                 .padding(6)
                                 .background(colorForGrade(climb.grade))
@@ -123,14 +123,13 @@ struct ClimbsView: View {
             AddClimbView(wall: navWall.wall)
         }
         .navigationDestination(for: NavToClimbView.self) { navWall in
-            ClimbView(climb: navWall.climb)
+            ClimbImageView(climb: navWall.climb)
         }
     }
 }
 
 
-struct ClimbView: View {
-    @Environment(\.modelContext) private var context
+struct ClimbImageView: View {
     @EnvironmentObject var nav: NavigationStateManager
 
     var climb: Climb
@@ -151,7 +150,7 @@ struct ClimbView: View {
                 VStack(spacing: 0) {
                     GeometryReader { containerGeo in
                         ZStack(alignment: .topLeading) {
-                            if let uiImage = UIImage(data: climb.wall.imageData) {
+                            if let uiImage = UIImage(data: climb.wall().imageData) {
                                 GeometryReader { imageGeo in
                                     let containerSize = containerGeo.size
                                     let baseFrame = imageGeo.frame(in: .global)
@@ -168,7 +167,7 @@ struct ClimbView: View {
                                         .clipped()
                                         .overlay(
                                             PolygonView(
-                                                polygons: climb.climbHolds.map { $0.hold.points },
+                                                polygons: climb.climbHolds.map { $0.hold.cgPoints() },
                                                 containerSize: containerSize,
                                                 imageSize: uiImage.size,
                                                 scale: scale,
@@ -203,8 +202,6 @@ struct ClimbView: View {
                 VStack {
                     HStack {
                         Button(action: {
-                            // This will do nothing for now
-                            saveContext(context: context)
                             nav.removeLast()
                         }) {
                             // TODO: try chevron left.
@@ -263,11 +260,12 @@ struct ClimbView: View {
                                 width: lastOffset.width + value.translation.width,
                                 height: lastOffset.height + value.translation.height
                             )
+                            let wall = climb.wall()
                             imageOffset = clampedOffset(
                                 offset: newOffset,
                                 scale: scale,
                                 containerSize: geometryProxy.size,
-                                imageSize: CGSize(width: climb.wall.width, height: climb.wall.height)
+                                imageSize: CGSize(width: wall.width, height: wall.height)
                             )
                         }
                         .onEnded { _ in

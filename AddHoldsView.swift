@@ -132,8 +132,6 @@ func convertToImageCoordinates(
 // Then if someone clicks on Done with less than 3 holds, show a pop-up which
 // is something like "A hold must be constructed of at least 3 points.
 struct AddHoldsView: View {
-    @Environment(\.modelContext) private var context
-    
     @EnvironmentObject var nav: NavigationStateManager
 
     var wall: Wall
@@ -189,7 +187,7 @@ struct AddHoldsView: View {
                                         )
                                         .overlay(
                                             PolygonView(
-                                                polygons:  wall.holds.map { $0.points },
+                                                polygons:  wall.holds.map { $0.cgPoints() },
                                                 containerSize: containerSize,
                                                 imageSize: uiImage.size,
                                                 scale: scale,
@@ -293,9 +291,9 @@ struct AddHoldsView: View {
 
                         Button(action: {
                             if tappedPoints.count > 2 {
-                                wall.addHold(hold: Hold(points: tappedPoints))
+                                wall.addHold(hold: Hold(cgPoints: tappedPoints))
+                                let _ = wall.save()
                             }
-                            saveContext(context: context)
                             nav.removeLast()
                         }) {
                             Text("Done")
