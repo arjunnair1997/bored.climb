@@ -5,7 +5,7 @@ import SwiftData
 struct bored_climbApp: App {
     var body: some Scene {
         WindowGroup {
-            WallsView()
+            MainTabView()
                 .preferredColorScheme(.light)
         }
     }

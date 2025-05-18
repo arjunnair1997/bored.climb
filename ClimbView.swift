@@ -20,10 +20,16 @@ struct CommentCell: View {
                 Spacer()
             }
             
-            Text(comment.content)
-                .font(.body)
-                .foregroundColor(.white)
-                .frame(maxWidth: .infinity, alignment: .leading)
+            HStack {
+                Text(comment.content)
+                    .font(.body)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                
+                Spacer()
+            }
+            
+            
         }
         .padding(10)
     }
@@ -37,6 +43,7 @@ struct CommentCell: View {
 }
 
 // TODO: add support for slide to go back.
+// TODO: don't allow the image to shrink when the keyboard comes up.
 struct ClimbView: View {
     @EnvironmentObject var nav: NavigationStateManager
 
@@ -209,7 +216,6 @@ struct ClimbView: View {
                     }
                     .padding(.bottom, 10)
                 }
-//                .background(Color.black.opacity(0.7))
             }
         }
         .background(Color.black.opacity(0.7))

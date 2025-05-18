@@ -55,7 +55,6 @@ CREATE INDEX IF NOT EXISTS idx_climb_wall_id ON Climb(wall_id);
 CREATE INDEX IF NOT EXISTS idx_climb_hold_climb_id ON ClimbHold(climb_id);
 CREATE INDEX IF NOT EXISTS idx_climb_hold_hold_id ON ClimbHold(hold_id);
 
--- Comments table
 CREATE TABLE IF NOT EXISTS ClimbComment (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     climb_id INTEGER NOT NULL,
