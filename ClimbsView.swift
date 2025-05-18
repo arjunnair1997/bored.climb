@@ -180,6 +180,11 @@ struct ClimbView: View {
                                                     lastOffset = imageOffset
                                                 }
                                         )
+                                        .contentShape(Rectangle()) // Ensures the entire area is tappable
+                                        .onTapGesture {
+                                            // Navigate to ClimbImageView on tap
+                                            nav.selectionPath.append(NavToClimbImageView(climb: climb, viewID: "climb_image_view"))
+                                        }
                                 }
                             } else {
                                 fatalError("unable to load image")
@@ -189,23 +194,25 @@ struct ClimbView: View {
                 }
                 .background(Color.black.opacity(0.1))
                 
+                // TODO: Add grade display + comment box.
+
                 // List of holds
-                List {
-                    ForEach(climb.wall().holds.indices, id: \.self) { index in
-                        HStack {
-                            Text(holdNameFromIndex(i: index))
-                            // This is needed so that the entire list item registers
-                            // the tap. Otherwise, the tap is only registered for the
-                            // text.
-                            Spacer()
-                        }
-                        .contentShape(Rectangle())
-//                        .onTapGesture {
-//                            overlappingHoldPolygons = [wall.holds[index].cgPoints()]
+//                List {
+//                    ForEach(climb.wall().holds.indices, id: \.self) { index in
+//                        HStack {
+//                            Text(holdNameFromIndex(i: index))
+//                            // This is needed so that the entire list item registers
+//                            // the tap. Otherwise, the tap is only registered for the
+//                            // text.
+//                            Spacer()
 //                        }
-                    }
-                }
-                .listStyle(.plain)
+//                        .contentShape(Rectangle())
+////                        .onTapGesture {
+////                            overlappingHoldPolygons = [wall.holds[index].cgPoints()]
+////                        }
+//                    }
+//                }
+//                .listStyle(.plain)
             }
             .toolbar {
                 // Back button at the top left
@@ -248,7 +255,6 @@ struct ClimbView: View {
             .navigationBarBackButtonHidden(true)
     }
 }
-
 
 
 struct ClimbImageView: View {
