@@ -75,6 +75,7 @@ struct ClimbsView: View {
                                 .padding(6)
                                 .background(colorForGrade(climb.grade))
                                 .cornerRadius(8)
+                                .opacity(1)
                         }
 
                         Text(climb.desc)

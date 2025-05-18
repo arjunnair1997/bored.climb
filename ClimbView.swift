@@ -1,6 +1,11 @@
 import SwiftUI
 
-
+func getDescriptionForClimbView(desc: String) -> (String, Bool) {
+    if desc.isEmpty {
+        return ("No description.", true)
+    }
+    return (desc, false)
+}
 
 // TODO: add support for slide to go back.
 struct ClimbView: View {
@@ -83,11 +88,19 @@ struct ClimbView: View {
                         .padding(6)
                         .background(colorForGrade(climb.grade))
                         .cornerRadius(8)
+                        .opacity(1)
 
-                    Text(climb.desc)
+                    let (desc, isDefault) = getDescriptionForClimbView(desc: climb.desc)
+                    let textColor = if isDefault {
+                        Color.white.opacity(0.3)
+                    } else {
+                        Color.white.opacity(0.9)
+                    }
+                    
+                    Text(desc)
                         .font(.subheadline)
                         .padding(6)
-                        .foregroundColor(.white.opacity(0.9))
+                        .foregroundColor(textColor)
                         .lineLimit(3)
                         .truncationMode(/*@START_MENU_TOKEN@*/.tail/*@END_MENU_TOKEN@*/)
                         .multilineTextAlignment(.center)
@@ -143,6 +156,7 @@ struct ClimbView: View {
                 .background(Color.black.opacity(0.7))
             }
         }
+        .background(Color.black.opacity(0.7))
         .toolbar {
             // Back button at the top left
             ToolbarItem(placement: .navigationBarLeading) {
