@@ -68,7 +68,7 @@ struct ClimbView: View {
                         }
                         //                        .background(Color.black.ignoresSafeArea())
                     }
-                    .background(Color.white)
+                    .background(Color.black)
                     .frame(maxHeight: fittedSize.height)
                 } else {
                     fatalError("unable to load image")
@@ -78,33 +78,24 @@ struct ClimbView: View {
                 HStack {
                     // TODO: Make the grade banner take up the entire Hstack height. Or even use a fixed height
                     // for the entire hstack.
-                    HStack {
-                        Text(climb.grade.displayString())
-                            .font(.subheadline)
-                            .padding(6)
-                            .background(colorForGrade(climb.grade))
-                            .cornerRadius(8)
-                        
-                        Spacer()
-                    }
-                    
-                    // TODO: truncate this and make sure it is aligned right after the grade.
+                    Text(climb.grade.displayString())
+                        .font(.subheadline)
+                        .padding(6)
+                        .background(colorForGrade(climb.grade))
+                        .cornerRadius(8)
+
                     Text(climb.desc)
                         .font(.subheadline)
+                        .padding(6)
                         .foregroundColor(.white.opacity(0.9))
                         .lineLimit(3)
-                        .multilineTextAlignment(.leading)
+                        .truncationMode(/*@START_MENU_TOKEN@*/.tail/*@END_MENU_TOKEN@*/)
+                        .multilineTextAlignment(.center)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 10)
                 .padding(.vertical, 8)
-                .background(Color.black.opacity(0.8))
-                
-                // Horizontal line to demarcate the end of the banner
-                Rectangle()
-                    .fill(Color.gray.opacity(0.5))
-                    .frame(height: 1)
-                    .padding(.horizontal, 0)
+                .background(Color(red: 48/255, green: 50/255, blue: 56/255))
                 
                 // Comment box section
                 VStack(spacing: 12) {
@@ -178,7 +169,7 @@ struct ClimbView: View {
                     nav.selectionPath.append(NavToClimbImageView(climb: climb, viewID: "climb_image_view"))
                 }) {
                     HStack {
-                        Image(systemName: "plus")
+                        Image(systemName: "rectangle.and.arrow.up.right.and.arrow.down.left")
                     }
                 }
             }

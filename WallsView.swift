@@ -2,7 +2,7 @@ import SwiftUI
 import SwiftData
 import PhotosUI
 
-let toolbarColor = Color(red: 231/255, green: 201/255, blue: 117/255)
+let toolbarColor = Color(red: 245/255, green: 191/255, blue: 79/255)
 
 func saveContext(context: ModelContext) {
     do {
@@ -383,7 +383,7 @@ struct WallsView: View {
             .onChange(of: selectedWallImage) { oldItem, newItem in
                 Task {
                     if let dd = try? await newItem?.loadTransferable(type: Data.self) {
-                        let image = UIImage(named: "test_wall")!
+                        let image = UIImage(named: "vert_test_wall")!
                         let data = image.pngData()!
                         let wall = getWallFromData(data: data)
                         let _ = DatabaseManager.shared.saveWall(wall: wall)
