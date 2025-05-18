@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		9708DD092DBF0086006BFE34 /* EditWallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9708DD082DBF0086006BFE34 /* EditWallView.swift */; };
-		9708DD0B2DBF0749006BFE34 /* models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9708DD0A2DBF0749006BFE34 /* models.swift */; };
 		9708DD0D2DC6B120006BFE34 /* ClimbsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9708DD0C2DC6B120006BFE34 /* ClimbsView.swift */; };
 		9708DD0F2DC6BEC7006BFE34 /* AddClimbView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9708DD0E2DC6BEC7006BFE34 /* AddClimbView.swift */; };
 		9722EDB12DB44A7100377E59 /* bored_climbApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9722EDB02DB44A7100377E59 /* bored_climbApp.swift */; };
@@ -42,7 +41,6 @@
 
 /* Begin PBXFileReference section */
 		9708DD082DBF0086006BFE34 /* EditWallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditWallView.swift; sourceTree = "<group>"; };
-		9708DD0A2DBF0749006BFE34 /* models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = models.swift; sourceTree = "<group>"; };
 		9708DD0C2DC6B120006BFE34 /* ClimbsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClimbsView.swift; sourceTree = "<group>"; };
 		9708DD0E2DC6BEC7006BFE34 /* AddClimbView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddClimbView.swift; sourceTree = "<group>"; };
 		9722EDAD2DB44A7100377E59 /* bored.climb.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = bored.climb.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -96,7 +94,6 @@
 				9708DD0C2DC6B120006BFE34 /* ClimbsView.swift */,
 				9708DD0E2DC6BEC7006BFE34 /* AddClimbView.swift */,
 				9708DD082DBF0086006BFE34 /* EditWallView.swift */,
-				9708DD0A2DBF0749006BFE34 /* models.swift */,
 				9722EDAF2DB44A7100377E59 /* bored.climb */,
 				9722EDC32DB44A7300377E59 /* bored.climbTests */,
 				9722EDCD2DB44A7300377E59 /* bored.climbUITests */,
@@ -284,7 +281,6 @@
 				97712E682DB5C3BC00DB24C3 /* AddHoldsView.swift in Sources */,
 				9722EDB32DB44A7100377E59 /* WallsView.swift in Sources */,
 				9708DD0D2DC6B120006BFE34 /* ClimbsView.swift in Sources */,
-				9708DD0B2DBF0749006BFE34 /* models.swift in Sources */,
 				9744869D2DD9593F0038DD2A /* sql.swift in Sources */,
 				9708DD092DBF0086006BFE34 /* EditWallView.swift in Sources */,
 				9722EDB12DB44A7100377E59 /* bored_climbApp.swift in Sources */,
