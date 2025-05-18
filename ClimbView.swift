@@ -88,7 +88,6 @@ struct ClimbView: View {
                         .padding(6)
                         .background(colorForGrade(climb.grade))
                         .cornerRadius(8)
-                        .opacity(1)
 
                     let (desc, isDefault) = getDescriptionForClimbView(desc: climb.desc)
                     let textColor = if isDefault {

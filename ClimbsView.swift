@@ -7,43 +7,43 @@ import SwiftUI
 func colorForGrade(_ grade: Grade) -> Color {
     switch grade {
     case .proj:
-        return Color.gray.opacity(0.2) // Projects with a distinct neutral color
+        return Color.gray.opacity(1) // Projects with a distinct neutral color
     case .V_0:
-        return Color(red: 0.4, green: 0.8, blue: 0.4).opacity(0.5) // Light green
+        return Color(red: 0.4, green: 0.8, blue: 0.4).opacity(1) // Light green
     case .V_1:
-        return Color(red: 0.2, green: 0.7, blue: 0.2).opacity(0.5) // Medium green
+        return Color(red: 0.2, green: 0.7, blue: 0.2).opacity(1) // Medium green
     case .V_2:
-        return Color(red: 0.0, green: 0.6, blue: 0.4).opacity(0.5) // Teal-green
+        return Color(red: 0.0, green: 0.6, blue: 0.4).opacity(1) // Teal-green
     case .V_3:
-        return Color(red: 0.0, green: 0.5, blue: 0.5).opacity(0.5) // Teal
+        return Color(red: 0.0, green: 0.5, blue: 0.5).opacity(1) // Teal
     case .V_4:
-        return Color(red: 0.0, green: 0.4, blue: 0.7).opacity(0.5) // Blue-teal
+        return Color(red: 0.0, green: 0.4, blue: 0.7).opacity(1) // Blue-teal
     case .V_5:
-        return Color(red: 0.0, green: 0.2, blue: 0.8).opacity(0.5) // Medium blue
+        return Color(red: 0.0, green: 0.2, blue: 0.8).opacity(1) // Medium blue
     case .V_6:
-        return Color(red: 0.2, green: 0.0, blue: 0.8).opacity(0.5) // Indigo
+        return Color(red: 0.2, green: 0.0, blue: 0.8).opacity(1) // Indigo
     case .V_7:
-        return Color(red: 0.4, green: 0.0, blue: 0.8).opacity(0.5) // Purple
+        return Color(red: 0.4, green: 0.0, blue: 0.8).opacity(1) // Purple
     case .V_8:
-        return Color(red: 0.6, green: 0.0, blue: 0.8).opacity(0.5) // Deep purple
+        return Color(red: 0.6, green: 0.0, blue: 0.8).opacity(1) // Deep purple
     case .V_9:
-        return Color(red: 0.8, green: 0.0, blue: 0.8).opacity(0.5) // Magenta
+        return Color(red: 0.8, green: 0.0, blue: 0.8).opacity(1) // Magenta
     case .V_10:
-        return Color(red: 0.8, green: 0.0, blue: 0.6).opacity(0.5) // Pink-purple
+        return Color(red: 0.8, green: 0.0, blue: 0.6).opacity(1) // Pink-purple
     case .V_11:
-        return Color(red: 0.8, green: 0.0, blue: 0.4).opacity(0.5) // Dark pink
+        return Color(red: 0.8, green: 0.0, blue: 0.4).opacity(1) // Dark pink
     case .V_12:
-        return Color(red: 0.8, green: 0.0, blue: 0.2).opacity(0.5) // Pink-red
+        return Color(red: 0.8, green: 0.0, blue: 0.2).opacity(1) // Pink-red
     case .V_13:
-        return Color(red: 0.9, green: 0.0, blue: 0.0).opacity(0.5) // Bright red
+        return Color(red: 0.9, green: 0.0, blue: 0.0).opacity(1) // Bright red
     case .V_14:
-        return Color(red: 1.0, green: 0.2, blue: 0.0).opacity(0.5) // Red-orange
+        return Color(red: 1.0, green: 0.2, blue: 0.0).opacity(1) // Red-orange
     case .V_15:
-        return Color(red: 1.0, green: 0.4, blue: 0.0).opacity(0.5) // Orange
+        return Color(red: 1.0, green: 0.4, blue: 0.0).opacity(1) // Orange
     case .V_16:
-        return Color(red: 1.0, green: 0.6, blue: 0.0).opacity(0.5) // Amber
+        return Color(red: 1.0, green: 0.6, blue: 0.0).opacity(1) // Amber
     case .V_17:
-        return Color(red: 1.0, green: 0.8, blue: 0.0).opacity(0.5) // Gold
+        return Color(red: 1.0, green: 0.8, blue: 0.0).opacity(1) // Gold
     }
 }
 
@@ -75,7 +75,6 @@ struct ClimbsView: View {
                                 .padding(6)
                                 .background(colorForGrade(climb.grade))
                                 .cornerRadius(8)
-                                .opacity(1)
                         }
 
                         Text(climb.desc)
