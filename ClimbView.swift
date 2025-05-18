@@ -118,17 +118,6 @@ struct ClimbView: View {
                         .padding(.horizontal, 10)
                         .padding(.top, 10)
                     
-                    VStack {
-                        // Existing comments would go here
-                        // This is a placeholder - you'd typically have a ForEach to display comments
-                        Text("No comments yet. Be the first to add one!")
-                            .font(.subheadline)
-                            .foregroundColor(.gray)
-                            .padding(.vertical, 10)
-                            .frame(maxWidth: .infinity, alignment: .center)
-                    }
-                    .padding(.horizontal, 10)
-                    
                     // Text input for new comment
                     HStack {
                         TextField("Add a comment...", text: $commentText)
@@ -145,14 +134,13 @@ struct ClimbView: View {
                             }
                         }) {
                             Image(systemName: "paperplane.fill")
-                                .foregroundColor(.blue)
+                                .foregroundColor(toolbarColor)
                                 .padding(10)
                         }
                     }
                     .padding(.horizontal, 10)
                     .padding(.bottom, 10)
                 }
-                .background(Color.black.opacity(0.7))
             }
         }
         .background(Color.black.opacity(0.7))
