@@ -202,7 +202,7 @@ struct EditWallView: View {
             .navigationDestination(for: NavToAddHoldView.self) { navView in
                 return AddHoldsView(wall: navView.wall)
             }
-            .toolbarBackground(.black, for: .navigationBar)
+            .toolbarBackground(toolbarColor, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
             .navigationBarTitleDisplayMode(.inline)
             .toolbarColorScheme(.dark, for: .navigationBar)

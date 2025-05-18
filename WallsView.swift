@@ -2,6 +2,8 @@ import SwiftUI
 import SwiftData
 import PhotosUI
 
+let toolbarColor = Color(red: 231/255, green: 201/255, blue: 117/255)
+
 func saveContext(context: ModelContext) {
     do {
         try context.save()
@@ -374,7 +376,7 @@ struct WallsView: View {
                     }
                 }
             }
-            .toolbarBackground(.black, for: .navigationBar)
+            .toolbarBackground(toolbarColor, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
             .navigationBarTitleDisplayMode(.inline)
             .toolbarColorScheme(.dark, for: .navigationBar)

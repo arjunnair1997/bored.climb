@@ -114,7 +114,7 @@ struct ClimbsView: View {
                 }
             }
         }
-        .toolbarBackground(.black, for: .navigationBar)
+        .toolbarBackground(toolbarColor, for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
         .navigationBarTitleDisplayMode(.inline)
         .toolbarColorScheme(.dark, for: .navigationBar)

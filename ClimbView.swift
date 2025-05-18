@@ -186,7 +186,7 @@ struct ClimbView: View {
         .navigationDestination(for: NavToClimbImageView.self) { navView in
             ClimbImageView(climb: navView.climb)
         }
-        .toolbarBackground(.black, for: .navigationBar)
+        .toolbarBackground(toolbarColor, for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
         .navigationBarTitleDisplayMode(.inline)
         .toolbarColorScheme(.dark, for: .navigationBar)
