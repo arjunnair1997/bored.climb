@@ -9,7 +9,7 @@ struct MainTabView: View {
         TabView(selection: $selectedTab) {
             WallsView()
                 .tabItem {
-                    Label("Walls", systemImage: "square.grid.2x2")
+                    Label("Climb", systemImage: "figure.play")
                 }
                 .tag(0)
             
