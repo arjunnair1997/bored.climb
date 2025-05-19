@@ -19,7 +19,7 @@ struct ContentHeightTextEditor: View {
                 .frame(minHeight: 30, maxHeight: max(30, textEditorHeight))
                 .foregroundColor(.primary)
         }
-        .padding(.horizontal, 8)
+        .padding(.horizontal, 4)
         .background(Color(.systemGray6))
         .cornerRadius(8)
     }
@@ -48,9 +48,10 @@ struct UITextViewWrapper: UIViewRepresentable {
             uiView.text = self.text
         }
         
-        // Don't update focus in this method to prevent focus loss during typing
         if isFocused && !uiView.isFirstResponder {
             uiView.becomeFirstResponder()
+        } else if !isFocused && uiView.isFirstResponder {
+            uiView.resignFirstResponder()
         }
         
         UITextViewWrapper.recalculateHeight(view: uiView, result: $calculatedHeight)
@@ -121,7 +122,7 @@ struct JournalView: View {
                             
                             ContentHeightTextEditor(text: $entryText, textEditorHeight: $editorHeight, isFocused: $isTextEditorFocused)
                         }
-                        .padding(.horizontal, 8)
+                        .padding(.horizontal, 4)
                         .background(Color(.systemGray6))
                         .cornerRadius(8)
                         
