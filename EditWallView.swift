@@ -37,6 +37,10 @@ struct EditWallView: View {
     @State private var indexToDelete: Int?
     @State private var wallName: String
     
+    private var canDeleteHolds: Bool {
+        return wall.climbs.count == 0
+    }
+    
     @EnvironmentObject var nav: NavigationStateManager
     
     init(wall: Wall) {
@@ -119,48 +123,80 @@ struct EditWallView: View {
                         wall.name = newValue
                         let _ = wall.save()
                     }
+                
+                // Show a message when holds can't be deleted
+                if !canDeleteHolds {
+                    HStack {
+                        Image(systemName: "info.circle")
+                        Text("Holds cannot be deleted once climbs exist.")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                        Spacer()
+                    }
+                    .padding(.horizontal)
+                    .padding(.bottom, 8)
+                }
 
                 // List of holds
-                List {
-                    ForEach(wall.holds.indices, id: \.self) { index in
-                        HStack {
-                            Text(holdNameFromIndex(i: index))
-                            // This is needed so that the entire list item registers
-                            // the tap. Otherwise, the tap is only registered for the
-                            // text.
-                            Spacer()
-                        }
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            overlappingHoldPolygons = [wall.holds[index].cgPoints()]
-                        }
-                    }
-                    .onDelete { offsets in
-                        if let first = offsets.first {
-                            indexToDelete = first
-                            showDeleteConfirmation = true
-                        }
-                    }
-                }
-                .listStyle(.plain)
-                .alert("Delete Hold?", isPresented: $showDeleteConfirmation, actions: {
-                        Button("Cancel", role: .cancel) { }
-                        Button("Delete", role: .destructive) {
-                            if let index = indexToDelete {
-                                overlappingHoldPolygons = []
-                                wall.deleteHold(index: index)
-                                indexToDelete = nil
-                                showDeleteConfirmation = false
-                                let _ = wall.save()
+                if canDeleteHolds {
+                    // List with delete functionality when there are no climbs
+                    List {
+                        ForEach(wall.holds.indices, id: \.self) { index in
+                            HStack {
+                                Text(holdNameFromIndex(i: index))
+                                // This is needed so that the entire list item registers
+                                // the tap. Otherwise, the tap is only registered for the
+                                // text.
+                                Spacer()
+                            }
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                overlappingHoldPolygons = [wall.holds[index].cgPoints()]
                             }
                         }
-                    }, message: {
-                        if let index = indexToDelete {
-                            Text("Are you sure you want to delete hold \"\(holdNameFromIndex(i: index))\"?")
-                        } else {
-                            Text("Are you sure you want to delete this hold?")
+                        .onDelete { offsets in
+                            if let first = offsets.first {
+                                indexToDelete = first
+                                showDeleteConfirmation = true
+                            }
                         }
-                    })
+                    }
+                    .listStyle(.plain)
+                    .alert("Delete Hold?", isPresented: $showDeleteConfirmation, actions: {
+                            Button("Cancel", role: .cancel) { }
+                            Button("Delete", role: .destructive) {
+                                if let index = indexToDelete {
+                                    overlappingHoldPolygons = []
+                                    wall.deleteHold(index: index)
+                                    indexToDelete = nil
+                                    showDeleteConfirmation = false
+                                    let _ = wall.save()
+                                }
+                            }
+                        }, message: {
+                            if let index = indexToDelete {
+                                Text("Are you sure you want to delete hold \"\(holdNameFromIndex(i: index))\"?")
+                            } else {
+                                Text("Are you sure you want to delete this hold?")
+                            }
+                        })
+                } else {
+                    // List without delete functionality when there are climbs
+                    List {
+                        ForEach(wall.holds.indices, id: \.self) { index in
+                            HStack {
+                                Text(holdNameFromIndex(i: index))
+                                Spacer()
+                            }
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                overlappingHoldPolygons = [wall.holds[index].cgPoints()]
+                            }
+                        }
+                        // No onDelete modifier here
+                    }
+                    .listStyle(.plain)
+                }
             }
             .toolbar {
                 // Back button at the top left
@@ -204,22 +240,3 @@ struct EditWallView: View {
             .navigationBarBackButtonHidden(true)
     }
 }
-
-//#Preview {
-//    // Step 1: Create an in-memory SwiftData container
-//    do {
-//        let container = try ModelContainer(
-//            for: Wall.self,
-//            configurations: ModelConfiguration(isStoredInMemoryOnly: false)
-//        )
-//        //    let image = UIImage(named: "test_wall")!
-//        let image = UIImage(named: "test_wall")!
-//        let data = image.pngData()!
-//        let wall = getWallFromData(data: data)
-//        let context = container.mainContext
-//        context.insert(wall)
-//        return EditWallView(wall: wall).modelContainer(container)
-//    } catch {
-//        fatalError("Failed to create model container: \(error)")
-//    }
-//}
