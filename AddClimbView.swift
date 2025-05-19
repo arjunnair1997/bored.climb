@@ -124,7 +124,6 @@ struct AddClimbView: View {
 
                         Spacer()
 
-                        // TODO: Make sure this is centrally aligned.
                         Text("Tap to select holds")
                             .font(.custom("tiny", size: 14))
                             .foregroundColor(.white)
@@ -332,7 +331,6 @@ struct SelectStartHoldView: View {
                             // This will do nothing for now
                             nav.removeLast()
                         }) {
-                            // TODO: try chevron left.
                             Text("Back")
                                 .font(.headline)
                                 .foregroundColor(.white)
@@ -345,7 +343,6 @@ struct SelectStartHoldView: View {
 
                         Spacer()
 
-                        // TODO: Make sure this is centrally aligned.
                         Text("Select upto 4 start holds")
                             .font(.custom("tiny", size: 14))
                             .foregroundColor(.white)
@@ -544,7 +541,6 @@ struct SelectFinishHoldView: View {
                         Button(action: {
                             nav.removeLast()
                         }) {
-                            // TODO: try chevron left.
                             Text("Back")
                                 .font(.headline)
                                 .foregroundColor(.white)
@@ -557,7 +553,6 @@ struct SelectFinishHoldView: View {
 
                         Spacer()
 
-                        // TODO: Make sure this is centrally aligned.
                         Text("Select upto 2 finish holds. Cannot be same as start.")
                             .font(.custom("tiny", size: 14))
                             .foregroundColor(.white)

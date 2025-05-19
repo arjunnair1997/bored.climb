@@ -43,7 +43,6 @@ struct CommentCell: View {
 }
 
 // TODO: add support for slide to go back.
-// TODO: don't allow the image to shrink when the keyboard comes up.
 struct ClimbView: View {
     @EnvironmentObject var nav: NavigationStateManager
 
@@ -118,8 +117,6 @@ struct ClimbView: View {
                 
                 // Banner displaying climb grade and description - no spacing between image and banner
                 HStack {
-                    // TODO: Make the grade banner take up the entire Hstack height. Or even use a fixed height
-                    // for the entire hstack.
                     Text(climb.grade.displayString())
                         .font(.subheadline)
                         .padding(6)

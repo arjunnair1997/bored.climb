@@ -133,9 +133,6 @@ func convertToImageCoordinates(
     return CGPoint(x: boundedX, y: boundedY)
 }
 
-// TODO: Consider a way to fit in a cancel button. Cancel is highly useful.
-// Then if someone clicks on Done with less than 3 holds, show a pop-up which
-// is something like "A hold must be constructed of at least 3 points.
 struct AddHoldsView: View {
     @EnvironmentObject var nav: NavigationStateManager
 
@@ -154,9 +151,6 @@ struct AddHoldsView: View {
     // Timer for showing tap coordinates temporarily
     let tapDisplayDuration: Double = 2.0
 
-    // TODO: In all of the views which display the wall image, can probably get away with not
-    // using so much nesting. Here, the vstack can definitely be deleted, and maybe so many
-    // geometry readers are unnecessary.
     var body: some View {
         GeometryReader { geometryProxy in
             ZStack {
@@ -286,7 +280,6 @@ struct AddHoldsView: View {
                         
                         Spacer()
 
-                        // TODO: Make sure this is centrally aligned.
                         Text("Zoom & tap around 1 hold")
                             .font(.custom("tiny", size: 14))
                             .foregroundColor(.white)
@@ -403,9 +396,6 @@ struct PolygonView: View {
     }
     
     // Function to draw a polygon with a vertical tick starting from the polygon boundary.
-    //
-    // TODO: There's a weird edge case where if a hold is near the bottom boundary, then the tick goes out of the image
-    // but still within the container.
     private func drawPolygonWithTick(context: GraphicsContext, points: [CGPoint], drawCircle: Bool, scale: CGFloat) {
         // First draw the regular polygon
         drawRegularPolygon(context: context, points: points, drawCircle: drawCircle)

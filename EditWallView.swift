@@ -28,11 +28,6 @@ func holdNameFromIndex(i: Int) -> String {
     return "Hold \(i + 1)"
 }
 
-// TODO: If you add edit support for a wall, then you need to store multiple versions
-// of the same wall to support existing climbs which use the older wall.
-//
-// TODO: It's instinctive to make this view zoomable. This is because some walls are extremely
-// zoomed out, and you need to be able to zoom in to tap on the holds.
 struct EditWallView: View {
     var wall: Wall
     

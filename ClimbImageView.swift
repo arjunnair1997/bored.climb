@@ -75,7 +75,6 @@ struct ClimbImageView: View {
                         Button(action: {
                             nav.removeLast()
                         }) {
-                            // TODO: try chevron left.
                             Text("Back")
                                 .font(.headline)
                                 .foregroundColor(.white)
@@ -88,7 +87,6 @@ struct ClimbImageView: View {
 
                         Spacer()
 
-                        // TODO: Make sure this is centrally aligned.
                         Text("\(climb.name)")
                             .font(.custom("tiny", size: 14))
                             .foregroundColor(.white)

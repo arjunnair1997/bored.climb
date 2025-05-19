@@ -260,11 +260,6 @@ func truncateWallName(_ name: String) -> String {
     return name
 }
 
-// TODO: prevent rotation of the screen.
-// TODO: Make the naming system better. It's in the way, and i don't think
-// there should be edit support for wall names.
-// TODO: Force white background and don't respect dark theme.
-// TODO: Force unique constraint on climb names.
 struct WallsView: View {
     @StateObject var nav = NavigationStateManager()
 
