@@ -1,49 +1,64 @@
 import SwiftUI
 
-// TODO: This is fine but i want to try an alternate theme. The colors start off as dull
-// per "group" of grades and as the grades progress they become brighter. So Light green
-// should come after Teal-green. I don't care that it transitions correctly between groups
-// of grades.
 func colorForGrade(_ grade: Grade) -> Color {
     switch grade {
     case .proj:
-        return Color.gray.opacity(1) // Projects with a distinct neutral color
+        // Metallic silver - with enhanced shine built in
+        return Color(red: 0.9, green: 0.9, blue: 0.95)
     case .V_0:
-        return Color(red: 0.4, green: 0.8, blue: 0.4).opacity(1) // Light green
+        // Pearlescent light green
+        return Color(red: 0.7, green: 0.95, blue: 0.7)
     case .V_1:
-        return Color(red: 0.2, green: 0.7, blue: 0.2).opacity(1) // Medium green
+        // Glossy pastel green
+        return Color(red: 0.6, green: 0.9, blue: 0.6)
     case .V_2:
-        return Color(red: 0.0, green: 0.6, blue: 0.4).opacity(1) // Teal-green
+        // Iridescent seafoam
+        return Color(red: 0.5, green: 0.85, blue: 0.75)
     case .V_3:
-        return Color(red: 0.0, green: 0.5, blue: 0.5).opacity(1) // Teal
+        // Shimmering teal
+        return Color(red: 0.4, green: 0.8, blue: 0.8)
     case .V_4:
-        return Color(red: 0.0, green: 0.4, blue: 0.7).opacity(1) // Blue-teal
+        // Luminous sky blue
+        return Color(red: 0.4, green: 0.75, blue: 0.9)
     case .V_5:
-        return Color(red: 0.0, green: 0.2, blue: 0.8).opacity(1) // Medium blue
+        // Radiant azure
+        return Color(red: 0.5, green: 0.7, blue: 0.95)
     case .V_6:
-        return Color(red: 0.2, green: 0.0, blue: 0.8).opacity(1) // Indigo
+        // Gleaming indigo
+        return Color(red: 0.6, green: 0.65, blue: 0.95)
     case .V_7:
-        return Color(red: 0.4, green: 0.0, blue: 0.8).opacity(1) // Purple
+        // Lustrous lavender
+        return Color(red: 0.7, green: 0.6, blue: 0.95)
     case .V_8:
-        return Color(red: 0.6, green: 0.0, blue: 0.8).opacity(1) // Deep purple
+        // Glowing violet
+        return Color(red: 0.8, green: 0.6, blue: 0.95)
     case .V_9:
-        return Color(red: 0.8, green: 0.0, blue: 0.8).opacity(1) // Magenta
+        // Vivid magenta
+        return Color(red: 0.9, green: 0.6, blue: 0.9)
     case .V_10:
-        return Color(red: 0.8, green: 0.0, blue: 0.6).opacity(1) // Pink-purple
+        // Brilliant rose pink with enhanced shine
+        return Color(red: 1.0, green: 0.65, blue: 0.85)
     case .V_11:
-        return Color(red: 0.8, green: 0.0, blue: 0.4).opacity(1) // Dark pink
+        // Sparkling coral with enhanced shine
+        return Color(red: 1.0, green: 0.6, blue: 0.75)
     case .V_12:
-        return Color(red: 0.8, green: 0.0, blue: 0.2).opacity(1) // Pink-red
+        // Polished salmon with enhanced shine
+        return Color(red: 1.0, green: 0.55, blue: 0.65)
     case .V_13:
-        return Color(red: 0.9, green: 0.0, blue: 0.0).opacity(1) // Bright red
+        // Resplendent cherry with enhanced shine
+        return Color(red: 1.0, green: 0.55, blue: 0.55)
     case .V_14:
-        return Color(red: 1.0, green: 0.2, blue: 0.0).opacity(1) // Red-orange
+        // Lustrous peach with enhanced shine
+        return Color(red: 1.0, green: 0.65, blue: 0.45)
     case .V_15:
-        return Color(red: 1.0, green: 0.4, blue: 0.0).opacity(1) // Orange
+        // Vibrant orange with enhanced shine
+        return Color(red: 1.0, green: 0.75, blue: 0.45)
     case .V_16:
-        return Color(red: 1.0, green: 0.6, blue: 0.0).opacity(1) // Amber
+        // Dazzling amber with enhanced shine
+        return Color(red: 1.0, green: 0.85, blue: 0.45)
     case .V_17:
-        return Color(red: 1.0, green: 0.8, blue: 0.0).opacity(1) // Gold
+        // Brilliant gold with enhanced shine
+        return Color(red: 1.0, green: 0.95, blue: 0.6)
     }
 }
 
