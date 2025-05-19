@@ -66,6 +66,9 @@ struct ClimbsView: View {
     @EnvironmentObject var nav: NavigationStateManager
     var wall: Wall
     
+    @State private var isShowingAlert = false
+    @State private var climbToDelete: Climb?
+    
     var body: some View {
         List {
             ForEach(wall.climbs) { climb in
@@ -99,10 +102,31 @@ struct ClimbsView: View {
                             .truncationMode(/*@START_MENU_TOKEN@*/.tail/*@END_MENU_TOKEN@*/)
                     }
                     .padding(.vertical, 4)
+                    .contextMenu {
+                        Button(role: .destructive, action: {
+                            climbToDelete = climb
+                            isShowingAlert = true
+                        }) {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    }
                 }
             }
         }
         .listStyle(PlainListStyle())
+        .alert("Delete Entry", isPresented: $isShowingAlert) {
+            Button("Cancel", role: .cancel) {}
+            Button("Delete", role: .destructive) {
+                if let climb = climbToDelete, let _ = climb.id {
+                    wall.deleteClimb(climb: climb)
+                    climbToDelete = nil
+                } else {
+                    fatalError("either no climb or climb id")
+                }
+            }
+        } message: {
+            Text("Are you sure you want to delete this entry?")
+        }
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: {

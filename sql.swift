@@ -112,6 +112,27 @@ class Wall: Identifiable {
         return []
     }
     
+    func deleteClimb(climb: Climb) {
+        // Find index of climb in the collection
+        guard let climbs = _climbs else {
+            fatalError("No climbs loaded")
+        }
+        
+        guard let climbId = climb.id else {
+            fatalError("climb has no id")
+        }
+        
+        guard let index = climbs.firstIndex(where: { $0.id == climbId }) else {
+            fatalError("climb not found in this wall")
+        }
+        
+        // Delete from database
+        DatabaseManager.shared.deleteClimb(id: climbId)
+        
+        // Remove from in-memory collection
+        _climbs?.remove(at: index)
+    }
+    
     init(imageData: Data, width: Double, height: Double, name: String) {
         self.imageData = imageData
         self.width = width
