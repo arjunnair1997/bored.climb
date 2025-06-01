@@ -79,42 +79,28 @@ class Wall: Identifiable {
     var width: Double
     var height: Double
     var name: String = ""
-    
-    // Relationships
-    private var _holds: [Hold]? = nil
-    private var _climbs: [Climb]? = nil
 
     var holds: [Hold] {
-        if let holds = _holds {
-            return holds
-        }
-        
         // Load holds if id exists
         if let id = id {
-            _holds = DatabaseManager.shared.getHoldsForWall(wallId: id)
-            return _holds ?? []
+            return DatabaseManager.shared.getHoldsForWall(wallId: id)
+        } else {
+            fatalError("no wall id")
         }
-        
-        return []
     }
     
     var climbs: [Climb] {
-        if let climbs = _climbs {
-            return climbs
-        }
-        
         // Load climbs if id exists
         if let id = id {
-            _climbs = DatabaseManager.shared.getClimbsForWall(wallId: id)
-            return _climbs ?? []
+            return DatabaseManager.shared.getClimbsForWall(wallId: id)
+        } else {
+            fatalError("no wall id")
         }
-        
-        return []
     }
     
     func deleteClimb(climb: Climb) {
-        // Find index of climb in the collection
-        guard let climbs = _climbs else {
+        let c = climbs
+        if c.count == 0 {
             fatalError("No climbs loaded")
         }
         
@@ -122,15 +108,12 @@ class Wall: Identifiable {
             fatalError("climb has no id")
         }
         
-        guard let index = climbs.firstIndex(where: { $0.id == climbId }) else {
+        guard let index = c.firstIndex(where: { $0.id == climbId }) else {
             fatalError("climb not found in this wall")
         }
         
         // Delete from database
         DatabaseManager.shared.deleteClimb(id: climbId)
-        
-        // Remove from in-memory collection
-        _climbs?.remove(at: index)
     }
     
     init(imageData: Data, width: Double, height: Double, name: String) {
@@ -150,12 +133,6 @@ class Wall: Identifiable {
             let holdId = DatabaseManager.shared.saveHold(hold: hold, wallId: self.id.unsafelyUnwrapped)
             hold.id = holdId
         }
-
-        // Add to in-memory collection
-        if _holds == nil {
-            _holds = []
-        }
-        _holds?.append(hold)
     }
     
     func addClimb(climb: Climb) {
@@ -169,12 +146,6 @@ class Wall: Identifiable {
                 climb.id = climbId
             }
         }
-        
-        // Add to in-memory collection
-        if _climbs == nil {
-            _climbs = []
-        }
-        _climbs?.append(climb)
     }
     
     func deleteHold(index: Int) {
@@ -194,9 +165,6 @@ class Wall: Identifiable {
         } else {
             fatalError("hold has no id")
         }
-
-        // Remove from in-memory collection
-        _holds?.remove(at: index)
     }
     
     func save() -> Int64 {
