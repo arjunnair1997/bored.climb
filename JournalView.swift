@@ -94,6 +94,31 @@ struct UITextViewWrapper: UIViewRepresentable {
     }
 }
 
+// New UIViewRepresentable for read-only selectable text
+struct SelectableTextView: UIViewRepresentable {
+    let text: String
+    
+    func makeUIView(context: Context) -> UITextView {
+        let textView = UITextView()
+        textView.text = text
+        textView.font = UIFont.preferredFont(forTextStyle: .body)
+        textView.isEditable = false
+        textView.isSelectable = true
+        textView.isScrollEnabled = false
+        textView.backgroundColor = .clear
+        textView.textContainer.lineFragmentPadding = 0
+        textView.textContainerInset = .zero
+        textView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        return textView
+    }
+    
+    func updateUIView(_ uiView: UITextView, context: Context) {
+        if uiView.text != text {
+            uiView.text = text
+        }
+    }
+}
+
 struct JournalView: View {
     @State private var entryText: String = ""
     @State private var entries: [JournalEntry] = []
@@ -234,16 +259,14 @@ struct JournalView: View {
     }
 }
 
-// Journal Entry Cell Component
 struct JournalEntryCell: View {
     let entry: JournalEntry
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(entry.content)
+            SelectableTextView(text: entry.content)
                 .padding(.top, 8)
                 .padding(.horizontal, 8)
-                .multilineTextAlignment(.leading)
             
             HStack {
                 Spacer()
