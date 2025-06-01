@@ -535,57 +535,21 @@ class DatabaseManager {
                 let contentPtr = sqlite3_column_text(statement, 1)
                 let content = contentPtr != nil ? String(cString: contentPtr!) : ""
                 
-                // Parse date from SQLite timestamp
                 let datePtr = sqlite3_column_text(statement, 2)
                 let dateString = datePtr != nil ? String(cString: datePtr!) : ""
                 
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                let createdAt = dateFormatter.date(from: dateString) ?? Date()
-                
-                let entry = JournalEntry(id: entryId, content: content, createdAt: createdAt)
+                dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+                let createdDate = dateFormatter.date(from: dateString) ?? Date()
+
+                let entry = JournalEntry(id: entryId, content: content, createdAt: createdDate)
                 result.append(entry)
             }
             
             return result
         }
-        
-        // Get a specific journal entry by ID
-        func getJournalEntry(id: Int64) -> JournalEntry? {
-            let query = "SELECT id, content, created_at FROM JournalEntry WHERE id = ?"
-            var statement: OpaquePointer?
-            
-            if sqlite3_prepare_v2(db, query, -1, &statement, nil) != SQLITE_OK {
-                let errmsg = String(cString: sqlite3_errmsg(db)!)
-                fatalError("Error preparing select statement: \(errmsg)")
-            }
-            
-            defer {
-                sqlite3_finalize(statement)
-            }
-            
-            sqlite3_bind_int64(statement, 1, id)
-            
-            if sqlite3_step(statement) == SQLITE_ROW {
-                let entryId = sqlite3_column_int64(statement, 0)
-                
-                let contentPtr = sqlite3_column_text(statement, 1)
-                let content = contentPtr != nil ? String(cString: contentPtr!) : ""
-                
-                // Parse date from SQLite timestamp
-                let datePtr = sqlite3_column_text(statement, 2)
-                let dateString = datePtr != nil ? String(cString: datePtr!) : ""
-                
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                let createdAt = dateFormatter.date(from: dateString) ?? Date()
-                
-                return JournalEntry(id: entryId, content: content, createdAt: createdAt)
-            }
-            
-            return nil
-        }
-        
+
         // Delete a journal entry
         func deleteJournalEntry(entryId: Int64) {
             let query = "DELETE FROM JournalEntry WHERE id = ?"
