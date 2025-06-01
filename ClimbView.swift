@@ -107,7 +107,37 @@ struct ClimbView: View {
                                     }
                             }
                         }
-                        //                        .background(Color.black.ignoresSafeArea())
+                        // Add the gestures to enable zoom and pan functionality
+                        .gesture(
+                            SimultaneousGesture(
+                                // Magnification gesture to handle zooming
+                                MagnificationGesture()
+                                    .onChanged { value in
+                                        scale = min(max(1.0, lastScale * value), 10.0)
+                                    }
+                                    .onEnded { _ in
+                                        lastScale = scale
+                                    },
+                                // Drag gesture for panning
+                                DragGesture()
+                                    .onChanged { value in
+                                        let newOffset = CGSize(
+                                            width: lastOffset.width + value.translation.width,
+                                            height: lastOffset.height + value.translation.height
+                                        )
+                                        imageOffset = clampedOffset(
+                                            offset: newOffset,
+                                            scale: scale,
+                                            containerSize: containerGeo.size,
+                                            imageSize: uiImage.size
+                                        )
+                                    }
+                                    .onEnded { _ in
+                                        lastOffset = imageOffset
+                                    }
+                            )
+                        )
+                        .background(Color.black)
                     }
                     .background(Color.black)
                     .frame(maxHeight: fittedSize.height)
